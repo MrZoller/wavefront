@@ -10,11 +10,15 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 
 ## Layer 0 — Primitives
 
-| Module                            | Intuition                                                                   | Status      |
-| --------------------------------- | --------------------------------------------------------------------------- | ----------- |
-| **Rotating phasor / IQ**          | A complex sample is just a 2D point, and a signal spins it.                 | ✅ shipping |
-| Phase difference                  | Two sensors see the same wave with a phase offset that encodes direction.   | planned     |
-| Cross-correlation as a lag finder | A sliding dot product reveals _when_ a signal arrived (the engine of TDOA). | planned     |
+| Module                                | Intuition                                                                   | Status      |
+| ------------------------------------- | --------------------------------------------------------------------------- | ----------- |
+| **Rotating phasor / IQ**              | A complex sample is just a 2D point, and a signal spins it.                 | ✅ shipping |
+| **Phase difference**                  | Two sensors see the same wave with a phase offset that encodes direction.   | ✅ shipping |
+| **Cross-correlation as a lag finder** | A sliding dot product reveals _when_ a signal arrived (the engine of TDOA). | ✅ shipping |
+
+![Phase difference module](../images/phase-difference.png)
+
+![Cross-correlation lag finder module](../images/cross-correlation.png)
 
 ## Layer 1 — Angle of Arrival (AoA)
 

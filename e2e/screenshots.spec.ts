@@ -22,3 +22,17 @@ test('rotating phasor module', async ({ page }) => {
   await page.waitForTimeout(700);
   await page.screenshot({ path: path.join(IMG_DIR, 'rotating-phasor.png') });
 });
+
+test('phase difference module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Phase Difference' }).first().click();
+  await expect(page.getByRole('img', { name: /plane wave arriving/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'phase-difference.png') });
+});
+
+test('cross-correlation module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Cross-Correlation as a Lag Finder' }).first().click();
+  await expect(page.getByRole('img', { name: /cross-correlation versus lag/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'cross-correlation.png') });
+});

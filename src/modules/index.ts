@@ -9,4 +9,7 @@
  */
 
 // Track A — Direction Finding & Geolocation
+// Layer 0 — Primitives
 import './direction-finding/rotating-phasor';
+import './direction-finding/phase-difference';
+import './direction-finding/cross-correlation';
