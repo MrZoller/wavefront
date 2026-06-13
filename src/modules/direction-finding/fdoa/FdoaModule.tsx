@@ -26,8 +26,9 @@ export function FdoaModule() {
   const [f0MHz, setF0MHz] = useState(300);
 
   const f0 = f0MHz * 1e6;
-  const [rx0, rx1] = receivers;
-  const measured = fdoa(emitter, rx1, rx0, f0, C); // Δf at the true emitter (Hz)
+  const [rx0, rx1] = receivers; // rx0 = Rx1 (the receiver), rx1 = Rx2 (the reference)
+  // Δf at the true emitter (Hz). Argument order matches the displayed formula Δf = v₁·û₁ − v₂·û₂.
+  const measured = fdoa(emitter, rx0, rx1, f0, C);
 
   // Normalize the heatmap to the largest Δf the geometry can produce (both platforms fully radial,
   // opposed): keeps the colour scale meaningful as f0 / velocities change.
@@ -98,7 +99,7 @@ export function FdoaModule() {
       ctx.fill();
     }
     // Isodoppler curve through the emitter (the level set Δf = measured).
-    const segs = isoContour((x, y) => fdoa({ x, y }, rx1, rx0, f0, C), WORLD, measured, 90);
+    const segs = isoContour((x, y) => fdoa({ x, y }, rx0, rx1, f0, C), WORLD, measured, 90);
     ctx.strokeStyle = colors.signal;
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -119,7 +120,7 @@ export function FdoaModule() {
         onPointMove={onPointMove}
         draw={draw}
         field={{
-          value: (x, y) => fdoa({ x, y }, rx1, rx0, f0, C),
+          value: (x, y) => fdoa({ x, y }, rx0, rx1, f0, C),
           color: (v) => fdoaColor(v, fMax),
           resolution: 56,
         }}
