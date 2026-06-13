@@ -43,12 +43,12 @@ export function PolarPlot({
         y: cy - Math.cos(theta) * rad,
       });
 
-      // Radial grid arcs.
+      // Radial grid arcs (upper semicircle, matching the pt() fan: left → top → right).
       ctx.strokeStyle = colors.border;
       ctx.lineWidth = 1;
       for (const frac of [0.25, 0.5, 0.75, 1]) {
         ctx.beginPath();
-        ctx.arc(cx, cy, r * frac, -Math.PI / 2, Math.PI / 2);
+        ctx.arc(cx, cy, r * frac, Math.PI, 2 * Math.PI);
         ctx.stroke();
       }
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { phaseDifference, wrapPhase, candidateBearings, isUnambiguous } from '@/dsp/phase';
@@ -19,15 +19,16 @@ interface Emitter {
 export function InterferometerModule() {
   const [dLambda, setDLambda] = useState(0.5);
   const [emitter, setEmitter] = useState<Emitter>({ fx: 0.68, fy: 0.22 });
+  // Actual canvas size in CSS px, so the bearing is computed in the same pixel geometry the
+  // draw callback uses (a non-square canvas would skew a fraction-based angle).
+  const [size, setSize] = useState({ w: 1, h: 1 });
   const dragging = useRef(false);
 
-  // Derived geometry (recomputed during draw too; kept here for the readouts).
-  const ex = emitter.fx;
-  const ey = emitter.fy;
-  // Map to a bearing using the same broadside-up convention as the canvas.
-  const dx = ex - 0.5;
-  const dy = ey - 0.82;
-  const trueTheta = Math.atan2(dx, -dy);
+  const cx = size.w / 2;
+  const baseY = size.h * 0.82;
+  const emX = emitter.fx * size.w;
+  const emY = Math.min(emitter.fy * size.h, baseY - 14);
+  const trueTheta = Math.atan2(emX - cx, -(emY - baseY));
   const deltaPhi = phaseDifference(dLambda, trueTheta, 1);
   const wrapped = wrapPhase(deltaPhi);
   const candidates = candidateBearings(wrapped, dLambda, 1);
@@ -98,6 +99,17 @@ export function InterferometerModule() {
     },
     [dLambda, emitter, trueTheta, candidates]
   );
+
+  // Keep `size` in sync with the canvas's CSS pixel dimensions.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const sync = () => setSize({ w: canvas.clientWidth, h: canvas.clientHeight });
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(canvas);
+    return () => ro.disconnect();
+  }, [canvasRef]);
 
   const updateFromPointer = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
