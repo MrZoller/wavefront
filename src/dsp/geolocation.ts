@@ -139,12 +139,25 @@ export const rangeDifference = (p: Point, f1: Point, f2: Point): number =>
  * Points tracing the hyperbola branch of constant range difference `deltaR = |x−f1| − |x−f2|`
  * (foci `f1`, `f2`). Parametrized as `a·cosh t` along the focal axis and `b·sinh t` across it,
  * with `a = deltaR/2`, `c = ½|f2−f1|`, `b = √(c²−a²)`. Returns [] if `|deltaR| ≥ |f2−f1|`.
+ *
+ * `maxExtent` (e.g. the map diagonal) extends the parameter range so the branch reaches that far
+ * from its center — otherwise a fixed `tMax` truncates curves with close foci before they cross the
+ * viewport (and visibly miss the emitter). A point's distance from center grows like `½·c·e^t`, so
+ * reaching `maxExtent` needs `t ≈ ln(2·maxExtent/c)`; `tMax` stays a lower bound for short spans.
  */
-export function hyperbolaPoints(f1: Point, f2: Point, deltaR: number, tMax = 2.5, n = 80): Point[] {
+export function hyperbolaPoints(
+  f1: Point,
+  f2: Point,
+  deltaR: number,
+  tMax = 2.5,
+  n = 80,
+  maxExtent?: number
+): Point[] {
   const c = distance(f1, f2) / 2;
   const a = deltaR / 2;
   if (c <= 1e-9 || Math.abs(a) >= c) return [];
   const b = Math.sqrt(c * c - a * a);
+  if (maxExtent && maxExtent > 0) tMax = Math.max(tMax, Math.log((2 * maxExtent) / c));
   const center = { x: (f1.x + f2.x) / 2, y: (f1.y + f2.y) / 2 };
   const ux = (f2.x - f1.x) / (2 * c);
   const uy = (f2.y - f1.y) / (2 * c);
@@ -209,15 +222,48 @@ function tdoaGaussNewton(
   return x;
 }
 
+/** A coarse grid of seeds over the receivers' bounding box, expanded so an emitter outside the
+ *  receiver hull is still bracketed. Gives Gauss–Newton multiple starting basins. */
+function gridSeeds(receivers: Point[], n = 4): Point[] {
+  let minX = Infinity,
+    maxX = -Infinity,
+    minY = Infinity,
+    maxY = -Infinity;
+  for (const r of receivers) {
+    minX = Math.min(minX, r.x);
+    maxX = Math.max(maxX, r.x);
+    minY = Math.min(minY, r.y);
+    maxY = Math.max(maxY, r.y);
+  }
+  const padX = (maxX - minX) * 0.5 || 1;
+  const padY = (maxY - minY) * 0.5 || 1;
+  minX -= padX;
+  maxX += padX;
+  minY -= padY;
+  maxY += padY;
+  const seeds: Point[] = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      seeds.push({
+        x: minX + ((maxX - minX) * i) / (n - 1),
+        y: minY + ((maxY - minY) * j) / (n - 1),
+      });
+    }
+  }
+  return seeds;
+}
+
 /**
  * Solve for the emitter from TDOA measurements. `rangeDiffs[i]` is the range difference to
  * `receivers[i+1]` relative to the reference `receivers[0]` (`|x−Rᵢ| − |x−R0|`).
  *
- * Gauss–Newton is run from several seeds (the receivers + their centroid, or a caller-supplied
- * `guess`) and the lowest-residual result is kept — TDOA can have multiple local minima / a second
- * hyperbola intersection, so a single seed is not enough. `converged` requires the final residual
- * to actually be near zero, not merely a small step, so the caller never displays a confident fix
- * that doesn't sit on the hyperbola intersection.
+ * Gauss–Newton is run from several seeds and the lowest-residual result is kept — TDOA can have
+ * multiple local minima / a second hyperbola intersection, so a single seed is not enough. Without a
+ * caller-supplied `guess` the seeds span a grid over the receivers' (expanded) bounding box in
+ * addition to the centroid, so the search reaches an emitter outside the receiver hull instead of
+ * stalling at a local minimum near the centroid. `converged` requires the final residual to actually
+ * be near zero, not merely a small step, so the caller never displays a confident fix that doesn't
+ * sit on the hyperbola intersection.
  */
 export function tdoaSolve(
   receivers: Point[],
@@ -229,12 +275,7 @@ export function tdoaSolve(
     x: receivers.reduce((s, r) => s + r.x, 0) / receivers.length,
     y: receivers.reduce((s, r) => s + r.y, 0) / receivers.length,
   };
-  const seeds: Point[] = guess
-    ? [guess]
-    : [
-        centroid,
-        ...receivers.map((r) => ({ x: (r.x + centroid.x) / 2, y: (r.y + centroid.y) / 2 })),
-      ];
+  const seeds: Point[] = guess ? [guess] : [centroid, ...gridSeeds(receivers)];
 
   let best = seeds[0];
   let bestRes = Infinity;

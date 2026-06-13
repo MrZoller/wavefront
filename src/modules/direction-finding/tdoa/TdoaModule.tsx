@@ -10,6 +10,9 @@ import {
 } from '@/dsp/geolocation';
 
 const WORLD = { minX: -50, maxX: 50, minY: -50, maxY: 50 };
+// Trace each hyperbola at least this far from its center so the branch always crosses the map
+// (a hyperbola centered at one edge must still reach the far corner).
+const MAP_SPAN = Math.hypot(WORLD.maxX - WORLD.minX, WORLD.maxY - WORLD.minY);
 
 /**
  * TDOA multilateration (brief §4, Layer 2). Each receiver pair sharing a reference defines a
@@ -63,7 +66,7 @@ export function TdoaModule() {
     // One hyperbola per pair (Rx0, Rxi), each passing through the emitter.
     for (let i = 1; i < receivers.length; i++) {
       const dr = rangeDifference(emitter, ref, receivers[i]);
-      const pts = hyperbolaPoints(ref, receivers[i], dr, 2.4, 120);
+      const pts = hyperbolaPoints(ref, receivers[i], dr, 2.4, 120, MAP_SPAN);
       if (pts.length === 0) continue;
       ctx.strokeStyle = colors.signalDim;
       ctx.lineWidth = 1.5;

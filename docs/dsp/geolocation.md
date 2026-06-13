@@ -26,8 +26,10 @@ for distant emitters and shallow crossing angles.
 
 A measured time difference is a range difference `Δr = c·τ`. The locus of constant range
 difference to two receivers is a **hyperbola** (`hyperbolaPoints`, with `rangeDifference` the
-defining quantity). Three receivers give intersecting hyperbolas; `tdoaSolve` recovers the
-position by Gauss–Newton on the range-difference residuals.
+defining quantity). Three receivers give intersecting hyperbolas, but those can meet at two points
+in 2D; a fourth receiver removes that ambiguity. `tdoaSolve` recovers the position by Gauss–Newton
+on the range-difference residuals, searching from a grid of seeds so it finds the true intersection
+rather than a nearby local minimum.
 
 ## GDOP
 
@@ -50,7 +52,7 @@ for time-difference positioning, matching the TDOA module it follows. Needs ≥3
 - Every generated hyperbola point has the prescribed range difference; none when `|Δr| ≥` focal
   separation.
 - `tdoaSolve` recovers a known emitter from exact range differences.
-- `gdop = √(4/3)` for three receivers 120° apart; small when spread, huge when clustered, `∞` when
+- `gdop = √(8/9)` for three receivers 120° apart; small when spread, huge when clustered, `∞` when
   collinear.
 
 ## Where it's used

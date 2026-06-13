@@ -109,6 +109,18 @@ describe('TDOA hyperbola', () => {
   it('returns no curve when |Δr| exceeds the focal separation', () => {
     expect(hyperbolaPoints({ x: -5, y: 0 }, { x: 5, y: 0 }, 12, 2, 20)).toHaveLength(0);
   });
+
+  it('extends the branch to reach maxExtent when foci are close', () => {
+    // Δr = 0 hyperbola of foci (-5,0),(5,0) is the y-axis; a fixed tMax=2.4 only reaches y≈27,
+    // truncating before an emitter at (0,50). maxExtent must push the branch past it.
+    const f1 = { x: -5, y: 0 };
+    const f2 = { x: 5, y: 0 };
+    const pts = hyperbolaPoints(f1, f2, 0, 2.4, 80, 70);
+    const reach = Math.max(...pts.map((p) => Math.abs(p.y)));
+    expect(reach).toBeGreaterThan(50);
+    // Still a valid hyperbola: every point keeps the prescribed range difference.
+    for (const p of pts) expect(rangeDifference(p, f1, f2)).toBeCloseTo(0, 6);
+  });
 });
 
 describe('TDOA multilateration', () => {
@@ -126,6 +138,24 @@ describe('TDOA multilateration', () => {
     expect(converged).toBe(true);
     expect(fix.x).toBeCloseTo(3, 4);
     expect(fix.y).toBeCloseTo(7, 4);
+  });
+
+  it('recovers an emitter that sits outside the receiver hull (grid seeds)', () => {
+    // Centroid/midpoint seeds alone stall at a local minimum (residual ≈ 0.15) for this layout;
+    // the grid seeds reach the true intersection at (10,−20).
+    const receivers: Point[] = [
+      { x: -20, y: -40 },
+      { x: 40, y: 40 },
+      { x: 20, y: 10 },
+      { x: 0, y: -20 },
+    ];
+    const truth: Point = { x: 10, y: -20 };
+    const ref = receivers[0];
+    const rangeDiffs = receivers.slice(1).map((r) => distance(truth, r) - distance(truth, ref));
+    const { fix, converged } = tdoaSolve(receivers, rangeDiffs);
+    expect(converged).toBe(true);
+    expect(fix.x).toBeCloseTo(10, 3);
+    expect(fix.y).toBeCloseTo(-20, 3);
   });
 });
 
