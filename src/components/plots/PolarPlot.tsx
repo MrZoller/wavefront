@@ -75,7 +75,8 @@ export function PolarPlot({
         ctx.lineTo(p.x, p.y);
       }
       ctx.closePath();
-      ctx.fillStyle = 'color-mix(in srgb, var(--color-signal) 22%, transparent)';
+      // Canvas fillStyle can't resolve CSS var() — concrete rgba (signal green at 22%).
+      ctx.fillStyle = 'rgba(62, 240, 160, 0.22)';
       ctx.strokeStyle = colors.signal;
       ctx.lineWidth = 1.75;
       ctx.fill();

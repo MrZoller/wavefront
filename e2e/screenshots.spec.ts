@@ -50,3 +50,28 @@ test('beamforming module', async ({ page }) => {
   await expect(page.getByRole('img', { name: /polar array gain pattern/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'beamforming.png') });
 });
+
+test('AoA cross-fix module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'AoA Cross-Fixing' }).first().click();
+  await expect(
+    page.getByRole('application', { name: /DF sites with lines of bearing/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'aoa-cross-fix.png') });
+});
+
+test('TDOA module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'TDOA Multilateration' }).first().click();
+  await expect(
+    page.getByRole('application', { name: /hyperbolas of constant range difference/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'tdoa.png') });
+});
+
+test('GDOP heatmap module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'GDOP Heatmap' }).first().click();
+  await expect(page.getByRole('application', { name: /GDOP heatmap/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'gdop-heatmap.png') });
+});
