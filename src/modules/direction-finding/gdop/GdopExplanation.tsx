@@ -14,12 +14,16 @@ export function GdopExplanation() {
 
       <section>
         <h3 className="mb-1 font-medium text-text">The formula</h3>
-        <p>Stack the unit line-of-sight vectors from a candidate point to each receiver into H:</p>
+        <p>
+          Since TDOA only measures range <em>differences</em>, each row of the geometry matrix H is
+          a <em>differenced</em> line-of-sight, <span className="readout">uᵢ − u₀</span>, relative
+          to a reference receiver:
+        </p>
         <p className="readout my-2 text-signal">GDOP = √( trace( (HᵀH)⁻¹ ) )</p>
         <p>
           When the receivers surround the point from varied directions, HᵀH is well-conditioned and
           GDOP is small (green). When they bunch up or fall on a line, HᵀH becomes singular and GDOP
-          explodes (red) — tiny errors swing the fix wildly.
+          explodes (red) — tiny timing errors swing the fix wildly.
         </p>
       </section>
 

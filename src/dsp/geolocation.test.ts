@@ -129,13 +129,23 @@ describe('TDOA multilateration', () => {
   });
 });
 
-describe('GDOP', () => {
-  it('equals √(4/3) for three receivers 120° apart around the candidate', () => {
+describe('GDOP (TDOA-differenced)', () => {
+  it('equals √(8/9) for three receivers 120° apart (reference = first)', () => {
+    // Differenced rows uᵢ−u₀ ⇒ HᵀH = diag(4.5, 1.5) ⇒ trace(inv) = 8/9.
     const receivers = [0, 120, 240].map((d) => ({
       x: 10 * Math.cos(deg(d)),
       y: 10 * Math.sin(deg(d)),
     }));
-    expect(gdop({ x: 0, y: 0 }, receivers)).toBeCloseTo(Math.sqrt(4 / 3), 9);
+    expect(gdop({ x: 0, y: 0 }, receivers)).toBeCloseTo(Math.sqrt(8 / 9), 9);
+  });
+
+  it('needs at least three receivers', () => {
+    expect(
+      gdop({ x: 0, y: 0 }, [
+        { x: 10, y: 0 },
+        { x: 0, y: 10 },
+      ])
+    ).toBe(Infinity);
   });
 
   it('is low for well-spread geometry and large for clustered receivers', () => {
@@ -152,6 +162,16 @@ describe('GDOP', () => {
     ];
     expect(gdop(candidate, spread)).toBeLessThan(2);
     expect(gdop(candidate, clustered)).toBeGreaterThan(20);
+  });
+
+  it('flags a collinear (y=0) layout as poor for an off-line candidate', () => {
+    // The case range-based GDOP misses: receivers on a line, candidate above them.
+    const receivers = [
+      { x: -10, y: 0 },
+      { x: 0, y: 0 },
+      { x: 10, y: 0 },
+    ];
+    expect(gdop({ x: 0, y: 50 }, receivers)).toBeGreaterThan(5);
   });
 
   it('is infinite for collinear line-of-sight (singular geometry)', () => {

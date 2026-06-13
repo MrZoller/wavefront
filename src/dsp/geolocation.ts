@@ -158,23 +158,27 @@ export function hyperbolaPoints(f1: Point, f2: Point, deltaR: number, tMax = 2.5
   return out;
 }
 
-/**
- * Solve for the emitter from TDOA measurements by Gauss–Newton. `rangeDiffs[i]` is the range
- * difference to `receivers[i+1]` relative to the reference `receivers[0]`. Returns the position
- * (and whether it converged).
- */
-export function tdoaSolve(
+/** RMS of the TDOA range-difference residuals at point `x` (0 at an exact solution). */
+function tdoaResidual(x: Point, receivers: Point[], rangeDiffs: number[]): number {
+  const ref = receivers[0];
+  let sum = 0;
+  for (let i = 1; i < receivers.length; i++) {
+    const pred = distance(x, receivers[i]) - distance(x, ref);
+    const r = pred - rangeDiffs[i - 1];
+    sum += r * r;
+  }
+  return Math.sqrt(sum / Math.max(1, receivers.length - 1));
+}
+
+/** One Gauss–Newton run from a single seed. */
+function tdoaGaussNewton(
   receivers: Point[],
   rangeDiffs: number[],
-  guess?: Point,
-  iterations = 50
-): { fix: Point; converged: boolean } {
+  seed: Point,
+  iterations: number
+): Point {
   const ref = receivers[0];
-  let x = guess ?? {
-    x: receivers.reduce((s, r) => s + r.x, 0) / receivers.length,
-    y: receivers.reduce((s, r) => s + r.y, 0) / receivers.length + 1e-3,
-  };
-  let converged = false;
+  let x = seed;
   for (let it = 0; it < iterations; it++) {
     let h00 = 0,
       h01 = 0,
@@ -184,10 +188,9 @@ export function tdoaSolve(
     const u0 = unit(x, ref);
     for (let i = 1; i < receivers.length; i++) {
       const ui = unit(x, receivers[i]);
-      // residual = predicted − measured; predicted = |x−Ri| − |x−R0|
       const pred = distance(x, receivers[i]) - distance(x, ref);
       const res = pred - rangeDiffs[i - 1];
-      // d(pred)/dx = (−ui) − (−u0) = u0 − ui  (gradient of distance points away from receiver)
+      // d(pred)/dx = u0 − ui (gradient of distance points away from the receiver).
       const jx = u0.x - ui.x;
       const jy = u0.y - ui.y;
       h00 += jx * jx;
@@ -201,31 +204,77 @@ export function tdoaSolve(
     const dx = inv[0] * g0 + inv[1] * g1;
     const dy = inv[2] * g0 + inv[3] * g1;
     x = { x: x.x - dx, y: x.y - dy };
-    if (Math.hypot(dx, dy) < 1e-9) {
-      converged = true;
-      break;
+    if (Math.hypot(dx, dy) < 1e-10) break;
+  }
+  return x;
+}
+
+/**
+ * Solve for the emitter from TDOA measurements. `rangeDiffs[i]` is the range difference to
+ * `receivers[i+1]` relative to the reference `receivers[0]` (`|x−Rᵢ| − |x−R0|`).
+ *
+ * Gauss–Newton is run from several seeds (the receivers + their centroid, or a caller-supplied
+ * `guess`) and the lowest-residual result is kept — TDOA can have multiple local minima / a second
+ * hyperbola intersection, so a single seed is not enough. `converged` requires the final residual
+ * to actually be near zero, not merely a small step, so the caller never displays a confident fix
+ * that doesn't sit on the hyperbola intersection.
+ */
+export function tdoaSolve(
+  receivers: Point[],
+  rangeDiffs: number[],
+  guess?: Point,
+  iterations = 60
+): { fix: Point; converged: boolean } {
+  const centroid = {
+    x: receivers.reduce((s, r) => s + r.x, 0) / receivers.length,
+    y: receivers.reduce((s, r) => s + r.y, 0) / receivers.length,
+  };
+  const seeds: Point[] = guess
+    ? [guess]
+    : [
+        centroid,
+        ...receivers.map((r) => ({ x: (r.x + centroid.x) / 2, y: (r.y + centroid.y) / 2 })),
+      ];
+
+  let best = seeds[0];
+  let bestRes = Infinity;
+  for (const seed of seeds) {
+    const x = tdoaGaussNewton(receivers, rangeDiffs, seed, iterations);
+    const res = tdoaResidual(x, receivers, rangeDiffs);
+    if (res < bestRes) {
+      bestRes = res;
+      best = x;
     }
   }
-  return { fix: x, converged };
+  return { fix: best, converged: bestRes < 1e-4 };
 }
 
 // ── GDOP ─────────────────────────────────────────────────────────────────────
 
 /**
- * Geometric Dilution of Precision at `candidate` for a set of `receivers`:
- *   `GDOP = √(trace((HᵀH)⁻¹))`, where each row of `H` is the unit line-of-sight from the
- * candidate to a receiver. Low for well-spread geometry; it blows up (→ ∞) as the receivers
- * become collinear or clustered, so unit measurement error balloons into position error.
+ * Geometric Dilution of Precision at `candidate` for a TDOA receiver layout (brief §4, Layer 2,
+ * following the TDOA module). Only range *differences* are observable, so each row of the geometry
+ * matrix `H` is the *differenced* line-of-sight `uᵢ − u₀` relative to the reference `receivers[0]`:
+ *
+ *   `GDOP = √(trace((HᵀH)⁻¹))`,  rows `uᵢ − u₀` for `i ≥ 1`.
+ *
+ * Low for well-spread geometry; it blows up (→ ∞) as the receivers become collinear or clustered
+ * — and, unlike a raw range Jacobian, it correctly penalizes layouts that are poor specifically
+ * for time-difference positioning. Needs ≥3 receivers (two independent rows in 2D).
  */
 export function gdop(candidate: Point, receivers: Point[]): number {
+  if (receivers.length < 3) return Infinity;
+  const u0 = unit(candidate, receivers[0]);
   let h00 = 0,
     h01 = 0,
     h11 = 0;
-  for (const r of receivers) {
-    const u = unit(candidate, r);
-    h00 += u.x * u.x;
-    h01 += u.x * u.y;
-    h11 += u.y * u.y;
+  for (let i = 1; i < receivers.length; i++) {
+    const ui = unit(candidate, receivers[i]);
+    const rx = ui.x - u0.x;
+    const ry = ui.y - u0.y;
+    h00 += rx * rx;
+    h01 += rx * ry;
+    h11 += ry * ry;
   }
   const inv = invert2x2(h00, h01, h01, h11);
   if (!inv) return Infinity;

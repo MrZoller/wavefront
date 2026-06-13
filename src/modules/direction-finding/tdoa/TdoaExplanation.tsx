@@ -22,11 +22,13 @@ export function TdoaExplanation() {
       </section>
 
       <section>
-        <h3 className="mb-1 font-medium text-text">Three receivers fix it</h3>
+        <h3 className="mb-1 font-medium text-text">How many receivers fix it</h3>
         <p>
-          Each additional pair adds another hyperbola. Two curves intersect at the emitter; a third
-          removes the remaining ambiguity. We recover the position by Gauss–Newton least squares on
-          the range-difference equations — watch the fix track the emitter as you drag.
+          In 2D, three receivers give only <em>two</em> independent hyperbolas — and two curves can
+          cross at <em>two</em> points, so a single extra intersection survives. A fourth receiver
+          adds a third hyperbola that passes through only the true point, removing the ambiguity
+          (this scene ships with four). We then recover the position by Gauss–Newton least squares
+          on the range-difference equations — watch the fix track the emitter as you drag.
         </p>
       </section>
 

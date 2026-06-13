@@ -31,13 +31,17 @@ position by Gauss–Newton on the range-difference residuals.
 
 ## GDOP
 
-Geometric Dilution of Precision maps measurement error to position error at a point:
+Geometric Dilution of Precision maps measurement error to position error at a point. Because TDOA
+only observes range _differences_, the geometry matrix uses _differenced_ line-of-sight rows
+relative to a reference receiver (`receivers[0]`):
 
 ```
-GDOP = √( trace( (HᵀH)⁻¹ ) )       rows of H = unit line-of-sight to each receiver   (gdop)
+GDOP = √( trace( (HᵀH)⁻¹ ) )       rows of H = uᵢ − u₀  (i ≥ 1)   (gdop)
 ```
 
-Small for well-spread receivers; `→ ∞` as they become clustered or collinear (singular `H`).
+Small for well-spread receivers; `→ ∞` as they become clustered or collinear (singular `H`). This
+differenced form (vs. a raw range Jacobian) correctly penalizes layouts that are poor specifically
+for time-difference positioning, matching the TDOA module it follows. Needs ≥3 receivers.
 
 ## What the tests pin down
 
