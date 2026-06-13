@@ -195,56 +195,92 @@ export function WorldMap({
     y: Math.max(extent.minY, Math.min(extent.maxY, y)),
   });
 
+  /** Move a marker by one keyboard step for an arrow key; returns true if it handled the key. */
+  const nudge = (id: string, key: string): boolean => {
+    if (!onPointMove) return false;
+    const p = points.find((q) => q.id === id);
+    if (!p) return false;
+    const step = (extent.maxX - extent.minX) / 100;
+    let dx = 0;
+    let dy = 0;
+    if (key === 'ArrowLeft') dx = -step;
+    else if (key === 'ArrowRight') dx = step;
+    else if (key === 'ArrowUp') dy = step;
+    else if (key === 'ArrowDown') dy = -step;
+    else return false;
+    const c = clamp(p.x + dx, p.y + dy);
+    onPointMove(id, c.x, c.y);
+    return true;
+  };
+
+  const draggablePoints = points.filter((p) => p.draggable !== false);
+
   return (
-    <canvas
-      ref={canvasRef}
-      tabIndex={0}
-      style={{ width: '100%', height, touchAction: 'none', cursor: 'crosshair' }}
-      className="rounded-md border border-border bg-surface outline-none focus:border-signal-dim"
-      role="application"
-      aria-label={`${ariaLabel}. Tab to focus, arrow keys to move the selected marker.`}
-      onPointerDown={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const id = hitTest(e.clientX - rect.left, e.clientY - rect.top);
-        if (id) {
-          dragId.current = id;
-          setActiveId(id);
-          e.currentTarget.setPointerCapture(e.pointerId);
-        }
-      }}
-      onPointerMove={(e) => {
-        if (!dragId.current || !onPointMove) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const t = makeTransform(size.w, size.h);
-        const wd = t.toWorld(e.clientX - rect.left, e.clientY - rect.top);
-        const c = clamp(wd.x, wd.y);
-        onPointMove(dragId.current, c.x, c.y);
-      }}
-      onPointerUp={(e) => {
-        dragId.current = null;
-        e.currentTarget.releasePointerCapture(e.pointerId);
-      }}
-      onKeyDown={(e) => {
-        if (!onPointMove) return;
-        const id = activeId ?? points.find((p) => p.draggable !== false)?.id ?? null;
-        if (!id) return;
-        const p = points.find((q) => q.id === id);
-        if (!p) return;
-        const step = (extent.maxX - extent.minX) / 100;
-        let dx = 0;
-        let dy = 0;
-        if (e.key === 'ArrowLeft') dx = -step;
-        else if (e.key === 'ArrowRight') dx = step;
-        else if (e.key === 'ArrowUp') dy = step;
-        else if (e.key === 'ArrowDown') dy = -step;
-        else if (e.key === 'Tab')
-          return; // let focus move naturally
-        else return;
-        e.preventDefault();
-        if (!activeId) setActiveId(id);
-        const c = clamp(p.x + dx, p.y + dy);
-        onPointMove(id, c.x, c.y);
-      }}
-    />
+    <div className="flex flex-col gap-2">
+      <canvas
+        ref={canvasRef}
+        tabIndex={0}
+        style={{ width: '100%', height, touchAction: 'none', cursor: 'crosshair' }}
+        className="rounded-md border border-border bg-surface outline-none focus:border-signal-dim"
+        role="application"
+        aria-label={`${ariaLabel}. Use the marker buttons below to select a marker, then arrow keys to move it.`}
+        onPointerDown={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const id = hitTest(e.clientX - rect.left, e.clientY - rect.top);
+          if (id) {
+            dragId.current = id;
+            setActiveId(id);
+            e.currentTarget.setPointerCapture(e.pointerId);
+          }
+        }}
+        onPointerMove={(e) => {
+          if (!dragId.current || !onPointMove) return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          const t = makeTransform(size.w, size.h);
+          const wd = t.toWorld(e.clientX - rect.left, e.clientY - rect.top);
+          const c = clamp(wd.x, wd.y);
+          onPointMove(dragId.current, c.x, c.y);
+        }}
+        onPointerUp={(e) => {
+          dragId.current = null;
+          e.currentTarget.releasePointerCapture(e.pointerId);
+        }}
+        onKeyDown={(e) => {
+          const id = activeId ?? draggablePoints[0]?.id;
+          if (id && nudge(id, e.key)) {
+            e.preventDefault();
+            if (!activeId) setActiveId(id);
+          }
+        }}
+      />
+
+      {/* Keyboard-accessible marker selection: Tab to a marker, arrow keys to move it. */}
+      {onPointMove && draggablePoints.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="readout text-[10px] text-text-faint">move:</span>
+          {draggablePoints.map((p) => (
+            <button
+              key={p.id}
+              type="button"
+              aria-pressed={p.id === activeId}
+              onFocus={() => setActiveId(p.id)}
+              onClick={() => setActiveId(p.id)}
+              onKeyDown={(e) => {
+                if (nudge(p.id, e.key)) e.preventDefault();
+              }}
+              className={[
+                'readout rounded-sm border px-2 py-0.5 text-[10px] transition-colors',
+                p.id === activeId
+                  ? 'border-signal-dim text-signal'
+                  : 'border-border text-text-muted hover:border-signal-dim',
+              ].join(' ')}
+              style={{ outlineColor: p.color }}
+            >
+              {p.label ?? p.id}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

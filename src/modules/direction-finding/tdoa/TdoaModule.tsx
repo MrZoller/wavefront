@@ -24,10 +24,12 @@ export function TdoaModule() {
   ]);
   const [emitter, setEmitter] = useState<Point>({ x: -6, y: 4 });
 
-  // Range differences relative to receiver 0 (|x−Rᵢ| − |x−R0|), then solve for the emitter.
+  // Range differences relative to receiver 0 (|x−Rᵢ| − |x−R0|), then solve INDEPENDENTLY — seed
+  // from the receiver centroid, not the true emitter, so the fix is what the measurements alone
+  // recover (and can diverge for poor geometry) rather than an echo of ground truth.
   const ref = receivers[0];
   const measured = receivers.slice(1).map((r) => distance(emitter, r) - distance(emitter, ref));
-  const { fix, converged } = tdoaSolve(receivers, measured, emitter);
+  const { fix, converged } = tdoaSolve(receivers, measured);
 
   const points: MapPoint[] = [
     ...receivers.map((r, i) => ({

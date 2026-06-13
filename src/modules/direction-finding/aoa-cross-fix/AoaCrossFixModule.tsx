@@ -76,7 +76,9 @@ export function AoaCrossFixModule() {
     if (fix && ellipse) {
       const c = t.toPx(fix.x, fix.y);
       ctx.strokeStyle = colors.signal;
-      ctx.fillStyle = 'color-mix(in srgb, var(--color-signal) 14%, transparent)';
+      // Canvas fillStyle can't resolve CSS var()/custom properties — use a concrete rgba
+      // (signal green #3ef0a0 at 14% — see src/design/tokens.ts).
+      ctx.fillStyle = 'rgba(62, 240, 160, 0.14)';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       // y-axis is flipped on screen, so negate the world rotation angle.
