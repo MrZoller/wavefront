@@ -22,11 +22,15 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 
 ## Layer 1 — Angle of Arrival (AoA)
 
-| Module                      | Intuition                                                                           | Status             |
-| --------------------------- | ----------------------------------------------------------------------------------- | ------------------ |
-| Two-element interferometer  | Path-length difference → phase difference → bearing (and ambiguity when `d > λ/2`). | planned            |
-| Beamforming / array pattern | Steer a uniform linear array and watch the gain pattern sweep.                      | planned            |
-| MUSIC super-resolution      | The noise subspace resolves two emitters beamforming smears together.               | planned (advanced) |
+| Module                          | Intuition                                                                           | Status             |
+| ------------------------------- | ----------------------------------------------------------------------------------- | ------------------ |
+| **Two-element interferometer**  | Path-length difference → phase difference → bearing (and ambiguity when `d > λ/2`). | ✅ shipping        |
+| **Beamforming / array pattern** | Steer a uniform linear array and watch the gain pattern sweep.                      | ✅ shipping        |
+| MUSIC super-resolution          | The noise subspace resolves two emitters beamforming smears together.               | planned (advanced) |
+
+![Two-element interferometer module](../images/interferometer.png)
+
+![Beamforming / array pattern module](../images/beamforming.png)
 
 ## Layer 2 — Geolocation (marquee scenes)
 

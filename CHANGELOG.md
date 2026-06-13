@@ -8,6 +8,15 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Track A, Layer 1 — Angle of Arrival.** Two new modules:
+  - **Two-Element Interferometer** — drag the emitter and watch the phase difference invert into
+    lines of bearing; baselines past λ/2 light up the ambiguous candidate rays.
+  - **Beamforming / Array Pattern** — steer an N-element ULA and watch the delay-and-sum gain
+    pattern (mainlobe + sidelobes) sweep, with grating lobes appearing for d > λ/2.
+- **New `dsp/` primitives (12 tests):** ULA `steeringVector`, `delayAndSumPower`, `arrayResponse`
+  / `beamPattern` / `toDb`, and `candidateBearings` for phase-ambiguity resolution.
+- **New shared viz:** `PolarPlot` (half-polar array/gain pattern with markers).
+- `docs/dsp/steering-and-beamforming.md` (equations + linked tests).
 - **Track A, Layer 0 complete.** Two new modules round out the Direction Finding primitives:
   - **Phase Difference** — live two-sensor geometry showing the extra path `d·sin(θ)`, the two
     phase-shifted sensor waveforms, `Δr`/`Δφ` readouts, and a `d ≤ λ/2` ambiguity badge.
