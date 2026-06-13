@@ -35,16 +35,21 @@ export function Sidebar() {
               <h2 className="text-xs font-semibold uppercase tracking-wider text-text-muted">
                 {track.title}
               </h2>
-              {track.status === 'planned' && (
-                <span className="rounded-sm border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-text-faint">
-                  Planned
+              {track.status !== 'shipping' && (
+                <span
+                  className={[
+                    'rounded-sm border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-wide',
+                    track.status === 'building' ? 'text-cyan' : 'text-text-faint',
+                  ].join(' ')}
+                >
+                  {track.status === 'building' ? 'Building' : 'Planned'}
                 </span>
               )}
             </div>
 
             {modules.length === 0 ? (
               <p className="px-1 text-xs text-text-faint">
-                {track.status === 'shipping' ? 'Modules in progress…' : 'Coming later.'}
+                {track.status === 'planned' ? 'Coming later.' : 'Modules in progress…'}
               </p>
             ) : (
               <ul className="flex flex-col gap-0.5">

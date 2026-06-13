@@ -17,7 +17,7 @@ export const TRACKS: TrackDef[] = [
     id: 'playing-a-radio-signal',
     title: 'Playing a Radio Signal',
     description: 'What actually happens when you send data over the air, end to end?',
-    status: 'shipping',
+    status: 'building',
   },
   {
     id: 'modulations-and-waveforms',

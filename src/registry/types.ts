@@ -44,6 +44,6 @@ export interface TrackDef {
   title: string;
   /** The non-EE-facing framing: the question this track answers. */
   description: string;
-  /** Build/ship status so the shell can flag what's live vs. planned. */
-  status: 'shipping' | 'planned';
+  /** Build/ship status so the shell can flag what's live vs. in progress vs. planned. */
+  status: 'shipping' | 'building' | 'planned';
 }
