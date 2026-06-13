@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 
 /**
  * Plays a continuous sine tone via the Web Audio API (brief §3.2 — "let the user hear it").
@@ -76,5 +76,7 @@ export function useToneAudio() {
     };
   }, []);
 
-  return { start, stop, setFrequency };
+  // Stable identity so consumers can safely list the controls in effect deps without the
+  // object changing on every render (e.g. an animation loop re-rendering at frame rate).
+  return useMemo(() => ({ start, stop, setFrequency }), [start, stop, setFrequency]);
 }

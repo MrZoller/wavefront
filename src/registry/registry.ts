@@ -8,10 +8,20 @@ import type { ModuleDef, TrackId } from './types';
  */
 const MODULES: ModuleDef[] = [];
 
-/** Register a module. Throws on duplicate ids so collisions surface immediately. */
+/**
+ * Register a module. Repeated registration of the same id (e.g. Vite HMR re-evaluating a
+ * module entry during `npm run dev`) replaces the existing definition so editing a lesson
+ * never crashes the dev session. In production builds a duplicate id is a real collision and
+ * throws so it surfaces immediately.
+ */
 export function registerModule(def: ModuleDef): void {
-  if (MODULES.some((m) => m.id === def.id)) {
-    throw new Error(`Duplicate module id: "${def.id}"`);
+  const existing = MODULES.findIndex((m) => m.id === def.id);
+  if (existing !== -1) {
+    if (import.meta.env.PROD) {
+      throw new Error(`Duplicate module id: "${def.id}"`);
+    }
+    MODULES[existing] = def;
+    return;
   }
   MODULES.push(def);
 }
