@@ -34,12 +34,18 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 
 ## Layer 2 — Geolocation (marquee scenes)
 
-| Module               | Intuition                                                                     | Status            |
-| -------------------- | ----------------------------------------------------------------------------- | ----------------- |
-| AoA cross-fixing     | Two lines of bearing intersect to a fix; error regions elongate with range.   | planned           |
-| TDOA multilateration | Each receiver pair defines a hyperbola of constant range difference.          | planned           |
-| GDOP heatmap         | Geometry turns measurement error into position error — see it across the map. | planned (ship v1) |
-| FDOA                 | Doppler-difference isodoppler curves from a moving platform.                  | planned (stub)    |
+| Module                   | Intuition                                                                     | Status         |
+| ------------------------ | ----------------------------------------------------------------------------- | -------------- |
+| **AoA cross-fixing**     | Two lines of bearing intersect to a fix; error regions elongate with range.   | ✅ shipping    |
+| **TDOA multilateration** | Each receiver pair defines a hyperbola of constant range difference.          | ✅ shipping    |
+| **GDOP heatmap**         | Geometry turns measurement error into position error — see it across the map. | ✅ shipping v1 |
+| FDOA                     | Doppler-difference isodoppler curves from a moving platform.                  | planned (stub) |
+
+![AoA cross-fixing module](../images/aoa-cross-fix.png)
+
+![TDOA multilateration module](../images/tdoa.png)
+
+![GDOP heatmap module](../images/gdop-heatmap.png)
 
 > These scenes assume a straight line-of-bearing to the emitter (true at VHF and up). The
 > HF-skywave wrinkle is the cross-link from Track E (§8).

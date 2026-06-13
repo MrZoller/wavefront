@@ -8,6 +8,19 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚢 Track A v1 — Layer 2 Geolocation (the marquee).** Direction Finding & Geolocation is now
+  feature-complete for v1:
+  - **AoA Cross-Fixing** — lines of bearing cross to a fix, with a 2σ error region that elongates
+    with range and shallow geometry (adjustable σθ).
+  - **TDOA Multilateration** — receiver-pair hyperbolas of constant range difference, with a
+    Gauss–Newton fix tracking the emitter.
+  - **GDOP Heatmap** — the whole map colored by geometric dilution of precision; spread the
+    receivers for a green basin, cluster/collinear to watch it go red.
+- **New `dsp/` primitives (12 tests):** `aoaFix` + error ellipse, `rangeDifference` /
+  `hyperbolaPoints` / `tdoaSolve`, and `gdop`, plus 2×2 linear-algebra helpers.
+- **New shared viz:** `WorldMap` — a 2D map canvas with a scalar-field heatmap and draggable,
+  keyboard-operable site/emitter markers.
+- `docs/dsp/geolocation.md` (equations + linked tests).
 - **Track A, Layer 1 — Angle of Arrival.** Two new modules:
   - **Two-Element Interferometer** — drag the emitter and watch the phase difference invert into
     lines of bearing; baselines past λ/2 light up the ambiguous candidate rays.

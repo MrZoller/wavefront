@@ -11,7 +11,7 @@ Geolocation** — the most visual corner of DSP — built on a small foundation 
 > sweep a slider — and watch _everything_ recompute and animate in real time. That live
 > feedback loop is the soul of the tool.
 
-![The Rotating Phasor / IQ module — a tone shown three ways at once](./docs/images/rotating-phasor.png)
+![GDOP heatmap — drag the receivers and watch the precision field repaint](./docs/images/gdop-heatmap.png)
 
 ## What it is / who it's for
 
@@ -25,9 +25,14 @@ Everything is explained in software-developer analogies:
 
 ## Gallery
 
-_Marquee scenes are captured automatically as the UI grows (`npm run screenshots` → `docs/images/`)._
-The first slice — the **rotating phasor / IQ** module (above) — is the milestone that proves the
-whole stack (rendering, audio, state, registry, design system, tests, screenshots).
+_Marquee scenes are captured automatically (`npm run screenshots` → `docs/images/`)._ **v1 ships
+the full Direction Finding track** — from the rotating phasor up to the live GDOP map.
+
+|                                                                 |                                                           |
+| --------------------------------------------------------------- | --------------------------------------------------------- |
+| ![Rotating phasor](./docs/images/rotating-phasor.png)           | ![Cross-correlation](./docs/images/cross-correlation.png) |
+| ![Two-element interferometer](./docs/images/interferometer.png) | ![Beamforming](./docs/images/beamforming.png)             |
+| ![AoA cross-fixing](./docs/images/aoa-cross-fix.png)            | ![TDOA multilateration](./docs/images/tdoa.png)           |
 
 ![Track overview — the curriculum map](./docs/images/overview.png)
 
