@@ -157,6 +157,24 @@ describe('TDOA multilateration', () => {
     expect(fix.x).toBeCloseTo(10, 3);
     expect(fix.y).toBeCloseTo(-20, 3);
   });
+
+  it('recovers an emitter dragged close to a receiver (receiver-adjacent seeds)', () => {
+    // The default scene's receivers; emitter dragged next to Rx2. The tight basin around the
+    // receiver is missed by the centroid/grid seeds alone.
+    const receivers: Point[] = [
+      { x: -32, y: -18 },
+      { x: 30, y: -22 },
+      { x: 8, y: 30 },
+      { x: -22, y: 26 },
+    ];
+    const truth: Point = { x: 33, y: -24 };
+    const ref = receivers[0];
+    const rangeDiffs = receivers.slice(1).map((r) => distance(truth, r) - distance(truth, ref));
+    const { fix, converged } = tdoaSolve(receivers, rangeDiffs);
+    expect(converged).toBe(true);
+    expect(fix.x).toBeCloseTo(33, 3);
+    expect(fix.y).toBeCloseTo(-24, 3);
+  });
 });
 
 describe('GDOP (TDOA-differenced)', () => {

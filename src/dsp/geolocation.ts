@@ -222,9 +222,9 @@ function tdoaGaussNewton(
   return x;
 }
 
-/** A coarse grid of seeds over the receivers' bounding box, expanded so an emitter outside the
- *  receiver hull is still bracketed. Gives Gauss–Newton multiple starting basins. */
-function gridSeeds(receivers: Point[], n = 4): Point[] {
+/** A grid of seeds over the receivers' bounding box, expanded so an emitter outside the receiver
+ *  hull is still bracketed. Gives Gauss–Newton multiple starting basins. */
+function gridSeeds(receivers: Point[], n = 6): Point[] {
   let minX = Infinity,
     maxX = -Infinity,
     minY = Infinity,
@@ -259,11 +259,12 @@ function gridSeeds(receivers: Point[], n = 4): Point[] {
  *
  * Gauss–Newton is run from several seeds and the lowest-residual result is kept — TDOA can have
  * multiple local minima / a second hyperbola intersection, so a single seed is not enough. Without a
- * caller-supplied `guess` the seeds span a grid over the receivers' (expanded) bounding box in
- * addition to the centroid, so the search reaches an emitter outside the receiver hull instead of
- * stalling at a local minimum near the centroid. `converged` requires the final residual to actually
- * be near zero, not merely a small step, so the caller never displays a confident fix that doesn't
- * sit on the hyperbola intersection.
+ * caller-supplied `guess` the seeds span the centroid, a point just inside each receiver (the emitter
+ * is often dragged near a receiver, whose own tight basin a coarse grid can miss — and seeding *on* a
+ * receiver makes the Jacobian degenerate), and a grid over the receivers' expanded bounding box (so
+ * an emitter outside the receiver hull is still reached). `converged` requires the final residual to
+ * actually be near zero, not merely a small step, so the caller never displays a confident fix that
+ * doesn't sit on the hyperbola intersection.
  */
 export function tdoaSolve(
   receivers: Point[],
@@ -275,7 +276,15 @@ export function tdoaSolve(
     x: receivers.reduce((s, r) => s + r.x, 0) / receivers.length,
     y: receivers.reduce((s, r) => s + r.y, 0) / receivers.length,
   };
-  const seeds: Point[] = guess ? [guess] : [centroid, ...gridSeeds(receivers)];
+  // Receiver-adjacent seeds nudged 15% toward the centroid: close to each receiver's basin without
+  // sitting on the singular point.
+  const nearReceivers = receivers.map((r) => ({
+    x: r.x + (centroid.x - r.x) * 0.15,
+    y: r.y + (centroid.y - r.y) * 0.15,
+  }));
+  const seeds: Point[] = guess
+    ? [guess]
+    : [centroid, ...nearReceivers, ...gridSeeds(receivers)];
 
   let best = seeds[0];
   let bestRes = Infinity;
