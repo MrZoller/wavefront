@@ -6,6 +6,8 @@ back up to a live GDOP map.
 
 Built as a layered curriculum — each layer is a prerequisite for the next.
 
+![The Rotating Phasor / IQ module](../images/rotating-phasor.png)
+
 ## Layer 0 — Primitives
 
 | Module                            | Intuition                                                                   | Status      |

@@ -11,7 +11,7 @@ Geolocation** — the most visual corner of DSP — built on a small foundation 
 > sweep a slider — and watch _everything_ recompute and animate in real time. That live
 > feedback loop is the soul of the tool.
 
-<!-- Hero image lands here once the phasor slice is captured (npm run screenshots). -->
+![The Rotating Phasor / IQ module — a tone shown three ways at once](./docs/images/rotating-phasor.png)
 
 ## What it is / who it's for
 
@@ -26,8 +26,10 @@ Everything is explained in software-developer analogies:
 ## Gallery
 
 _Marquee scenes are captured automatically as the UI grows (`npm run screenshots` → `docs/images/`)._
-The first slice — the **rotating phasor / IQ** module — is the milestone that proves the whole
-stack (rendering, audio, state, registry, design system, tests, screenshots).
+The first slice — the **rotating phasor / IQ** module (above) — is the milestone that proves the
+whole stack (rendering, audio, state, registry, design system, tests, screenshots).
+
+![Track overview — the curriculum map](./docs/images/overview.png)
 
 ## Quickstart
 

@@ -16,3 +16,12 @@ All notable changes to this project are documented here. The format is based on
   navigation composed from the registry.
 - Shared viz library: DPR-aware `useCanvas` hook and a generic `TimeSeriesPlot`.
 - Documentation set: `ARCHITECTURE.md`, `docs/README.md`, and the Direction Finding track page.
+- **From-scratch DSP core (first primitives):** complex/IQ types and ops, Euler phasor
+  (`expj`), and complex-tone generation — with 21 numerical-correctness tests.
+- **First module — The Rotating Phasor / IQ** (Track A, Layer 0): a tone shown three ways at
+  once (rotating vector on the complex plane, scrolling I/Q waveforms, audible Web Audio tone)
+  with a live frequency slider. New shared viz: `PhasorPlot`, `useAnimationFrame`, plus the
+  `useToneAudio` hook.
+- **Automated screenshot pipeline** (`npm run screenshots`, Playwright) capturing the overview
+  and phasor scenes into `docs/images/`, embedded in the README.
+- `docs/dsp/complex-and-phasors.md` — the math-honest "go deeper" page linking its tests.
