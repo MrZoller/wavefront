@@ -98,3 +98,17 @@ test('noisy channel module', async ({ page }) => {
   await expect(page.getByRole('img', { name: /received symbols spread by noise/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'noisy-channel.png') });
 });
+
+test('pulse shaping module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Pulse Shaping' }).first().click();
+  await expect(page.getByRole('img', { name: /pulse-shaped waveform/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'pulse-shaping.png') });
+});
+
+test('matched filter module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Matched Filter' }).first().click();
+  await expect(page.getByRole('img', { name: /eye diagram of the matched-filter/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'matched-filter.png') });
+});

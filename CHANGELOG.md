@@ -14,11 +14,16 @@ All notable changes to this project are documented here. The format is based on
     constellation; toggle bits and switch schemes to watch the same bits land differently.
   - **The Noisy Channel** — add complex AWGN at a chosen Eb/N0, slice each received point to the
     nearest constellation point, and watch the live bit error rate climb as the clouds collide.
-- **New `dsp/` primitives (14 tests):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
+  - **Pulse Shaping** — each symbol launches a raised-cosine pulse; the summed waveform passes
+    exactly through the symbol values (ISI-free), and β trades bandwidth for ringing.
+  - **Matched Filter** — root-raised-cosine shaping + matched receiver, shown as a BPSK eye diagram
+    that opens and closes with Eb/N0, with live BER.
+- **New `dsp/` primitives (21 tests):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
   (`BPSK` / `QPSK` / `QAM16`), `bitsToSymbols` / `symbolsToBits` / `nearestSymbol`, `awgn` +
-  `noiseSigma` (Eb/N0 → σ), and `bitErrorRate`.
+  `noiseSigma` (Eb/N0 → σ), and `bitErrorRate`; `dsp/pulse.ts` — `raisedCosine` / `rootRaisedCosine`
+  pulses, `upsample`, and FIR `convolve`.
 - **New shared viz:** `ConstellationPlot` — an I/Q lattice + received-symbol scatter cloud.
-- `docs/dsp/comms.md` and `docs/tracks/playing-a-radio-signal.md`.
+- `docs/dsp/comms.md`, `docs/dsp/pulse.md`, and `docs/tracks/playing-a-radio-signal.md`.
 
 - **FDOA (Doppler Difference)** — completes Track A, Layer 2. Two moving platforms sweep past a
   stationary emitter; the difference of their Doppler shifts is a measurable observable whose

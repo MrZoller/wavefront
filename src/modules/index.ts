@@ -25,5 +25,7 @@ import './direction-finding/fdoa';
 // Track B — Playing a Radio Signal
 // Layer 0 — The transmit chain
 import './playing-a-radio-signal/symbol-mapping';
+import './playing-a-radio-signal/pulse-shaping';
 // Layer 1 — The channel & receiver
 import './playing-a-radio-signal/noisy-channel';
+import './playing-a-radio-signal/matched-filter';

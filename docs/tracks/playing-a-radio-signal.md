@@ -11,19 +11,23 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 | Module             | Intuition                                                                        | Status      |
 | ------------------ | -------------------------------------------------------------------------------- | ----------- |
 | **Symbol Mapping** | Bits ride on I/Q symbols: group the bits, look them up in the constellation.     | ✅ shipping |
-| Pulse Shaping      | Turn discrete symbols into a band-limited waveform; the raised cosine kills ISI. | planned     |
+| **Pulse Shaping**  | Turn discrete symbols into a band-limited waveform; the raised cosine kills ISI. | ✅ shipping |
 | Up/Downconversion  | Mix baseband onto a carrier and back — the spectrum slides, the bits don't.      | planned     |
 
 ![Symbol Mapping module](../images/symbol-mapping.png)
+
+![Pulse Shaping module](../images/pulse-shaping.png)
 
 ## Layer 1 — The channel & receiver
 
 | Module                | Intuition                                                                          | Status      |
 | --------------------- | ---------------------------------------------------------------------------------- | ----------- |
 | **The Noisy Channel** | AWGN smears each symbol into a cloud; slice to the nearest point, count the flips. | ✅ shipping |
-| Matched Filter        | Correlate against the pulse to pull symbols out of noise (max SNR sampling).       | planned     |
+| **Matched Filter**    | Correlate against the pulse to pull symbols out of noise (max SNR sampling).       | ✅ shipping |
 
 ![The Noisy Channel module](../images/noisy-channel.png)
+
+![Matched Filter module](../images/matched-filter.png)
 
 ## Layer 2 — End to end
 
