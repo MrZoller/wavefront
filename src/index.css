@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens as CSS custom properties — mirror of src/design/tokens.ts.
+ * Tailwind v4 reads the @theme block to generate utility classes (bg-bg, text-signal, etc.).
+ */
+@theme {
+  --color-bg: #070b0e;
+  --color-surface: #0d1418;
+  --color-surface-raised: #121b21;
+  --color-border: #1e2c33;
+
+  --color-text: #e6f0ee;
+  --color-text-muted: #8aa1a0;
+  --color-text-faint: #54686a;
+
+  --color-signal: #3ef0a0;
+  --color-signal-dim: #1f7a55;
+  --color-cyan: #42d4f4;
+  --color-cyan-dim: #1f6a86;
+
+  --color-alert: #ff6b5e;
+  --color-alert-dim: #7a2f2a;
+
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', ui-monospace, monospace;
+
+  --ease-instrument: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Numeric readouts (frequencies, bearings, coordinates) use the mono face. */
+.readout {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* Subtle phosphor glow for active traces / accents. */
+.glow-signal {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-signal) 60%, transparent));
+}
