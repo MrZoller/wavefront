@@ -329,3 +329,44 @@ export function gdop(candidate: Point, receivers: Point[]): number {
   const trace = inv[0] + inv[3];
   return trace > 0 ? Math.sqrt(trace) : Infinity;
 }
+
+// ── FDOA (Doppler difference) ─────────────────────────────────────────────────
+
+/** A receiver in motion: a site at `x,y` with velocity `(vx, vy)` (same length units / second). */
+export interface MovingReceiver extends Point {
+  vx: number;
+  vy: number;
+}
+
+/**
+ * Radial rate of a moving receiver relative to an emitter: the component of the receiver's velocity
+ * along the line of sight, `v · û` with `û` pointing from the receiver toward the emitter. Positive
+ * when the receiver closes on the emitter (a Doppler up-shift), negative when it opens away, zero
+ * when it moves purely across the line of sight.
+ */
+export function radialRate(rx: MovingReceiver, emitter: Point): number {
+  const u = unit(rx, emitter);
+  return rx.vx * u.x + rx.vy * u.y;
+}
+
+/**
+ * Frequency Difference of Arrival (FDOA, brief §4, Layer 2) between a moving receiver `rx` and a
+ * moving reference `ref`, in hertz. A receiver moving through the field sees the emitter's carrier
+ * Doppler-shifted by `(f0/c)·(v·û)`; the *difference* of the two shifts is what two platforms can
+ * measure without knowing the emitter's true frequency:
+ *
+ *   `Δf = (f0 / c) · (v_rx·û_rx − v_ref·û_ref)`.
+ *
+ * The locus of emitter positions giving a fixed `Δf` is an *isodoppler* curve; a second pair (or a
+ * TDOA line) crosses it to a fix. `f0` is the carrier (Hz) and `c` the propagation speed in the same
+ * length units as the velocities (e.g. km and km/s).
+ */
+export function fdoa(
+  emitter: Point,
+  rx: MovingReceiver,
+  ref: MovingReceiver,
+  f0: number,
+  c: number
+): number {
+  return (f0 / c) * (radialRate(rx, emitter) - radialRate(ref, emitter));
+}

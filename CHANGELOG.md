@@ -8,6 +8,13 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **FDOA (Doppler Difference)** — completes Track A, Layer 2. Two moving platforms sweep past a
+  stationary emitter; the difference of their Doppler shifts is a measurable observable whose
+  constant-value locus is an _isodoppler_ curve, drawn through the emitter over a diverging
+  Doppler-difference heatmap. Drag the receivers, their velocity arrows, the emitter, or the carrier
+  `f₀`.
+- **New `dsp/` primitives (6 tests):** `radialRate` / `fdoa` (Doppler-difference geolocation) and a
+  field-agnostic `isoContour` (marching-squares level-set extractor) in `dsp/contour.ts`.
 - **🚢 Track A v1 — Layer 2 Geolocation (the marquee).** Direction Finding & Geolocation is now
   feature-complete for v1:
   - **AoA Cross-Fixing** — lines of bearing cross to a fix, with a 2σ error region that elongates

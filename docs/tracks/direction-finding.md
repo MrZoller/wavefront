@@ -39,7 +39,7 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 | **AoA cross-fixing**     | Two lines of bearing intersect to a fix; error regions elongate with range.   | ✅ shipping    |
 | **TDOA multilateration** | Each receiver pair defines a hyperbola of constant range difference.          | ✅ shipping    |
 | **GDOP heatmap**         | Geometry turns measurement error into position error — see it across the map. | ✅ shipping v1 |
-| FDOA                     | Doppler-difference isodoppler curves from a moving platform.                  | planned (stub) |
+| **FDOA**                 | Doppler-difference isodoppler curves from a moving platform.                  | ✅ shipping    |
 
 ![AoA cross-fixing module](../images/aoa-cross-fix.png)
 
