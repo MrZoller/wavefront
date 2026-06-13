@@ -8,6 +8,18 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚧 Track B — Playing a Radio Signal (started).** A new track following one message down the
+  transmit/receive chain:
+  - **Symbol Mapping** — group bits into Gray-coded I/Q symbols on a BPSK / QPSK / 16-QAM
+    constellation; toggle bits and switch schemes to watch the same bits land differently.
+  - **The Noisy Channel** — add complex AWGN at a chosen Eb/N0, slice each received point to the
+    nearest constellation point, and watch the live bit error rate climb as the clouds collide.
+- **New `dsp/` primitives (14 tests):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
+  (`BPSK` / `QPSK` / `QAM16`), `bitsToSymbols` / `symbolsToBits` / `nearestSymbol`, `awgn` +
+  `noiseSigma` (Eb/N0 → σ), and `bitErrorRate`.
+- **New shared viz:** `ConstellationPlot` — an I/Q lattice + received-symbol scatter cloud.
+- `docs/dsp/comms.md` and `docs/tracks/playing-a-radio-signal.md`.
+
 - **FDOA (Doppler Difference)** — completes Track A, Layer 2. Two moving platforms sweep past a
   stationary emitter; the difference of their Doppler shifts is a measurable observable whose
   constant-value locus is an _isodoppler_ curve, drawn through the emitter over a diverging

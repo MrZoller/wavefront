@@ -21,3 +21,9 @@ import './direction-finding/aoa-cross-fix';
 import './direction-finding/tdoa';
 import './direction-finding/gdop';
 import './direction-finding/fdoa';
+
+// Track B — Playing a Radio Signal
+// Layer 0 — The transmit chain
+import './playing-a-radio-signal/symbol-mapping';
+// Layer 1 — The channel & receiver
+import './playing-a-radio-signal/noisy-channel';

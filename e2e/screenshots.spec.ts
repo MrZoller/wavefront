@@ -82,3 +82,19 @@ test('FDOA module', async ({ page }) => {
   await expect(page.getByRole('application', { name: /Doppler-difference field/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'fdoa.png') });
 });
+
+test('symbol mapping module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Symbol Mapping' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /constellation with the mapped symbols/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'symbol-mapping.png') });
+});
+
+test('noisy channel module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'The Noisy Channel' }).first().click();
+  await expect(page.getByRole('img', { name: /received symbols spread by noise/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'noisy-channel.png') });
+});
