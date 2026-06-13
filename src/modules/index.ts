@@ -20,3 +20,4 @@ import './direction-finding/beamforming';
 import './direction-finding/aoa-cross-fix';
 import './direction-finding/tdoa';
 import './direction-finding/gdop';
+import './direction-finding/fdoa';

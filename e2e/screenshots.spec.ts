@@ -75,3 +75,10 @@ test('GDOP heatmap module', async ({ page }) => {
   await expect(page.getByRole('application', { name: /GDOP heatmap/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'gdop-heatmap.png') });
 });
+
+test('FDOA module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'FDOA (Doppler Difference)' }).first().click();
+  await expect(page.getByRole('application', { name: /Doppler-difference field/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'fdoa.png') });
+});

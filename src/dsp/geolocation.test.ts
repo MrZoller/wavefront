@@ -8,7 +8,10 @@ import {
   hyperbolaPoints,
   tdoaSolve,
   gdop,
+  radialRate,
+  fdoa,
   type Point,
+  type MovingReceiver,
 } from './geolocation';
 
 const deg = (d: number) => (d * Math.PI) / 180;
@@ -230,5 +233,35 @@ describe('GDOP (TDOA-differenced)', () => {
       { x: -3, y: 0 },
     ];
     expect(gdop(candidate, collinear)).toBe(Infinity);
+  });
+});
+
+describe('FDOA (Doppler difference)', () => {
+  it('radialRate is +|v| closing, −|v| opening, 0 across the line of sight', () => {
+    const emitter = { x: 0, y: 0 };
+    // Receiver to the left moving right (+x) closes on the emitter.
+    expect(radialRate({ x: -10, y: 0, vx: 3, vy: 0 }, emitter)).toBeCloseTo(3, 9);
+    // Same receiver moving left opens away.
+    expect(radialRate({ x: -10, y: 0, vx: -3, vy: 0 }, emitter)).toBeCloseTo(-3, 9);
+    // Moving purely across the line of sight → no radial component.
+    expect(radialRate({ x: -10, y: 0, vx: 0, vy: 4 }, emitter)).toBeCloseTo(0, 9);
+  });
+
+  it('fdoa scales the Doppler-rate difference by f0/c', () => {
+    const emitter = { x: 0, y: 0 };
+    const rx: MovingReceiver = { x: -10, y: 0, vx: 3, vy: 0 }; // closing at 3
+    const ref: MovingReceiver = { x: 10, y: 0, vx: 3, vy: 0 }; // opening at −3
+    // rate difference = 3 − (−3) = 6; ×(f0/c).
+    expect(fdoa(emitter, rx, ref, 300, 1000)).toBeCloseTo((300 / 1000) * 6, 9);
+  });
+
+  it('is zero on the perpendicular bisector for mirror-image platforms', () => {
+    // Receivers mirrored across x=0 with mirrored velocities: any emitter on the y-axis is
+    // symmetric, so both see the same Doppler and the difference vanishes.
+    const rx: MovingReceiver = { x: -20, y: 0, vx: 5, vy: 2 };
+    const ref: MovingReceiver = { x: 20, y: 0, vx: -5, vy: 2 };
+    expect(fdoa({ x: 0, y: 30 }, rx, ref, 1e8, 3e5)).toBeCloseTo(0, 6);
+    // Off the axis it is non-zero.
+    expect(Math.abs(fdoa({ x: 15, y: 30 }, rx, ref, 1e8, 3e5))).toBeGreaterThan(1);
   });
 });
