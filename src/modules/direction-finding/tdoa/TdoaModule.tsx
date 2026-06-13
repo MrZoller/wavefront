@@ -21,6 +21,7 @@ export function TdoaModule() {
     { x: -32, y: -18 },
     { x: 30, y: -22 },
     { x: 8, y: 30 },
+    { x: -22, y: 26 },
   ]);
   const [emitter, setEmitter] = useState<Point>({ x: -6, y: 4 });
 
