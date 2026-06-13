@@ -8,6 +8,9 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
+# Async mode: let the session start immediately while provisioning runs in the background.
+echo '{"async": true, "asyncTimeout": 300000}'
+
 cd "$CLAUDE_PROJECT_DIR"
 
 # Install JS dependencies (idempotent; npm install benefits from the cached container state).
