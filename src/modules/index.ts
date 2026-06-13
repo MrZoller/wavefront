@@ -13,3 +13,6 @@
 import './direction-finding/rotating-phasor';
 import './direction-finding/phase-difference';
 import './direction-finding/cross-correlation';
+// Layer 1 — Angle of Arrival
+import './direction-finding/interferometer';
+import './direction-finding/beamforming';

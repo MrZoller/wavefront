@@ -36,3 +36,17 @@ test('cross-correlation module', async ({ page }) => {
   await expect(page.getByRole('img', { name: /cross-correlation versus lag/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'cross-correlation.png') });
 });
+
+test('interferometer module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Two-Element Interferometer' }).first().click();
+  await expect(page.getByRole('img', { name: /draggable emitter/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'interferometer.png') });
+});
+
+test('beamforming module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Beamforming / Array Pattern' }).first().click();
+  await expect(page.getByRole('img', { name: /polar array gain pattern/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'beamforming.png') });
+});

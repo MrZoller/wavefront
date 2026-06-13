@@ -53,3 +53,22 @@ export function bearingFromPhase(deltaPhi: number, d: number, wavelength: number
   if (sinTheta < -1 || sinTheta > 1) return NaN;
   return Math.asin(sinTheta);
 }
+
+/**
+ * All bearings consistent with a measured (wrapped) phase difference.
+ *
+ * A measurement only pins down `Δφ` modulo 2π, so the true phase could be `Δφ + 2πk` for any
+ * integer `k`. Each branch that yields `|sin θ| ≤ 1` is a candidate bearing:
+ *   `θ_k = asin( (Δφ + 2πk) · λ / (2π · d) )`.
+ * When `d ≤ λ/2` only `k = 0` survives (unambiguous); larger baselines admit several, which is
+ * exactly the phase ambiguity. Returns the candidate bearings (radians), ascending.
+ */
+export function candidateBearings(wrappedPhi: number, d: number, wavelength: number): number[] {
+  const out: number[] = [];
+  const kMax = Math.ceil((2 * Math.PI * d) / wavelength) + 1;
+  for (let k = -kMax; k <= kMax; k++) {
+    const sinTheta = ((wrappedPhi + 2 * Math.PI * k) * wavelength) / (2 * Math.PI * d);
+    if (sinTheta >= -1 && sinTheta <= 1) out.push(Math.asin(sinTheta));
+  }
+  return out.sort((a, b) => a - b);
+}
