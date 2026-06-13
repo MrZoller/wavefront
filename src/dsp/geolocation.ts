@@ -282,9 +282,7 @@ export function tdoaSolve(
     x: r.x + (centroid.x - r.x) * 0.15,
     y: r.y + (centroid.y - r.y) * 0.15,
   }));
-  const seeds: Point[] = guess
-    ? [guess]
-    : [centroid, ...nearReceivers, ...gridSeeds(receivers)];
+  const seeds: Point[] = guess ? [guess] : [centroid, ...nearReceivers, ...gridSeeds(receivers)];
 
   let best = seeds[0];
   let bestRes = Infinity;
