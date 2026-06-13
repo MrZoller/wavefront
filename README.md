@@ -68,8 +68,8 @@ and step-by-step recipes.
 
 - **React + TypeScript + Vite**, **Tailwind** (v4) for layout, design tokens for the
   "lab-instrument" aesthetic.
-- **Canvas 2D / SVG** for crisp plots; **react-three-fiber / Three.js** reserved for dense 3D
-  field moments (e.g. the GDOP heatmap).
+- **Canvas 2D** for the plots, world map, and the GDOP heatmap (a coarse sampled field — fast
+  enough without WebGL); **react-three-fiber / Three.js** held in reserve for genuinely 3D moments.
 - **Web Audio API** for the audible-signal moments.
 - **Zustand** for lightweight state.
 
