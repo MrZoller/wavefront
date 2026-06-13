@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
-import { phaseDifference, wrapPhase, candidateBearings, isUnambiguous } from '@/dsp/phase';
+import { phaseDifference, wrapPhase, candidateBearings } from '@/dsp/phase';
 
 const toDeg = (r: number) => (r * 180) / Math.PI;
 
@@ -32,7 +32,9 @@ export function InterferometerModule() {
   const deltaPhi = phaseDifference(dLambda, trueTheta, 1);
   const wrapped = wrapPhase(deltaPhi);
   const candidates = candidateBearings(wrapped, dLambda, 1);
-  const unambiguous = isUnambiguous(dLambda, 1);
+  // The lesson should match what's drawn: a measurement is ambiguous only when this particular
+  // phase yields more than one candidate ray (not merely whenever d > λ/2).
+  const unambiguous = candidates.length === 1;
 
   const canvasRef = useCanvas(
     (ctx, w, h) => {

@@ -7,6 +7,7 @@ import {
   arrayResponse,
   beamPattern,
   toDb,
+  gratingLobeAngles,
 } from './array';
 
 const deg = (d: number) => (d * Math.PI) / 180;
@@ -79,6 +80,32 @@ describe('beamPattern sampling', () => {
     let peakIdx = 0;
     for (let i = 1; i < power.length; i++) if (power[i] > power[peakIdx]) peakIdx = i;
     expect((anglesRad[peakIdx] * 180) / Math.PI).toBeCloseTo(30, 0);
+  });
+});
+
+describe('gratingLobeAngles', () => {
+  it('finds none at half-wavelength spacing (no aliasing)', () => {
+    expect(gratingLobeAngles(0.5, deg(0), 1)).toHaveLength(0);
+    expect(gratingLobeAngles(0.5, deg(30), 1)).toHaveLength(0);
+  });
+
+  it('finds endfire grating lobes at d = λ steered to broadside', () => {
+    const lobes = gratingLobeAngles(1, deg(0), 1).map((r) => (r * 180) / Math.PI);
+    expect(lobes).toHaveLength(2);
+    expect(Math.abs(lobes[0])).toBeCloseTo(90, 6);
+    expect(Math.abs(lobes[1])).toBeCloseTo(90, 6);
+  });
+
+  it('reports none just above λ/2 when no lobe is visible yet (d=0.55λ, steer 20°)', () => {
+    expect(gratingLobeAngles(0.55, deg(20), 1)).toHaveLength(0);
+  });
+
+  it('every returned grating bearing reproduces the steer response at full power', () => {
+    const d = 1.2;
+    const steer = deg(10);
+    for (const g of gratingLobeAngles(d, steer, 1)) {
+      expect(arrayResponse(6, d, g, steer, 1)).toBeCloseTo(1, 8);
+    }
   });
 });
 

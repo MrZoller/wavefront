@@ -98,5 +98,26 @@ export function toDb(power: number, floorDb = -40): number {
   return Math.max(floorDb, 10 * Math.log10(power));
 }
 
+/**
+ * Bearings of any grating lobes actually visible in [−90°, 90°] when the array is steered to
+ * `steerTheta`. A grating lobe is a second full-height mainlobe from spatial aliasing: it occurs
+ * where `sin θ_g = sin θ_steer + m · λ/d` for a nonzero integer `m` and `|sin θ_g| ≤ 1`.
+ *
+ * Returns the (possibly empty) list of grating-lobe bearings in radians. Empty when `d ≤ λ/2`,
+ * but also — crucially — for many steering angles just above λ/2 where no grating lobe has yet
+ * swung into the visible field, so callers can report aliasing from what is genuinely shown.
+ */
+export function gratingLobeAngles(d: number, steerTheta: number, wavelength: number): number[] {
+  const s0 = Math.sin(steerTheta);
+  const mMax = Math.ceil((2 * d) / wavelength) + 1;
+  const out: number[] = [];
+  for (let m = -mMax; m <= mMax; m++) {
+    if (m === 0) continue;
+    const s = s0 + (m * wavelength) / d;
+    if (s >= -1 && s <= 1) out.push(Math.asin(s));
+  }
+  return out.sort((a, b) => a - b);
+}
+
 // Re-exported for callers that build snapshots from steering vectors.
 export { magnitudeSquared };

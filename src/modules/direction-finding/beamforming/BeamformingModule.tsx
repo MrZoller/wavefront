@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { PolarPlot } from '@/components/plots/PolarPlot';
 import { colors } from '@/design/tokens';
-import { beamPattern, arrayResponse, toDb } from '@/dsp/array';
+import { beamPattern, arrayResponse, toDb, gratingLobeAngles } from '@/dsp/array';
 
 const deg = (d: number) => (d * Math.PI) / 180;
 
@@ -22,7 +22,9 @@ export function BeamformingModule() {
 
   // How strongly the steered beam picks up the source (peaks when steer aligns with source).
   const outputPower = arrayResponse(n, dLambda, deg(steerDeg), deg(sourceDeg), 1);
-  const grating = dLambda > 0.5;
+  // Grating lobes actually visible at the current steering angle (not merely d > λ/2).
+  const gratingLobes = gratingLobeAngles(dLambda, deg(steerDeg), 1);
+  const grating = gratingLobes.length > 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -55,7 +57,13 @@ export function BeamformingModule() {
             ].join(' ')}
           >
             <span className="text-text-faint">Grating lobes</span>
-            <span>{grating ? 'present (d > λ/2)' : 'none (d ≤ λ/2)'}</span>
+            <span>
+              {grating
+                ? `visible at ${gratingLobes.map((g) => `${((g * 180) / Math.PI).toFixed(0)}°`).join(', ')}`
+                : dLambda > 0.5
+                  ? 'none at this steer (d > λ/2)'
+                  : 'none (d ≤ λ/2)'}
+            </span>
           </div>
         </div>
       </div>
