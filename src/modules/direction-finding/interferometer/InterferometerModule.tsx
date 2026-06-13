@@ -122,6 +122,20 @@ export function InterferometerModule() {
     setEmitter({ fx, fy });
   };
 
+  // Keyboard-operable alternative to dragging: place the emitter along a chosen bearing at a
+  // fixed display radius (distance doesn't affect the plane-wave phase, so bearing is the
+  // meaningful control). Keeps the lesson usable without a pointer (brief §12 accessibility).
+  const setBearing = (thetaDeg: number) => {
+    const theta = (thetaDeg * Math.PI) / 180;
+    const r = Math.min(size.w, size.h) * 0.55;
+    const fx = (size.w / 2 + Math.sin(theta) * r) / size.w;
+    const fy = (size.h * 0.82 - Math.cos(theta) * r) / size.h;
+    setEmitter({
+      fx: Math.max(0.02, Math.min(0.98, fx)),
+      fy: Math.max(0.02, Math.min(0.74, fy)),
+    });
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <canvas
@@ -165,6 +179,22 @@ export function InterferometerModule() {
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
         <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
           <span className="readout flex justify-between text-xs text-text-muted">
+            <span>Emitter bearing θ</span>
+            <span className="text-signal">{toDeg(trueTheta).toFixed(0)}°</span>
+          </span>
+          <input
+            type="range"
+            min={-85}
+            max={85}
+            step={1}
+            value={Math.round(toDeg(trueTheta))}
+            onChange={(e) => setBearing(parseInt(e.target.value, 10))}
+            className="accent-[var(--color-signal)]"
+            aria-label="Emitter bearing in degrees (keyboard alternative to dragging)"
+          />
+        </label>
+        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
+          <span className="readout flex justify-between text-xs text-text-muted">
             <span>Baseline d</span>
             <span className="text-signal">{dLambda.toFixed(2)} λ</span>
           </span>
@@ -179,7 +209,8 @@ export function InterferometerModule() {
             aria-label="Baseline separation in wavelengths"
           />
           <span className="readout text-[10px] text-text-faint">
-            cyan rays = inferred bearings · green ray = truth · drag the emitter to move it
+            cyan rays = inferred bearings · green ray = truth · drag the emitter or use the bearing
+            slider
           </span>
         </label>
       </div>
