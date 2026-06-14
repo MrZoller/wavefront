@@ -32,7 +32,9 @@ const rms = (s: Complex[]) =>
   Math.sqrt(s.reduce((acc, c) => acc + c.re * c.re + c.im * c.im, 0) / s.length);
 
 function addNoise(signal: Complex[], snrDb: number, seed: number): Complex[] {
-  const sigma = rms(signal) * 10 ** (-snrDb / 20);
+  // Total noise power = signalPower / SNR; split evenly across the I and Q rails ⇒ σ per rail
+  // divides by √2 so the displayed SNR matches the control.
+  const sigma = (rms(signal) * 10 ** (-snrDb / 20)) / Math.SQRT2;
   const ni = gaussianNoise(signal.length, sigma, seed);
   const nq = gaussianNoise(signal.length, sigma, seed + 1);
   return signal.map((s, i) => ({ re: s.re + ni[i], im: s.im + nq[i] }));

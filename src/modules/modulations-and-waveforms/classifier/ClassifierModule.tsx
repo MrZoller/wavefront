@@ -4,7 +4,7 @@ import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
 import { colors } from '@/design/tokens';
 import { type Complex } from '@/dsp/complex';
-import { CONSTELLATIONS } from '@/dsp/comms';
+import { CONSTELLATIONS, awgn } from '@/dsp/comms';
 import { MODULATORS } from '@/dsp/modulation';
 import { extractFeatures, classify, type Features } from '@/dsp/features';
 import { magnitudeSpectrumDb, spectrogram } from '@/dsp/spectrum';
@@ -56,7 +56,8 @@ export function ClassifierModule() {
 
     const scatter: ScatterPoint[] =
       mod.hasConstellation && symbols
-        ? symbols.map((z) => ({ re: z.re, im: z.im }))
+        ? // Noise the displayed symbols too, so the clean lattice doesn't give away the answer.
+          awgn(symbols, 0.16, seed + 9).map((z) => ({ re: z.re, im: z.im }))
         : noisy
             .filter((_, i) => i % 2 === 0)
             .map((z) => ({ re: z.re, im: z.im, color: colors.cyan }));

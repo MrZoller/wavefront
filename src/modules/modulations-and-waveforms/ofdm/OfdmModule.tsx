@@ -15,7 +15,7 @@ const N_OFDM = 6;
 
 const bitsFor = (n: number) => {
   const rng = mulberry32(99);
-  return Array.from({ length: n }, () => rng() >>> 0).map((v) => v & 1);
+  return Array.from({ length: n }, () => (rng() < 0.5 ? 0 : 1));
 };
 
 /**
@@ -27,15 +27,18 @@ export function OfdmModule() {
   const [active, setActive] = useState(48); // number of occupied subcarriers (centered)
 
   const { signal, subSymbols, spectrum } = useMemo(() => {
-    const lo = Math.floor((N_SUB - active) / 2);
     const bits = bitsFor(active * 2 * N_OFDM);
     const qpsk = bitsToSymbols(bits, CONSTELLATIONS.QPSK);
-    // Place symbols on the centered active subcarriers; leave guard bands empty.
+    // Occupy the low-frequency bins around DC (which sit at the center after fftShift) and leave the
+    // band edges (around Nyquist) empty as guard — so the displayed spectrum is a centered block.
+    const halfLo = Math.ceil(active / 2);
+    const halfHi = Math.floor(active / 2);
     const data: Complex[] = [];
     let s = 0;
     for (let sym = 0; sym < N_OFDM; sym++) {
       for (let k = 0; k < N_SUB; k++) {
-        data.push(k >= lo && k < lo + active ? qpsk[s++] : { re: 0, im: 0 });
+        const isActive = k < halfLo || k >= N_SUB - halfHi;
+        data.push(isActive ? qpsk[s++] : { re: 0, im: 0 });
       }
     }
     const { signal } = ofdmModulate(data, N_SUB, CP);

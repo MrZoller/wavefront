@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Complex } from './complex';
 import { windowFn } from './window';
-import { magnitudeSpectrumDb, spectrogram } from './spectrum';
+import { magnitudeSpectrumDb, magnitudeSpectrumLinear, toDb, spectrogram } from './spectrum';
 
 const tone = (n: number, cyclesPerN: number): Complex[] =>
   Array.from({ length: n }, (_, k) => ({
@@ -30,6 +30,19 @@ describe('magnitude spectrum', () => {
     const center = spec.length / 2;
     expect(spec[peakIdx]).toBeCloseTo(0, 6); // peak normalized to 0 dB
     expect(peakIdx).toBeGreaterThan(center); // +8 cycles ⇒ right of DC after fftShift
+  });
+});
+
+describe('shared dB reference', () => {
+  it('a shared ref preserves the level difference between two spectra', () => {
+    // Same tone at two amplitudes: self-normalized both peak at 0 dB; shared ref shows −6 dB.
+    const big = tone(64, 8);
+    const small = tone(64, 8).map((c) => ({ re: c.re * 0.5, im: c.im * 0.5 }));
+    const bigLin = magnitudeSpectrumLinear(big, 'rectangular');
+    const smallLin = magnitudeSpectrumLinear(small, 'rectangular');
+    const ref = Math.max(...bigLin);
+    expect(Math.max(...toDb(bigLin, -80, ref))).toBeCloseTo(0, 6);
+    expect(Math.max(...toDb(smallLin, -80, ref))).toBeCloseTo(-6.02, 1); // 20·log10(0.5)
   });
 });
 

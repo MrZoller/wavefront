@@ -20,14 +20,23 @@ export function magnitudeSpectrumDb(
   window: WindowName = 'hann',
   floorDb = -80
 ): number[] {
+  return toDb(magnitudeSpectrumLinear(signal, window), floorDb);
+}
+
+/** Centered linear magnitude spectrum `|X|` (windowed, power-of-two padded), un-normalized — use
+ *  when two spectra must share one dB reference (e.g. comparing levels before/after spreading). */
+export function magnitudeSpectrumLinear(signal: Complex[], window: WindowName = 'hann'): number[] {
   const n = nextPow2(signal.length);
   const w = windowFn(window, signal.length);
   const padded: Complex[] = Array.from({ length: n }, (_, i) =>
     i < signal.length ? { re: signal[i].re * w[i], im: signal[i].im * w[i] } : { re: 0, im: 0 }
   );
-  const X = fftShift(fft(padded));
-  const mag = X.map((c) => Math.hypot(c.re, c.im));
-  const peak = Math.max(1e-12, ...mag);
+  return fftShift(fft(padded)).map((c) => Math.hypot(c.re, c.im));
+}
+
+/** Convert a linear magnitude array to dB normalized to `ref` (default: its own peak). */
+export function toDb(mag: number[], floorDb = -80, ref?: number): number[] {
+  const peak = ref ?? Math.max(1e-12, ...mag);
   return mag.map((m) => Math.max(floorDb, 20 * Math.log10(m / peak)));
 }
 

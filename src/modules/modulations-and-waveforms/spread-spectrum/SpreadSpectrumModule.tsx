@@ -3,7 +3,7 @@ import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { type Complex } from '@/dsp/complex';
 import { dsssSpread, pnCode, processingGainDb } from '@/dsp/waveforms';
 import { bipolarSequence } from '@/dsp/random';
-import { magnitudeSpectrumDb } from '@/dsp/spectrum';
+import { magnitudeSpectrumLinear, toDb } from '@/dsp/spectrum';
 
 const N_BITS = 32;
 
@@ -23,9 +23,13 @@ export function SpreadSpectrumModule() {
     // Spread: each bit × the PN code → L chips per bit at the full sample rate.
     const chips = dsssSpread(bits, pnCode(factor, 7));
     const spreadSig: Complex[] = chips.map((c) => ({ re: c, im: 0 }));
+    // Share one dB reference (the narrowband peak) so spreading's level drop is visible.
+    const narrowLin = magnitudeSpectrumLinear(held, 'hann');
+    const spreadLin = magnitudeSpectrumLinear(spreadSig, 'hann');
+    const ref = Math.max(...narrowLin);
     return {
-      narrow: magnitudeSpectrumDb(held, 'hann'),
-      spread: magnitudeSpectrumDb(spreadSig, 'hann'),
+      narrow: toDb(narrowLin, -80, ref),
+      spread: toDb(spreadLin, -80, ref),
     };
   }, [factor]);
 
