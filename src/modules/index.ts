@@ -32,3 +32,7 @@ import './playing-a-radio-signal/noisy-channel';
 import './playing-a-radio-signal/matched-filter';
 // Layer 2 — End to end
 import './playing-a-radio-signal/send-a-message';
+
+// Track C — Modulations & Waveforms
+import './modulations-and-waveforms/analog';
+import './modulations-and-waveforms/modulation-zoo';

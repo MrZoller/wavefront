@@ -128,3 +128,17 @@ test('send a message module', async ({ page }) => {
   ).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'send-a-message.png') });
 });
+
+test('analog modulation module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Analog: AM / FM / PM' }).first().click();
+  await expect(page.getByRole('img', { name: /FM spectrum/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'analog-modulation.png') });
+});
+
+test('modulation zoo module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Modulation Zoo' }).first().click();
+  await expect(page.getByRole('img', { name: /QPSK spectrogram/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'modulation-zoo.png') });
+});
