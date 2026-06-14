@@ -129,6 +129,21 @@ test('send a message module', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'send-a-message.png') });
 });
 
+test('multipath module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Multipath & Fading' }).first().click();
+  await expect(page.getByRole('img', { name: /channel frequency response/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'multipath-fading.png') });
+});
+
+test('carrier offset module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Carrier Offset & Doppler' }).first().click();
+  await expect(page.getByRole('img', { name: /constellation rotating/i })).toBeVisible();
+  await page.waitForTimeout(400); // let it spin to a non-trivial angle
+  await page.screenshot({ path: path.join(IMG_DIR, 'carrier-offset.png') });
+});
+
 test('analog modulation module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Analog: AM / FM / PM' }).first().click();

@@ -29,6 +29,8 @@ import './playing-a-radio-signal/pulse-shaping';
 import './playing-a-radio-signal/upconversion';
 // Layer 1 — The channel & receiver
 import './playing-a-radio-signal/noisy-channel';
+import './playing-a-radio-signal/multipath';
+import './playing-a-radio-signal/carrier-offset';
 import './playing-a-radio-signal/matched-filter';
 // Layer 2 — End to end
 import './playing-a-radio-signal/send-a-message';

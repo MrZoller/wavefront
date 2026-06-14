@@ -8,6 +8,18 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Track B channel completeness (brief §5 Layer 2).** Three additions finish the channel story:
+  - **Multipath & Fading** — a direct ray plus a draggable echo; live channel frequency response
+    (fading notches), blurred constellation, and a closing eye (ISI).
+  - **Carrier Offset & Doppler** — an animated QPSK constellation that tilts under a phase offset and
+    spins under a frequency offset (same physics as Doppler).
+  - **Send a Message** now plots the live **BER-vs-Eb/N0 waterfall** with the operating point marked.
+- **New `dsp/` primitives (7 tests):** `dsp/channel.ts` — `multipath` (FIR) + `channelResponseDb`,
+  `applyCfo` (carrier/phase offset), and `berVsSnr`.
+- **New shared viz:** `XYPlot` (line plot with log-y + operating-point marker), used for the BER
+  curve and channel response.
+- `docs/dsp/channel.md`.
+
 - **Analog on-ramp audio.** The AM/FM/PM module now plays its modulated tone via Web Audio (AM
   tremolo vs FM/PM vibrato) — completing Track C, which is now marked **v1**.
 - **🚢 Track C — Modulations & Waveforms (v1).** Every scheme's fingerprint, built on a pluggable
