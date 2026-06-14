@@ -62,7 +62,7 @@ export function SymbolMappingModule() {
 
           {/* Bit editor, grouped per symbol */}
           <div>
-            <p className="readout mb-1.5 text-[10px] text-text-faint">
+            <p className="readout mb-1.5 text-xs text-text-faint">
               click a bit to flip it · each group of {k} bit{k > 1 ? 's' : ''} → one symbol
             </p>
             <div className="flex flex-wrap gap-2">
@@ -105,7 +105,7 @@ export function SymbolMappingModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           more bits per symbol packs the plane tighter — faster, but the points sit closer together,
           so noise (next module) flips them more easily · neighboring points differ by exactly one
           bit (Gray coding), so a small slip costs just one bit

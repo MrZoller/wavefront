@@ -207,7 +207,7 @@ export function ChannelizerModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           green = the wide band · vertical lines = channel edges · cyan = the selected
           channel&rsquo;s filter · on <strong>bare FFT</strong> that filter is a leaky sinc with
           tall sidelobes — its neighbors&rsquo; energy bleeds in · switch to{' '}

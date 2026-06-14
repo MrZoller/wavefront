@@ -110,7 +110,7 @@ export function TdoaModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           each hyperbola = points with a constant time difference between Rx1 and another receiver ·
           drag receivers or the emitter and watch the curves intersect at the fix
         </p>

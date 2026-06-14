@@ -257,7 +257,7 @@ export function WorldMap({
       {/* Keyboard-accessible marker selection: Tab to a marker, arrow keys to move it. */}
       {onPointMove && draggablePoints.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="readout text-[10px] text-text-faint">move:</span>
+          <span className="readout text-xs text-text-faint">move:</span>
           {draggablePoints.map((p) => (
             <button
               key={p.id}

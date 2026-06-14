@@ -150,7 +150,7 @@ export function FdoaModule() {
             className="accent-[var(--color-signal)]"
             aria-label="Carrier frequency in megahertz"
           />
-          <span className="readout text-[10px] text-text-faint">
+          <span className="readout text-xs text-text-faint">
             drag receivers, their velocity arrows (v1 / v2), or the emitter · higher f₀ ⇒ a larger
             Doppler shift, so the same geometry yields a bigger Δf
           </span>

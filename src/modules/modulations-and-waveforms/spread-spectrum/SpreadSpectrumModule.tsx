@@ -68,7 +68,7 @@ export function SpreadSpectrumModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           spreading by L widens the spectrum ~L× and drops it ~L× lower · de-spreading at the
           receiver collapses it back, lifting the signal {processingGainDb(factor).toFixed(0)} dB
           above interference — the &ldquo;hide under the noise floor&rdquo; trick behind GPS and

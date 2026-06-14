@@ -74,7 +74,7 @@ export function MultirateModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           decimating by N keeps only the central 1/N of the band · with the filter ON the
           out-of-band tone is removed first, so the result is clean · turn it OFF and that tone
           folds back in as a false spur — aliasing, exactly as in the sampling module

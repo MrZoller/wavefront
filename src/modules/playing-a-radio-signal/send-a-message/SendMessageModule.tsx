@@ -150,7 +150,7 @@ export function SendMessageModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           this is the whole chain: text → bits → symbols → noisy channel → nearest-point decision →
           bits → text · green points decoded correctly, red flipped · keep Eb/N0 high for a clean
           message; lower it (or pick 16-QAM) and watch characters garble
