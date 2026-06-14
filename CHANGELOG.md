@@ -8,6 +8,30 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚢 Track B — Playing a Radio Signal (v1).** A complete new track following one message down the
+  transmit/receive chain, end to end:
+  - **Symbol Mapping** — group bits into Gray-coded I/Q symbols on a BPSK / QPSK / 16-QAM
+    constellation; toggle bits and switch schemes to watch the same bits land differently.
+  - **Pulse Shaping** — each symbol launches a raised-cosine pulse; the summed waveform passes
+    exactly through the symbol values (ISI-free), and β trades bandwidth for ringing.
+  - **Up/Downconversion** — mix complex baseband onto a real carrier (`I·cos − Q·sin`) and back;
+    three panes show baseband → passband on the wire → recovered baseband.
+  - **The Noisy Channel** — add complex AWGN at a chosen Eb/N0, slice each received point to the
+    nearest constellation point, and watch the live bit error rate climb as the clouds collide.
+  - **Matched Filter** — root-raised-cosine shaping + matched receiver, shown as a BPSK eye diagram
+    that opens and closes with Eb/N0, with live BER.
+  - **Send a Message** (capstone) — type text and watch it ride symbols across the noisy channel and
+    come back, characters garbling as Eb/N0 drops.
+- **New `dsp/` primitives (27 tests):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
+  (`BPSK` / `QPSK` / `QAM16`), `bitsToSymbols` / `symbolsToBits` / `nearestSymbol`, `awgn` +
+  `noiseSigma` (Eb/N0 → σ), `bitErrorRate`, and `textToBits` / `bitsToText`; `dsp/pulse.ts` —
+  `raisedCosine` / `rootRaisedCosine`, `upsample`, FIR `convolve`; `dsp/carrier.ts` — `upconvert` /
+  `downconvert` / `lowpass`.
+- **New shared viz:** `ConstellationPlot` — an I/Q lattice + received-symbol scatter cloud.
+- A `building` track status (distinct from `shipping`/v1) for the navigation shell.
+- `docs/dsp/comms.md`, `docs/dsp/pulse.md`, `docs/dsp/carrier.md`, and
+  `docs/tracks/playing-a-radio-signal.md`.
+
 - **FDOA (Doppler Difference)** — completes Track A, Layer 2. Two moving platforms sweep past a
   stationary emitter; the difference of their Doppler shifts is a measurable observable whose
   constant-value locus is an _isodoppler_ curve, drawn through the emitter over a diverging

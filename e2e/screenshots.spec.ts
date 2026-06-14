@@ -82,3 +82,49 @@ test('FDOA module', async ({ page }) => {
   await expect(page.getByRole('application', { name: /Doppler-difference field/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'fdoa.png') });
 });
+
+test('symbol mapping module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Symbol Mapping' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /constellation with the mapped symbols/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'symbol-mapping.png') });
+});
+
+test('noisy channel module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'The Noisy Channel' }).first().click();
+  await expect(page.getByRole('img', { name: /received symbols spread by noise/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'noisy-channel.png') });
+});
+
+test('pulse shaping module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Pulse Shaping' }).first().click();
+  await expect(page.getByRole('img', { name: /pulse-shaped waveform/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'pulse-shaping.png') });
+});
+
+test('matched filter module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Matched Filter' }).first().click();
+  await expect(page.getByRole('img', { name: /eye diagram of the matched-filter/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'matched-filter.png') });
+});
+
+test('up/downconversion module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Up/Downconversion' }).first().click();
+  await expect(page.getByRole('img', { name: /passband on the wire/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'upconversion.png') });
+});
+
+test('send a message module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Send a Message' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /received symbols for the transmitted message/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'send-a-message.png') });
+});

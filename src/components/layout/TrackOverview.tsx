@@ -25,10 +25,16 @@ export function TrackOverview() {
                     'shrink-0 rounded-sm px-2 py-0.5 text-[10px] uppercase tracking-wide',
                     track.status === 'shipping'
                       ? 'bg-signal-dim/30 text-signal'
-                      : 'border border-border text-text-faint',
+                      : track.status === 'building'
+                        ? 'border border-border text-cyan'
+                        : 'border border-border text-text-faint',
                   ].join(' ')}
                 >
-                  {track.status === 'shipping' ? 'v1' : 'planned'}
+                  {track.status === 'shipping'
+                    ? 'v1'
+                    : track.status === 'building'
+                      ? 'building'
+                      : 'planned'}
                 </span>
               </div>
               <p className="mt-1.5 text-sm text-text-muted">{track.description}</p>

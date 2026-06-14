@@ -50,7 +50,7 @@ Then open the printed local URL.
 | Track                               | What it answers                                                      | Status  |
 | ----------------------------------- | -------------------------------------------------------------------- | ------- |
 | **Direction Finding & Geolocation** | How do you find where a transmitter is?                              | 🚢 v1   |
-| Playing a Radio Signal              | What happens when you send data over the air, end to end?            | planned |
+| **Playing a Radio Signal**          | What happens when you send data over the air, end to end?            | 🚢 v1   |
 | Modulations & Waveforms             | Every modulation scheme's fingerprint, side by side.                 | planned |
 | Fundamentals                        | Why does any of this work? Sampling, filtering, FFT, channelization. | planned |
 | Propagation & Bands                 | The RF physics around the signal (bands, line-of-sight, skywave).    | planned |
