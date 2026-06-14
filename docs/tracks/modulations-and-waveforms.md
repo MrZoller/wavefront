@@ -29,5 +29,5 @@ compositions of the primitives.
 ![Chirp / LFM module](../images/chirp-lfm.png)
 
 > Linear schemes (PSK/QAM) read on the constellation; constant-envelope schemes (FSK/MSK) read in
-> frequency — the track surfaces that distinction directly. Web Audio for the analog on-ramp is a
-> planned follow-up. All signals are synthetic.
+> frequency — the track surfaces that distinction directly. The analog on-ramp is audible (AM
+> tremolo vs FM/PM vibrato) via Web Audio. All signals are synthetic.
