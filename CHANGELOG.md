@@ -8,6 +8,17 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Labeled plot axes, by construction.** Axis labels are now a structured `AxisLabel`
+  (`{ quantity, unit? }`) that splits meaning from unit, so "show a unit only when the quantity has
+  one" is structural — normalized/unitless axes (`Sample`, `Amplitude`, `Normalized frequency`) stay
+  honest while `Magnitude (dB)` keeps the dB. The shared Cartesian plots (`TimeSeriesPlot`,
+  `SpectrumPlot`, `XYPlot`, `SpectrogramPlot`, `EyeDiagramPlot`) make `xLabel`/`yLabel` **required**
+  (a plot can't render unlabeled), with `AXIS` presets for the recurring ones and a shared
+  `AxisCaption`; `ConstellationPlot`/`PhasorPlot` draw intrinsic `I`/`Q` axes and `PolarPlot` captions
+  bearing/power. Every existing plot across Tracks A–D is backfilled. Backed by a render/prop test
+  (`src/components/plots/{axisLabel,plots}.test.tsx`) and documented in `CONTRIBUTING.md` /
+  `ARCHITECTURE.md`.
+
 - **Inline glossary (`<Term>`).** A flat source of truth (`src/glossary/glossary.ts`) seeded with
   the jargon across Tracks A–D, surfaced at the point of use by a `<Term id="…">` popover: a phosphor
   dotted underline that opens the term's expansion, a one-line gloss, and a "Learn more →" link into
