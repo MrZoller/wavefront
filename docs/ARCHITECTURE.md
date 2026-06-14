@@ -37,10 +37,31 @@ physics, not signal processing.
 Defined in `src/registry/types.ts`:
 
 - **`ModuleDef`** — one learning unit: `id`, `title`, `track`, `oneLineIntuition`, the
-  interactive `component`, and optional `explanation` content + `status`.
-- **`TrackDef`** — an ordered collection of modules with shared framing.
+  interactive `component`, optional `explanation` content + `status`, and its place in the track's
+  climb: `layer` (which stage), `order` (position in the track's sequence, unique per track), and
+  optional `isCapstone`.
+- **`TrackDef`** — an ordered collection of modules with shared framing, plus `layerNames`
+  (human names for the layer indices its modules use).
 
-The app derives **all** navigation from these. There is no hand-maintained route map.
+The app derives **all** navigation from these — ordering, the layer subheaders, the step numbers,
+and the capstone marker, in both the sidebar and the landing cards. There is no hand-maintained
+route map and no ordering/markers hand-kept in the views.
+
+### Capstone = marquee, not "last"
+
+`isCapstone` marks a track's **marquee** — the one destination chip per track that a newcomer is
+drawn to, so the rest read as steps toward it. It is a _navigational_ signal and is **not**
+necessarily the last module by `order`. Two distinct ideas:
+
+- **`order`** expresses the **terminal / synthesis** module (what the track builds up to, last).
+- **`isCapstone`** expresses the **marquee** (the representative, demo-able payoff).
+
+In most tracks these coincide (GDOP Heatmap, Send a Message, Channelizer are both last _and_ the
+marquee). In Modulations & Waveforms they split: the **Modulation Zoo** is the marquee/capstone
+(stable, central), while the **Modulation Classifier** is the terminal synthesis (last by `order`,
+flagged `advanced`) — so it is _not_ the capstone. When the two diverge, prefer two explicit
+signals over overloading one, and don't tag a module `isCapstone` **and** `advanced` (a "skippable
+destination" is a contradiction).
 
 ## Recipe: add a new module
 
@@ -51,8 +72,10 @@ The app derives **all** navigation from these. There is no hand-maintained route
    genuinely new view type is needed. **Label every plot's axes** — the Cartesian plots require
    `xLabel`/`yLabel` (quantity + honest unit; see
    [CONTRIBUTING.md → Labeling plot axes](../CONTRIBUTING.md#labeling-plot-axes)).
-3. Register it: in the module's entry file, call `registerModule({ ... })`, then import
-   that file for its side effect from `src/modules/index.ts`.
+3. Register it: in the module's entry file, call `registerModule({ ... })` — declaring its
+   `track`, `layer`, and `order` (unique within the track, ascending through layers) — then import
+   that file for its side effect from `src/modules/index.ts`. The nav slots it into the right stage
+   automatically.
 4. Add a "go deeper" doc under `docs/dsp/` and link the test that verifies the math.
 5. **Register any new jargon** in `src/glossary/glossary.ts` (and match-only variants in the
    `ALIASES` map in `match.ts`). Write plain copy — `<GlossedText>` marks it automatically.
@@ -63,9 +86,16 @@ That's the whole loop. No shell, routing, or navigation edits.
 ## Recipe: add a new track
 
 1. Add a `TrackDef` to `src/registry/tracks.ts` (this controls display order + status badge).
+   Give it `layerNames` — a human name for each layer index its modules use (e.g.
+   `{ 0: 'Foundations', 1: 'Angle of Arrival', 2: 'Geolocation' }`).
 2. Add the `TrackId` to the union in `src/registry/types.ts`.
-3. Add modules per the recipe above. The sidebar and overview pick the track up automatically.
+3. Add modules per the recipe above, declaring each module's `layer` + `order`, and mark **exactly
+   one** module `isCapstone: true` (its marquee — see "Capstone = marquee, not 'last'"). The sidebar
+   and overview pick the track up automatically.
 4. Add a track page under `docs/tracks/`.
+
+The registry test (`src/registry/registry.test.ts`) enforces this contract: exactly one capstone
+per populated track, a name for every layer a module uses, and unique, layer-contiguous `order`.
 
 ## The glossary contract (`<Term>`)
 

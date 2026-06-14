@@ -8,6 +8,20 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Legible curriculum structure in the nav.** Each track's climb is now visible, driven entirely by
+  registry metadata so the sidebar and landing page stay in sync. Modules declare a `layer`, an
+  `order` (unique within a track), and at most one `isCapstone`; tracks declare `layerNames`. Both
+  views render the result: quiet layer subheaders (`Foundations`, `Angle of Arrival`, `Geolocation`,
+  …), per-layer step numbers as a directional cue, and a signal-tinted **Capstone** marker on each
+  track's marquee destination (GDOP Heatmap, Send a Message, Modulation Zoo, Channelizer). `order`
+  expresses the terminal/synthesis module and `isCapstone` the marquee — allowed to differ (in
+  Modulations & Waveforms the Classifier is terminal-by-order while the Zoo is the capstone). A
+  landing **scope note** ("publicly available, textbook-level concepts and synthetic signals") sits
+  quietly in the footer, and the hero now ties the from-scratch core to verifiability ("checked
+  against reference values by the test suite"). Backed by a registry test (one capstone per track,
+  every used layer named, unique layer-contiguous order) and documented in `ARCHITECTURE.md` /
+  `CONTRIBUTING.md`.
+
 - **Labeled plot axes, by construction.** Axis labels are now a structured `AxisLabel`
   (`{ quantity, unit? }`) that splits meaning from unit, so "show a unit only when the quantity has
   one" is structural — normalized/unitless axes (`Sample`, `Amplitude`, `Normalized frequency`) stay
