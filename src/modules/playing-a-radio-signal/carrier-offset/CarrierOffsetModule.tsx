@@ -120,7 +120,7 @@ export function CarrierOffsetModule() {
           <GlossedText>
             once the cloud rotates past a decision boundary, every symbol decodes wrong — so a real
             receiver runs a carrier-recovery loop to spin it back upright. Same physics as Doppler
-            from a moving transmitter (Track A&rsquo;s FDOA).
+            from a moving transmitter (FDOA).
           </GlossedText>
         </p>
       </div>

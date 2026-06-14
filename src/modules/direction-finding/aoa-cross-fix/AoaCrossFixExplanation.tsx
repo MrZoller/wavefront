@@ -34,7 +34,7 @@ export function AoaCrossFixExplanation() {
 
         <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
           This assumes a straight line-of-bearing (true at VHF and up). HF skywave bends it — see
-          the propagation cross-link (Track E). All scenarios here are synthetic.
+          the Propagation &amp; Bands track. All scenarios here are synthetic.
         </section>
       </div>
     </GlossedText>

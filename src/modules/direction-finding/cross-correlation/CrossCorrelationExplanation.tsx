@@ -38,8 +38,8 @@ export function CrossCorrelationExplanation() {
 
         <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
           This is the engine of TDOA: measure the same emitter at two receivers, correlate, and the
-          peak lag gives the time-difference-of-arrival that Layer 2 turns into a hyperbola. All
-          signals here are synthetic.
+          peak lag gives the time-difference-of-arrival that multilateration turns into a hyperbola.
+          All signals here are synthetic.
         </section>
       </div>
     </GlossedText>

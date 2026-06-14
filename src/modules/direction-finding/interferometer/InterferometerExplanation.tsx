@@ -7,9 +7,9 @@ export function InterferometerExplanation() {
         <section>
           <h3 className="mb-1 font-medium text-text">From phase back to a bearing</h3>
           <p>
-            Layer 0 turned a direction into a phase difference. An interferometer runs that
-            backwards: measure <span className="readout">Δφ</span> between two antennas and solve
-            for the bearing.
+            The phase-difference module turned a direction into a phase difference. An
+            interferometer runs that backwards: measure <span className="readout">Δφ</span> between
+            two antennas and solve for the bearing.
           </p>
           <p className="readout my-2 text-text">θ = asin( Δφ · λ / (2π·d) )</p>
         </section>
@@ -18,7 +18,7 @@ export function InterferometerExplanation() {
           <h3 className="mb-1 font-medium text-text">A single bearing is just a ray</h3>
           <p>
             One pair gives a <em>line of bearing</em>, not a position — the emitter is somewhere
-            along that ray. Crossing rays from a second site is what fixes a location (Layer 2).
+            along that ray. Crossing rays from a second site is what fixes a location.
           </p>
         </section>
 

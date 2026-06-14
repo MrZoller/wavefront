@@ -40,8 +40,8 @@ export function PhaseDifferenceExplanation() {
         </section>
 
         <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-          This is the seed of angle-of-arrival direction finding: invert Δφ to get θ. Layer 1 scales
-          it up to a whole array. All signals here are synthetic.
+          This is the seed of angle-of-arrival direction finding: invert Δφ to get θ. Interferometry
+          and beamforming scale it up to a whole array. All signals here are synthetic.
         </section>
       </div>
     </GlossedText>
