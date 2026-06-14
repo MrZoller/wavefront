@@ -72,10 +72,15 @@ Jargon is surfaced inline for non-EE readers from one flat source of truth,
 `src/components/Term.tsx`. Three lengths of the same idea: the `gloss` (one sentence, shown in the
 popover) → the linked `moduleId` (the interactive lesson) → the `docsPage` (the long-form write-up).
 
+First-use is scoped **per explanatory surface** (side-rail explanation, body copy, intro), not per
+page: each surface a reader can land on independently glosses its own first significant use of a
+concept-bearing term. See [CONTRIBUTING.md](../CONTRIBUTING.md#inline-glossary-term).
+
 This is **infrastructure, not a track**, and it is **enforced, not aspirational**:
 `src/glossary/glossary.test.ts` fails CI if any `<Term id>` is dangling, any `moduleId` doesn't
-resolve, or **any `docs/dsp/` page lacks a glossary entry referencing it** — so shipping a new
-primitive without defining its term breaks the build. The component is mobile-first (tap-to-toggle,
+resolve, **any `docs/dsp/` page lacks a glossary entry referencing it**, or an explanation panel
+leaves a curated load-bearing acronym unglossed (the per-surface net) — so shipping a new primitive
+without defining its term breaks the build. The component is mobile-first (tap-to-toggle,
 Esc/outside-tap dismiss), keyboard-focusable, and hides self-referential "Learn more" links at
 runtime.
 

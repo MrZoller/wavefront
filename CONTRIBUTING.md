@@ -53,8 +53,8 @@ When you add a module or a `dsp/` primitive that introduces a non-obvious term o
 1. Add a glossary entry (`id`, `term`, optional `expansion`, one-sentence `gloss`, optional
    `moduleId` link, optional `docsPage`). The `gloss` **must stay in sync** with that term's
    `docs/dsp` one-liner — they're the same idea at two lengths.
-2. Wrap its **first significant in-UI appearance** in `<Term id="…">…</Term>`. Use `<Term id="…" />`
-   to render the display term itself.
+2. Wrap its **first significant use within each primary explanatory surface** in
+   `<Term id="…">…</Term>`. Use `<Term id="…" />` to render the display term itself.
 
 ```tsx
 // glossary.ts
@@ -66,9 +66,17 @@ fft: { id: 'fft', term: 'FFT', expansion: 'Fast Fourier Transform',
 the <Term id="fft">FFT</Term> turns the waveform into its spectrum…
 ```
 
-**Restraint is the whole game.** Define on first use _per module_, never in a heading, and never
-self-referentially inside the module that teaches it (the popover hides its own "Learn more" link in
-that case anyway). The popover is a definition, not a lesson: one expansion + one sentence.
+**Scope first-use _per explanatory surface_, not per page.** A module page has distinct surfaces a
+reader navigates independently — the **side-rail explanation panel**, the **body copy / captions**,
+and the **module intro/description**. Each should stand on its own, so a term gets its marker on its
+first significant use _within each surface_ (the side rail glosses `FFT` even if a body caption
+already did). Don't let a terse caption "spend" the first-use that the explanation panel needs.
+
+**Restraint is still the whole game.** _Within_ a surface: first significant use only, not every
+occurrence — the goal is "every surface is self-sufficient," not "underline everything." Never wrap
+a term in a heading, control, or axis label, and never self-referentially inside the module that
+teaches it (the popover hides its own "Learn more" link in that case anyway). The popover is a
+definition, not a lesson: one expansion + one sentence.
 
 **What to define (the cutoff).** The test is **conceptual load, not the unit or how technical it
 looks.** Define what is domain-specific _or_ compresses a non-obvious concept; do **not** define
