@@ -8,6 +8,22 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚧 Track C — Modulations & Waveforms.** Every scheme's fingerprint, built on a pluggable
+  modulator:
+  - **Analog: AM / FM / PM** — one message tone modulated three ways with live spectrum.
+  - **Modulation Zoo** (marquee) — A/B two schemes across five synchronized views (I/Q,
+    constellation, spectrum, eye, spectrogram) at a shared SNR.
+  - **OFDM** — QPSK across 64 subcarriers via IFFT + cyclic prefix.
+  - **Spread Spectrum** — PN spreading with live processing gain.
+  - **Chirp / LFM** — the swept-tone spectrogram diagonal.
+  - **Modulation Classifier** (capstone) — identify an unknown scheme from three features.
+- **New `dsp/` primitives (27 tests):** `fft.ts` (DFT reference + radix-2 FFT/IFFT), `window.ts`,
+  `spectrum.ts` (magnitude spectrum + spectrogram), `modulation.ts` (pluggable `Modulator` + linear
+  PSK/QAM, CPFSK/MSK, analog AM/FM/PM), `waveforms.ts` (OFDM, chirp, DSSS), and `features.ts`
+  (modulation features + nearest-prototype classifier).
+- **New shared viz:** `SpectrumPlot`, `SpectrogramPlot` (waterfall), and `EyeDiagramPlot`.
+- `docs/dsp/fft.md`, `docs/dsp/modulation.md`, and `docs/tracks/modulations-and-waveforms.md`.
+
 - **🚢 Track B — Playing a Radio Signal (v1).** A complete new track following one message down the
   transmit/receive chain, end to end:
   - **Symbol Mapping** — group bits into Gray-coded I/Q symbols on a BPSK / QPSK / 16-QAM
