@@ -4,6 +4,7 @@ import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
 import { am, fm, pm } from '@/dsp/modulation';
 import { magnitudeSpectrumDb } from '@/dsp/spectrum';
+import { useModulatedAudio } from '@/audio/useModulatedAudio';
 
 const N = 512;
 const MSG_CYCLES = 6; // message tone cycles across the window
@@ -13,11 +14,13 @@ type Scheme = (typeof SCHEMES)[number];
 /**
  * Analog on-ramp (brief §6). The most relatable entry point a non-EE has: how does a car radio
  * actually work? One message tone, modulated three ways onto a carrier — AM moves the amplitude, FM
- * the frequency, PM the phase — each with a distinct spectrum. Drag the depth and watch sidebands grow.
+ * the frequency, PM the phase — each with a distinct spectrum. Drag the depth, watch the sidebands
+ * grow, and hear AM's tremolo vs FM/PM's vibrato.
  */
 export function AnalogModule() {
   const [scheme, setScheme] = useState<Scheme>('FM');
   const [depth, setDepth] = useState(0.6);
+  const audio = useModulatedAudio();
 
   const { message, signalI, spectrum } = useMemo(() => {
     const message = Array.from({ length: N }, (_, n) =>
@@ -62,6 +65,14 @@ export function AnalogModule() {
             {s}
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => (audio.playing ? audio.stop() : audio.play(scheme, depth))}
+          className="readout ml-auto rounded-md border border-signal-dim px-3 py-1 text-xs text-signal transition-colors hover:bg-surface-raised"
+          aria-label={audio.playing ? 'Stop audio' : `Play ${scheme} audio`}
+        >
+          {audio.playing ? '■ Stop' : `▶ Hear ${scheme}`}
+        </button>
       </div>
 
       <TimeSeriesPlot

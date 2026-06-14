@@ -8,7 +8,9 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
-- **🚧 Track C — Modulations & Waveforms.** Every scheme's fingerprint, built on a pluggable
+- **Analog on-ramp audio.** The AM/FM/PM module now plays its modulated tone via Web Audio (AM
+  tremolo vs FM/PM vibrato) — completing Track C, which is now marked **v1**.
+- **🚢 Track C — Modulations & Waveforms (v1).** Every scheme's fingerprint, built on a pluggable
   modulator:
   - **Analog: AM / FM / PM** — one message tone modulated three ways with live spectrum.
   - **Modulation Zoo** (marquee) — A/B two schemes across five synchronized views (I/Q,

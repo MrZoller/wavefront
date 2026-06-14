@@ -23,7 +23,7 @@ export const TRACKS: TrackDef[] = [
     id: 'modulations-and-waveforms',
     title: 'Modulations & Waveforms',
     description: 'Every modulation scheme has a fingerprint — see them side by side.',
-    status: 'building',
+    status: 'shipping',
   },
   {
     id: 'fundamentals',
