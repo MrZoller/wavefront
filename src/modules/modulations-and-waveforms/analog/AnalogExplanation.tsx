@@ -34,7 +34,7 @@ export function AnalogExplanation() {
 
         <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
           Shown as complex baseband around 0 Hz; a real transmitter slides this up to the
-          station&rsquo;s carrier (Track B&rsquo;s up-conversion). All signals are synthetic.
+          station&rsquo;s carrier (up-conversion). All signals are synthetic.
         </section>
       </div>
     </GlossedText>

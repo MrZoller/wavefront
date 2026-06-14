@@ -25,7 +25,8 @@ export function WindowingExplanation() {
 
         <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
           This is exactly why a polyphase filter bank replaces the FFT's implicit rectangular window
-          with a <em>designed</em> prototype (Layer 2). All signals are synthetic.
+          with a <em>designed</em> prototype — exactly what the channelizer module does. All signals
+          are synthetic.
         </section>
       </div>
     </GlossedText>

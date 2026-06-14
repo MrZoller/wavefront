@@ -101,6 +101,26 @@ sides of the line:
 And **gloss the concept, not the letters**: `dBm` → "a power level on a logarithmic scale,"
 not "decibel-milliwatts" (that's the `expansion` field's job).
 
+## User-facing copy: no internal layer/track vocabulary
+
+**Layer numbers** (Layer 0/1/2…) and **track letters** (Track A–F) are build-time scaffolding — they
+organize the registry and the brief, and they belong in code, comments, `docs/`, and this file.
+**Users never see them**: the UI shows human names (tracks like "Direction Finding & Geolocation",
+layer groupings like "Foundations" / "The Transmit Chain"). So **rendered copy must never say
+`Layer N` or `Track X`** (or spelled-out variants like "the second track") — it points the reader at
+a coordinate system that doesn't exist for them.
+
+For a cross-reference, instead:
+
+- name the **human module/track** ("the cross-correlation module", "the Propagation & Bands track"),
+  linked where the glossary already does it (a `<Term>` whose entry teaches that module); or
+- simply **restate the concept** ("that's the cross-correlation peak") when a full reference isn't
+  needed.
+
+This is the same internal-vocabulary-leak class as the glossary and accent-semantics rules, so it's
+guarded the same way: `src/test/no-internal-vocab.test.ts` strips comments and fails if any
+user-facing string matches `Layer \d` / `Track [A-F]`, so a leak can't silently reappear.
+
 ## Labeling plot axes
 
 Wavefront's premise is that the **visualization** carries the intuition and the prose only supports
