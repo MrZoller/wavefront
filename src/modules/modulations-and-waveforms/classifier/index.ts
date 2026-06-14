@@ -7,7 +7,7 @@ registerModule({
   title: 'Modulation Classifier',
   track: 'modulations-and-waveforms',
   oneLineIntuition:
-    'Unknown signal — which scheme is it? A few features (envelope, flatness, I/Q balance) give it away.',
+    'Unknown signal — which scheme is it? A few features (envelope, spread, I/Q balance) give it away.',
   component: ClassifierModule,
   explanation: ClassifierExplanation,
   status: 'advanced',

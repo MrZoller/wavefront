@@ -16,8 +16,8 @@ export function ClassifierExplanation() {
         <p>
           <strong>Envelope variation</strong> is near zero for constant-envelope FSK/MSK and large
           for amplitude-bearing 16-QAM. <strong>Q-rail fraction</strong> is ~0 for real-only BPSK
-          and ~½ for QPSK/QAM. <strong>Spectral flatness</strong> separates compact from wideband.
-          Three numbers place most schemes in distinct corners.
+          and ~½ for QPSK/QAM. <strong>Spectral spread</strong> separates a compact scheme (MSK)
+          from a wide one (FSK). Three numbers place each scheme in a distinct corner.
         </p>
       </section>
 

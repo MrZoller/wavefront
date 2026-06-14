@@ -32,7 +32,7 @@ frequency/phase (constant envelope, a Carson-rule fan of sidebands).
 ## Modulation features
 
 `extractFeatures` returns three discriminators — envelope coefficient of variation (constant-envelope
-vs amplitude-bearing), spectral flatness (compact vs wideband), and Q-rail energy fraction (BPSK ≈ 0
+vs amplitude-bearing), spectral spread (compact MSK vs wide FSK), and Q-rail energy fraction (BPSK ≈ 0
 vs QPSK/QAM ≈ ½). `classify` is nearest-prototype in that space; the tests confirm each clean scheme
 classifies as itself.
 

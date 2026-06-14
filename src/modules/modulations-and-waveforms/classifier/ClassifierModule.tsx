@@ -23,15 +23,41 @@ const trainingBits = (() => {
   return Array.from({ length: 400 }, () => (rng() < 0.5 ? 0 : 1));
 })();
 
-// Prototype feature vectors from clean reference signals (built once).
-const PROTOTYPES: Record<string, Features> = Object.fromEntries(
-  NAMES.map((n) => [n, extractFeatures(MODULATORS[n].modulate(trainingBits, SPS).signal)])
-);
-
 function rngBits(seed: number, n: number): number[] {
   const rng = mulberry32(seed);
   return Array.from({ length: n }, () => (rng() < 0.5 ? 0 : 1));
 }
+
+/** Add the same per-sample AWGN the mystery uses (σ ≈ mean envelope / 14 — enough to be visibly
+ *  noisy while keeping the constant-envelope pair FSK/MSK separable). */
+function addChannelNoise(signal: Complex[], seed: number): Complex[] {
+  const sigma = signal.reduce((s, c) => s + Math.hypot(c.re, c.im), 0) / signal.length / 14;
+  const ni = gaussianNoise(signal.length, sigma, seed);
+  const nq = gaussianNoise(signal.length, sigma, seed + 1);
+  return signal.map((s, i) => ({ re: s.re + ni[i], im: s.im + nq[i] }));
+}
+
+// Noise-matched prototypes: average each scheme's features over several noisy realizations, so a
+// noisy mystery is compared against noisy references (clean prototypes would misread, e.g. noise
+// pushes MSK's spectral flatness toward clean FSK).
+const PROTOTYPES: Record<string, Features> = Object.fromEntries(
+  NAMES.map((n) => {
+    const sig = MODULATORS[n].modulate(trainingBits, SPS).signal;
+    const reps = Array.from({ length: 6 }, (_, k) =>
+      extractFeatures(addChannelNoise(sig, 1000 + k * 13))
+    );
+    const mean = (sel: (f: Features) => number) =>
+      reps.reduce((s, f) => s + sel(f), 0) / reps.length;
+    return [
+      n,
+      {
+        envelopeCv: mean((f) => f.envelopeCv),
+        spectralSpread: mean((f) => f.spectralSpread),
+        qFraction: mean((f) => f.qFraction),
+      },
+    ];
+  })
+);
 
 /**
  * Modulation-classification capstone (brief §6 stretch). Here's an unknown signal — which scheme is
@@ -46,10 +72,7 @@ export function ClassifierModule() {
     const truth = NAMES[seed % NAMES.length];
     const mod = MODULATORS[truth];
     const { signal, symbols } = mod.modulate(rngBits(seed * 17 + 1, 320), SPS);
-    const sigma = signal.reduce((s, c) => s + Math.hypot(c.re, c.im), 0) / signal.length / 8;
-    const ni = gaussianNoise(signal.length, sigma, seed + 5);
-    const nq = gaussianNoise(signal.length, sigma, seed + 6);
-    const noisy = signal.map((s, i) => ({ re: s.re + ni[i], im: s.im + nq[i] }));
+    const noisy = addChannelNoise(signal, seed * 2 + 5);
 
     const features = extractFeatures(noisy);
     const guess = classify(features, PROTOTYPES);
@@ -95,7 +118,7 @@ export function ClassifierModule() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <FeatureBar label="Envelope variation" value={features.envelopeCv} max={0.8} />
-        <FeatureBar label="Spectral flatness" value={features.spectralFlatness} max={1} />
+        <FeatureBar label="Spectral spread" value={features.spectralSpread} max={0.3} />
         <FeatureBar label="Q-rail fraction" value={features.qFraction} max={0.6} />
       </div>
 

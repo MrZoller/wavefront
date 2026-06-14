@@ -95,7 +95,10 @@ export const MODULATORS: Record<string, Modulator> = {
   BPSK: linear(CONSTELLATIONS.BPSK),
   QPSK: linear(CONSTELLATIONS.QPSK),
   '16-QAM': linear(CONSTELLATIONS.QAM16),
-  FSK: cpfsk('FSK', 0.8),
+  // FSK uses a wide modulation index so its two tones sit far apart — clearly broader-band than MSK
+  // (h = 0.5), which keeps the two separable in both the spectrogram and the classifier's features.
+  // (1.5 rather than a round 2 so per-sample phase doesn't land on a neat π/4 grid in the locus.)
+  FSK: cpfsk('FSK', 1.5),
   MSK: cpfsk('MSK', 0.5),
 };
 

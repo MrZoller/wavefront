@@ -10,8 +10,9 @@ import { fft } from './fft';
 export interface Features {
   /** Envelope coefficient of variation std(|s|)/mean(|s|): ~0 for constant-envelope, high for QAM. */
   envelopeCv: number;
-  /** Spectral flatness (Wiener entropy) of the power spectrum, 0…1: high = noise-like/wideband. */
-  spectralFlatness: number;
+  /** Power-weighted RMS bandwidth in normalized frequency [0,0.5]: small for compact schemes (MSK),
+   *  large when energy spreads far from center (wide FSK). Robust to a uniform noise floor. */
+  spectralSpread: number;
   /** Fraction of energy on the Q rail: ~0 for BPSK (real only), ~0.5 for QPSK/QAM/FSK. */
   qFraction: number;
 }
@@ -34,16 +35,28 @@ export function extractFeatures(signal: Complex[]): Features {
   }
   const qFraction = totE > 1e-12 ? qE / totE : 0;
 
+  // Power-weighted RMS bandwidth about the spectral centroid, in normalized frequency (−0.5…0.5).
   const N = nextPow2(n);
   const padded: Complex[] = Array.from({ length: N }, (_, i) =>
     i < n ? signal[i] : { re: 0, im: 0 }
   );
-  const power = fft(padded).map((c) => c.re * c.re + c.im * c.im + 1e-12);
-  const logMean = power.reduce((s, p) => s + Math.log(p), 0) / N;
-  const arithMean = power.reduce((s, p) => s + p, 0) / N;
-  const spectralFlatness = Math.exp(logMean) / arithMean;
+  const power = fft(padded).map((c) => c.re * c.re + c.im * c.im);
+  let pSum = 0;
+  let fSum = 0;
+  for (let k = 0; k < N; k++) {
+    const f = k < N / 2 ? k / N : (k - N) / N; // unshifted bin → normalized freq
+    pSum += power[k];
+    fSum += f * power[k];
+  }
+  const centroid = pSum > 1e-12 ? fSum / pSum : 0;
+  let varSum = 0;
+  for (let k = 0; k < N; k++) {
+    const f = k < N / 2 ? k / N : (k - N) / N;
+    varSum += power[k] * (f - centroid) ** 2;
+  }
+  const spectralSpread = pSum > 1e-12 ? Math.sqrt(varSum / pSum) : 0;
 
-  return { envelopeCv, spectralFlatness, qFraction };
+  return { envelopeCv, spectralSpread, qFraction };
 }
 
 /** Nearest-prototype classifier: the scheme whose feature vector is closest (Euclidean). */
@@ -53,7 +66,7 @@ export function classify(f: Features, prototypes: Record<string, Features>): str
   for (const [name, p] of Object.entries(prototypes)) {
     const d =
       (f.envelopeCv - p.envelopeCv) ** 2 +
-      (f.spectralFlatness - p.spectralFlatness) ** 2 +
+      (f.spectralSpread - p.spectralSpread) ** 2 +
       (f.qFraction - p.qFraction) ** 2;
     if (d < bestD) {
       bestD = d;

@@ -11,14 +11,14 @@ compositions of the primitives.
 
 ## Modules
 
-| Module                    | Intuition                                                                         | Status      |
-| ------------------------- | --------------------------------------------------------------------------------- | ----------- |
-| **Analog: AM / FM / PM**  | One message, three carriers — wiggle amplitude, frequency, or phase.              | ✅ shipping |
-| **Modulation Zoo**        | A/B two schemes across five synchronized views (the marquee).                     | ✅ shipping |
-| **OFDM**                  | Many slow QPSK subcarriers via IFFT + cyclic prefix; multipath made easy.         | ✅ shipping |
-| **Spread Spectrum**       | A PN code smears data wide and low, then de-spreads it back (processing gain).    | advanced    |
-| **Chirp / LFM**           | A swept tone draws the spectrogram diagonal; pulse compression.                   | advanced    |
-| **Modulation Classifier** | Identify an unknown scheme from a few features (envelope, flatness, I/Q balance). | advanced    |
+| Module                    | Intuition                                                                       | Status      |
+| ------------------------- | ------------------------------------------------------------------------------- | ----------- |
+| **Analog: AM / FM / PM**  | One message, three carriers — wiggle amplitude, frequency, or phase.            | ✅ shipping |
+| **Modulation Zoo**        | A/B two schemes across five synchronized views (the marquee).                   | ✅ shipping |
+| **OFDM**                  | Many slow QPSK subcarriers via IFFT + cyclic prefix; multipath made easy.       | ✅ shipping |
+| **Spread Spectrum**       | A PN code smears data wide and low, then de-spreads it back (processing gain).  | advanced    |
+| **Chirp / LFM**           | A swept tone draws the spectrogram diagonal; pulse compression.                 | advanced    |
+| **Modulation Classifier** | Identify an unknown scheme from a few features (envelope, spread, I/Q balance). | advanced    |
 
 ![Modulation Zoo module](../images/modulation-zoo.png)
 
