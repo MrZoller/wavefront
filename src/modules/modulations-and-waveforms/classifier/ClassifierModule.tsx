@@ -62,7 +62,8 @@ const PROTOTYPES: Record<string, Features> = Object.fromEntries(
 );
 
 /**
- * Modulation-classification capstone (brief §6 stretch). Here's an unknown signal — which scheme is
+ * Modulation classification (brief §6 stretch) — the track's terminal synthesis. Here's an unknown
+ * signal — which scheme is
  * it, and how can you tell? The same hand-built features that separate the schemes (envelope
  * variation, spectral flatness, I/Q balance) drive a nearest-prototype classifier. Reveal to check.
  */

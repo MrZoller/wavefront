@@ -6,6 +6,8 @@ registerModule({
   id: 'tdoa-multilateration',
   title: 'TDOA Multilateration',
   track: 'direction-finding',
+  layer: 2,
+  order: 6,
   oneLineIntuition:
     'Each receiver pair is a hyperbola of constant range difference; a 4th receiver resolves which intersection is the emitter.',
   component: TdoaModule,

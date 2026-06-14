@@ -36,6 +36,23 @@ export interface ModuleDef {
   explanation?: ComponentType;
   /** Optional flag for advanced/optional or stretch modules (§4 marks several). */
   status?: 'stable' | 'advanced' | 'stub';
+  /**
+   * Which stage of the track's climb this module belongs to (0-based). Modules are grouped by
+   * layer in navigation; the track's `layerNames` gives each layer a human name.
+   */
+  layer: number;
+  /**
+   * Position in the track's pedagogical sequence — unique within a track, assigned ascending
+   * through the layers. Navigation renders modules in this order, not registration order.
+   */
+  order: number;
+  /**
+   * Marks the track's capstone: its **marquee** destination — the one chip per track that reads as
+   * where the climb leads, so the rest read as steps toward it. Exactly one module per track sets
+   * this. The capstone is the marquee, *not* necessarily the last module by `order` (a track's
+   * terminal/synthesis module can differ from its marquee — see docs/ARCHITECTURE.md).
+   */
+  isCapstone?: boolean;
 }
 
 /** An ordered collection of modules with shared framing (brief §9). */
@@ -46,4 +63,10 @@ export interface TrackDef {
   description: string;
   /** Build/ship status so the shell can flag what's live vs. in progress vs. planned. */
   status: 'shipping' | 'building' | 'planned';
+  /**
+   * Human name for each layer index this track uses (e.g. `0 → "Foundations"`). Surfaced as quiet
+   * subheaders that break the otherwise-flat module list into named stages. Every layer a module
+   * declares must have a name here (enforced by the registry test).
+   */
+  layerNames?: Record<number, string>;
 }

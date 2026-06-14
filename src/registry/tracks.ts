@@ -12,24 +12,32 @@ export const TRACKS: TrackDef[] = [
     title: 'Direction Finding & Geolocation',
     description: 'How do you find where a transmitter is? From phasors up to a live GDOP map.',
     status: 'shipping',
+    layerNames: { 0: 'Foundations', 1: 'Angle of Arrival', 2: 'Geolocation' },
   },
   {
     id: 'playing-a-radio-signal',
     title: 'Playing a Radio Signal',
     description: 'What actually happens when you send data over the air, end to end?',
     status: 'shipping',
+    layerNames: { 0: 'The Transmit Chain', 1: 'The Channel & Receiver', 2: 'End to End' },
   },
   {
     id: 'modulations-and-waveforms',
     title: 'Modulations & Waveforms',
     description: 'Every modulation scheme has a fingerprint — see them side by side.',
     status: 'shipping',
+    layerNames: { 0: 'Modulation Schemes', 1: 'Classification' },
   },
   {
     id: 'fundamentals',
     title: 'Fundamentals',
     description: 'Why does any of this work? Sampling, filtering, the FFT, and channelization.',
     status: 'building',
+    layerNames: {
+      0: 'Sampling & the Frequency Domain',
+      1: 'Filtering & Multirate',
+      2: 'Channelization',
+    },
   },
   {
     id: 'propagation-and-bands',

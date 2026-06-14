@@ -1,3 +1,4 @@
+import { TRACK_BY_ID } from './tracks';
 import type { ModuleDef, TrackId } from './types';
 
 /**
@@ -31,12 +32,42 @@ export function getModules(): readonly ModuleDef[] {
   return MODULES;
 }
 
-/** Modules belonging to a given track, in registration order. */
+/** Modules belonging to a given track, in pedagogical sequence (ascending `order`). */
 export function getModulesForTrack(track: TrackId): ModuleDef[] {
-  return MODULES.filter((m) => m.track === track);
+  return MODULES.filter((m) => m.track === track).sort((a, b) => a.order - b.order);
 }
 
 /** Look up a single module by id. */
 export function getModule(id: string): ModuleDef | undefined {
   return MODULES.find((m) => m.id === id);
+}
+
+/** A track's layer (stage), with its human name and the ordered modules that belong to it. */
+export interface TrackLayer {
+  layer: number;
+  name: string;
+  modules: ModuleDef[];
+}
+
+/**
+ * The track's modules grouped into ordered layers, each carrying its human name — the single
+ * source the sidebar and landing card both render from, so they stay in sync and a new module
+ * inherits the staged structure by declaring its `layer`/`order`. Modules within a layer keep
+ * pedagogical order; layers are returned ascending.
+ */
+export function getTrackLayers(track: TrackId): TrackLayer[] {
+  const def = TRACK_BY_ID[track];
+  const groups = new Map<number, ModuleDef[]>();
+  for (const m of getModulesForTrack(track)) {
+    const group = groups.get(m.layer);
+    if (group) group.push(m);
+    else groups.set(m.layer, [m]);
+  }
+  return [...groups.keys()]
+    .sort((a, b) => a - b)
+    .map((layer) => ({
+      layer,
+      name: def?.layerNames?.[layer] ?? `Layer ${layer}`,
+      modules: groups.get(layer)!,
+    }));
 }
