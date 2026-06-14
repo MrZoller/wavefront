@@ -1,4 +1,5 @@
-import { APP_NAME, APP_TAGLINE } from '@/config';
+import { Wordmark } from '@/components/Wordmark';
+import { APP_TAGLINE } from '@/config';
 import { TRACKS, getTrackLayers } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
@@ -20,8 +21,8 @@ export function Sidebar() {
           onClick={() => setActiveModule(null)}
           className="text-left transition-opacity hover:opacity-80"
         >
-          <h1 className="text-lg font-semibold tracking-tight text-signal glow-signal">
-            {APP_NAME}
+          <h1 className="text-lg">
+            <Wordmark />
           </h1>
           <p className="mt-0.5 text-xs text-text-muted">{APP_TAGLINE}</p>
         </button>
