@@ -185,7 +185,11 @@ same way everywhere (documented so new tracks inherit it):
   becomes `grab` on hover and `grabbing` while dragging, a faint **persistent halo ring** marks each
   handle as grabbable (not plotted data), and keyboard users get a focus ring + arrow-key nudge.
   `WorldMap` owns this for the geolocation maps; bespoke canvases follow the same recipe.
-- **Sliders / range inputs** get `cursor: pointer` (set app-wide in `index.css`) plus the accent thumb.
+- **Sliders** all go through the shared **`<Slider>`** (`src/components/Slider.tsx`) — never a
+  hand-rolled `<input type="range">` (a test fails if one appears). It pairs the static field name
+  with its live accent value and renders one range input whose track surface, accent fill-to-value,
+  and grabbable handle are styled once in `index.css`, so a slider never reads as a bare dot on a
+  hairline regardless of the page it's on.
 - **Selectable chips / buttons** look pressable — border + surface fill, a hover state, and a clear
   selected state (`border-signal-dim bg-surface-raised text-signal`). They must not read as a legend.
 - **Lean on passive affordance.** Cursor/hover/focus do the discovery; keep at most **one quiet

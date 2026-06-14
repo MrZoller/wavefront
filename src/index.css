@@ -57,10 +57,69 @@ body {
 
 /*
  * Interactive-affordance language (see CONTRIBUTING → "Interactive affordance"). Everything the user
- * can act on signals it: sliders get a pointer cursor here app-wide; draggable canvas handles set
- * `grab`/`grabbing` themselves (cursor + a faint halo ring); chips/buttons use hover + selected
- * styling. The aim is "obvious on hover", so the textual hint can stay a single quiet line per map.
+ * can act on signals it: draggable canvas handles set `grab`/`grabbing` themselves (cursor + a faint
+ * halo ring), chips/buttons use hover + selected styling, and sliders get the control surface below.
+ * The aim is "obvious on hover", so the textual hint can stay a single quiet line per map.
+ *
+ * Sliders are the most common control, so style them once here (every one goes through the shared
+ * <Slider>, which sets --wf-accent and the filled-to-value --wf-fill). A rounded track on a subtle
+ * surface, an accent fill up to the value, and a grabbable accent handle with hover/focus halos —
+ * so a slider never reads as a bare dot on a hairline, on any page.
  */
 input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 16px;
+  background: transparent;
   cursor: pointer;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--wf-accent, var(--color-signal)) var(--wf-fill, 0%),
+    var(--color-border) var(--wf-fill, 0%)
+  );
+}
+input[type='range']::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--color-border);
+}
+input[type='range']::-moz-range-progress {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--wf-accent, var(--color-signal));
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--wf-accent, var(--color-signal));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wf-accent, var(--color-signal)) 20%, transparent);
+  transition: box-shadow 120ms var(--ease-instrument);
+}
+input[type='range']::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+  background: var(--wf-accent, var(--color-signal));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--wf-accent, var(--color-signal)) 20%, transparent);
+}
+input[type='range']:hover::-webkit-slider-thumb,
+input[type='range']:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--wf-accent, var(--color-signal)) 38%, transparent);
+}
+input[type='range']:hover::-moz-range-thumb,
+input[type='range']:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--wf-accent, var(--color-signal)) 38%, transparent);
+}
+input[type='range']:focus {
+  outline: none;
 }
