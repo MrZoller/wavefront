@@ -54,3 +54,13 @@ body {
 .glow-signal {
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-signal) 60%, transparent));
 }
+
+/*
+ * Interactive-affordance language (see CONTRIBUTING → "Interactive affordance"). Everything the user
+ * can act on signals it: sliders get a pointer cursor here app-wide; draggable canvas handles set
+ * `grab`/`grabbing` themselves (cursor + a faint halo ring); chips/buttons use hover + selected
+ * styling. The aim is "obvious on hover", so the textual hint can stay a single quiet line per map.
+ */
+input[type='range'] {
+  cursor: pointer;
+}

@@ -88,7 +88,16 @@ export function InterferometerModule() {
         ctx.fill();
       }
 
-      // Emitter (draggable).
+      // Emitter (draggable): a faint handle ring marks it grabbable and the grab cursor confirms it
+      // on hover, so no on-canvas "drag me" label is needed (the hint lives once, below the controls).
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = colors.alert;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(emX, emY, 11, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.restore();
       ctx.fillStyle = colors.alert;
       ctx.shadowColor = colors.alert;
       ctx.shadowBlur = 10;
@@ -96,9 +105,6 @@ export function InterferometerModule() {
       ctx.arc(emX, emY, 7, 0, 2 * Math.PI);
       ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.fillStyle = colors.textMuted;
-      ctx.font = '11px ui-monospace, monospace';
-      ctx.fillText('emitter — drag me', emX + 12, emY + 4);
     },
     [dLambda, emitter, trueTheta, candidates]
   );
@@ -141,13 +147,14 @@ export function InterferometerModule() {
     <div className="flex flex-col gap-6">
       <canvas
         ref={canvasRef}
-        style={{ width: '100%', height: 340, touchAction: 'none', cursor: 'crosshair' }}
+        style={{ width: '100%', height: 340, touchAction: 'none', cursor: 'grab' }}
         className="rounded-md border border-border bg-surface"
         role="img"
         aria-label="Two antennas with a draggable emitter and its lines of bearing"
         onPointerDown={(e) => {
           dragging.current = true;
           e.currentTarget.setPointerCapture(e.pointerId);
+          e.currentTarget.style.cursor = 'grabbing';
           updateFromPointer(e);
         }}
         onPointerMove={(e) => {
@@ -156,6 +163,7 @@ export function InterferometerModule() {
         onPointerUp={(e) => {
           dragging.current = false;
           e.currentTarget.releasePointerCapture(e.pointerId);
+          e.currentTarget.style.cursor = 'grab';
         }}
       />
 
