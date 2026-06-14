@@ -51,7 +51,7 @@ export function MultirateModule() {
           </span>
           <input
             type="range"
-            min={2}
+            min={3}
             max={6}
             step={1}
             value={factor}

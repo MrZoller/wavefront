@@ -7,7 +7,7 @@ import { fft } from '@/dsp/fft';
 import { firResponseDb } from '@/dsp/filter';
 import { windowFn } from '@/dsp/window';
 import { bareFftProto, channelize, pfbProto } from '@/dsp/channelizer';
-import { magnitudeSpectrumDb } from '@/dsp/spectrum';
+import { magnitudeSpectrumLinear, toDb } from '@/dsp/spectrum';
 
 const N = 512;
 const FLOOR = -60;
@@ -49,24 +49,25 @@ export function ChannelizerModule() {
     const X = fft(wide).map((c) => Math.hypot(c.re, c.im));
     const peak = Math.max(...X);
     const wideDb = X.map((m) => Math.max(FLOOR, 20 * Math.log10(m / peak)));
-    const chan = channelize(
-      Array.from({ length: N }, (_, n) => {
-        // unwindowed copy for extraction (the window is only for the display spectrum)
-        let re = 0;
-        let im = 0;
-        for (const t of TONES) {
-          re += t.a * Math.cos(2 * Math.PI * t.f * n);
-          im += t.a * Math.sin(2 * Math.PI * t.f * n);
-        }
-        return { re, im };
-      }),
-      nCh,
-      proto
-    );
+
+    // Unwindowed copy for extraction (the window is only for the display spectrum).
+    const raw: Complex[] = Array.from({ length: N }, (_, n) => {
+      let re = 0;
+      let im = 0;
+      for (const t of TONES) {
+        re += t.a * Math.cos(2 * Math.PI * t.f * n);
+        im += t.a * Math.sin(2 * Math.PI * t.f * n);
+      }
+      return { re, im };
+    });
+    const chan = channelize(raw, nCh, proto).map((c) => magnitudeSpectrumLinear(c, 'hann'));
+    // Shared reference across all channels (≈ the strong signal channel, ~mode-independent) so a
+    // suppressed PFB leakage-only channel reads low instead of rescaling itself to 0 dB.
+    const ref = Math.max(1e-9, ...chan.map((m) => Math.max(...m)));
     return {
       wideDb,
       protoResp: firResponseDb(proto, 512),
-      extracted: magnitudeSpectrumDb(chan[sel] ?? [], 'hann'),
+      extracted: toDb(chan[sel] ?? [], FLOOR, ref),
     };
   }, [wide, nCh, mode, sel]);
 
@@ -78,10 +79,17 @@ export function ChannelizerModule() {
       // Channel k is tuned to k/nCh (matching `channelize`), so it spans ±0.5/nCh around that center.
       const center = sel / nCh;
       const halfW = 0.5 / nCh;
+      const wrap = (f: number) => ((f % 1) + 1) % 1;
 
-      // Selected channel band highlight (centered on the channel's true center frequency).
+      // Selected channel band highlight, wrapping around the [0,1) edge (channel 0 straddles DC).
       ctx.fillStyle = 'rgba(62, 240, 160, 0.10)';
-      ctx.fillRect(xOf(center - halfW), 0, w / nCh, h);
+      const a = wrap(center - halfW);
+      const b = wrap(center + halfW);
+      if (a <= b) ctx.fillRect(xOf(a), 0, (b - a) * w, h);
+      else {
+        ctx.fillRect(xOf(a), 0, (1 - a) * w, h);
+        ctx.fillRect(0, 0, b * w, h);
+      }
 
       // Channel boundaries — the edges between channel centers, at (k + 0.5)/nCh.
       ctx.strokeStyle = colors.border;
@@ -106,22 +114,20 @@ export function ChannelizerModule() {
       }
       ctx.stroke();
 
-      // Selected channel's filter shape, centered on the channel (leaky for FFT, sharp for PFB).
+      // Selected channel's filter shape, centered on the channel (leaky for FFT, sharp for PFB),
+      // wrapping around the band edge so channel 0's two halves both show.
       ctx.strokeStyle = colors.cyan;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      let started = false;
+      let prevX: number | null = null;
       for (let j = 0; j < protoResp.length; j++) {
         const fp = -0.5 + j / protoResp.length;
         if (Math.abs(fp) > 2.5 / nCh) continue; // a few channel-widths around the passband
-        const f = center + fp;
-        if (f < 0 || f > 1) continue;
-        const x = xOf(f);
+        const x = xOf(wrap(center + fp));
         const y = yOf(Math.max(FLOOR, protoResp[j]));
-        if (!started) {
-          ctx.moveTo(x, y);
-          started = true;
-        } else ctx.lineTo(x, y);
+        if (prevX === null || Math.abs(x - prevX) > w * 0.5) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+        prevX = x;
       }
       ctx.stroke();
     },
@@ -194,6 +200,7 @@ export function ChannelizerModule() {
         </p>
         <SpectrumPlot
           data={extracted}
+          floorDb={FLOOR}
           height={120}
           ariaLabel={`Extracted channel ${sel} spectrum`}
         />
