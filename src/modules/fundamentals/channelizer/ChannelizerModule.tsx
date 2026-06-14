@@ -75,17 +75,22 @@ export function ChannelizerModule() {
       const xOf = (f: number) => f * w; // f in [0,1)
       const yOf = (db: number) => h - ((db - FLOOR) / -FLOOR) * h;
 
-      // Selected channel band highlight.
-      ctx.fillStyle = 'rgba(62, 240, 160, 0.10)';
-      ctx.fillRect(xOf(sel / nCh), 0, w / nCh, h);
+      // Channel k is tuned to k/nCh (matching `channelize`), so it spans ±0.5/nCh around that center.
+      const center = sel / nCh;
+      const halfW = 0.5 / nCh;
 
-      // Channel grid.
+      // Selected channel band highlight (centered on the channel's true center frequency).
+      ctx.fillStyle = 'rgba(62, 240, 160, 0.10)';
+      ctx.fillRect(xOf(center - halfW), 0, w / nCh, h);
+
+      // Channel boundaries — the edges between channel centers, at (k + 0.5)/nCh.
       ctx.strokeStyle = colors.border;
       ctx.lineWidth = 1;
-      for (let k = 0; k <= nCh; k++) {
+      for (let k = 0; k < nCh; k++) {
+        const bx = xOf((k + 0.5) / nCh);
         ctx.beginPath();
-        ctx.moveTo(xOf(k / nCh), 0);
-        ctx.lineTo(xOf(k / nCh), h);
+        ctx.moveTo(bx, 0);
+        ctx.lineTo(bx, h);
         ctx.stroke();
       }
 
@@ -102,7 +107,6 @@ export function ChannelizerModule() {
       ctx.stroke();
 
       // Selected channel's filter shape, centered on the channel (leaky for FFT, sharp for PFB).
-      const center = (sel + 0.5) / nCh;
       ctx.strokeStyle = colors.cyan;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
