@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PhasorPlot } from '@/components/plots/PhasorPlot';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
 import { colors } from '@/design/tokens';
@@ -107,9 +108,9 @@ export function PhasorModule() {
         {/* The same tone as I(t) and Q(t) over time. */}
         <div className="flex min-w-[280px] flex-1 flex-col gap-4">
           <div>
-            <p className="readout mb-1 text-xs text-text-muted">
+            <PlotTitle>
               I(t) = cos(2π·f·t) <span className="text-text-faint">— in-phase</span>
-            </p>
+            </PlotTitle>
             <TimeSeriesPlot
               series={[{ color: colors.signal, samples: frame.i }]}
               yDomain={[-1.1, 1.1]}
@@ -120,9 +121,9 @@ export function PhasorModule() {
             />
           </div>
           <div>
-            <p className="readout mb-1 text-xs text-text-muted">
+            <PlotTitle>
               Q(t) = sin(2π·f·t) <span className="text-text-faint">— quadrature</span>
-            </p>
+            </PlotTitle>
             <TimeSeriesPlot
               series={[{ color: colors.cyan, samples: frame.q }]}
               yDomain={[-1.1, 1.1]}

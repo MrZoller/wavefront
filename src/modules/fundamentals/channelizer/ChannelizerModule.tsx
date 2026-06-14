@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -197,9 +198,9 @@ export function ChannelizerModule() {
       </div>
 
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
+        <PlotTitle>
           extracted channel {sel} (mixed to baseband, filtered, decimated by {nCh})
-        </p>
+        </PlotTitle>
         <SpectrumPlot
           data={extracted}
           floorDb={FLOOR}

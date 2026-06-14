@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -32,9 +33,7 @@ export function ChirpModule() {
         ariaLabel="Chirp spectrogram showing the swept-frequency diagonal"
       />
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
-          chirp waveform (I) — note the rising frequency
-        </p>
+        <PlotTitle>chirp waveform (I) — note the rising frequency</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.signal, samples: wave }]}
           height={110}

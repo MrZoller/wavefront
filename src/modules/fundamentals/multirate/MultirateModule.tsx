@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { type Complex } from '@/dsp/complex';
 import { decimate } from '@/dsp/multirate';
@@ -33,9 +34,7 @@ export function MultirateModule() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
-          original spectrum — a wanted tone (near DC) and an out-of-band tone
-        </p>
+        <PlotTitle>original spectrum — a wanted tone (near DC) and an out-of-band tone</PlotTitle>
         <SpectrumPlot
           data={original}
           height={130}
@@ -45,9 +44,9 @@ export function MultirateModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
+        <PlotTitle>
           after decimating by {factor} {antiAlias ? '(with anti-alias filter)' : '(no filter)'}
-        </p>
+        </PlotTitle>
         <SpectrumPlot
           data={decimated}
           height={130}

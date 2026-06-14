@@ -142,8 +142,11 @@ interface AxisLabel {
   `EyeDiagramPlot`) make `xLabel`/`yLabel` **required props** — a plot that doesn't name its axes
   won't compile, so new modules are labeled by default rather than by remembering. Reuse the `AXIS`
   presets for recurring axes (`magnitudeDb`, `normalizedFrequency`, `sample`, `time`, `amplitude`) so
-  every spectrum is worded the same way; put descriptive titles ("passband on the wire") in a `<p>`
-  above the plot, not in the axis label.
+  every spectrum is worded the same way; put a plot's descriptive title ("passband on the wire") in a
+  `<PlotTitle>` above the plot, not in the axis label. `PlotTitle` renders the name as a heading
+  (proportional face, a little brighter/heavier) so it stays distinct from the quiet monospace axis
+  captions that share the corner — without it the title and the top-left y-label fuse into one
+  two-line caption.
 - The plots with **intrinsic** axes label themselves: `ConstellationPlot` and `PhasorPlot` draw the
   `I`/`Q` axes, and `PolarPlot` captions its bearing/power axes. `WorldMap` is exempt — its
   latitude/longitude graticule is self-describing.

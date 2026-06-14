@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -123,9 +124,9 @@ export function CrossCorrelationModule() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <div>
-          <p className="readout mb-1 text-xs text-text-muted">
+          <PlotTitle>
             Reference burst <span className="text-text-faint">— what we&rsquo;re looking for</span>
-          </p>
+          </PlotTitle>
           <TimeSeriesPlot
             series={[{ color: colors.cyan, samples: ref }]}
             yDomain={[-1.3, 1.3]}
@@ -137,12 +138,12 @@ export function CrossCorrelationModule() {
         </div>
 
         <div>
-          <p className="readout mb-1 text-xs text-text-muted">
+          <PlotTitle>
             Received signal{' '}
             <span className="text-text-faint">
               — burst buried in noise (reference overlaid at lag {scrubLag})
             </span>
-          </p>
+          </PlotTitle>
           <TimeSeriesPlot
             series={[
               { color: colors.textMuted, samples: received },

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -50,7 +51,7 @@ export function DftBasisModule() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">signal = sum of the chosen sinusoids</p>
+        <PlotTitle>signal = sum of the chosen sinusoids</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.signal, samples: wave }]}
           height={120}
@@ -61,9 +62,7 @@ export function DftBasisModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
-          magnitude spectrum |X[k]| — one bar per bin
-        </p>
+        <PlotTitle>magnitude spectrum |X[k]| — one bar per bin</PlotTitle>
         <canvas
           ref={canvasRef}
           style={{ width: '100%', height: 150 }}
