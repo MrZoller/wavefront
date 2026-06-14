@@ -53,3 +53,11 @@ import './fundamentals/fir-filter';
 import './fundamentals/multirate';
 // Layer 2 — Channelization
 import './fundamentals/channelizer';
+
+// Track F — Signal Chain & SDR
+// Layer 0 — The analog/digital boundary
+import './signal-chain-sdr/quantization';
+import './signal-chain-sdr/gain-agc';
+// Layer 1 — Architecture & orientation
+import './signal-chain-sdr/signal-chain';
+import './signal-chain-sdr/sdr-architectures';

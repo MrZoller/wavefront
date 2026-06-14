@@ -50,7 +50,11 @@ export function quantize(x: number, bits: number, opts: QuantizeOptions = {}): n
 }
 
 /** Quantize a whole signal (see {@link quantize}). */
-export function quantizeSignal(samples: number[], bits: number, opts: QuantizeOptions = {}): number[] {
+export function quantizeSignal(
+  samples: number[],
+  bits: number,
+  opts: QuantizeOptions = {}
+): number[] {
   return samples.map((s) => quantize(s, bits, opts));
 }
 

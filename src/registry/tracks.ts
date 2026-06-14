@@ -40,6 +40,17 @@ export const TRACKS: TrackDef[] = [
     },
   },
   {
+    id: 'signal-chain-sdr',
+    title: 'Signal Chain & SDR',
+    description:
+      'Where do the IQ samples come from? The analog↔digital boundary, and how a real radio maps to the math.',
+    status: 'building',
+    layerNames: {
+      0: 'The Analog/Digital Boundary',
+      1: 'Architecture & Orientation',
+    },
+  },
+  {
     id: 'propagation-and-bands',
     title: 'Propagation & Bands',
     description: 'The RF physics around the signal: bands, line-of-sight, and HF skywave.',
