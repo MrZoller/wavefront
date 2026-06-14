@@ -18,7 +18,9 @@ test('wordmark (README header)', async ({ page }) => {
   // Capture the real landing wordmark lockup (mark + word) so the README header tracks the app
   // rather than a hand-made image. A little padding around the heading gives it room to breathe.
   await page.goto('/');
-  const heading = page.getByRole('heading', { name: 'Wavefront' }).first();
+  // Scope to the landing's <main> — the sidebar also has an <h1>Wavefront</h1> (at a smaller size),
+  // and it renders first, so an unscoped `.first()` would capture the nav lockup instead.
+  const heading = page.getByRole('main').getByRole('heading', { name: 'Wavefront' });
   await expect(heading).toBeVisible();
   const box = await heading.boundingBox();
   if (!box) throw new Error('wordmark heading has no bounding box');

@@ -15,9 +15,11 @@ export default function App() {
         ) : (
           // The overview owns its own vertical scroll so cards stay reachable on short
           // viewports and as the registry grows (ModuleView manages its own scrolling).
-          <div className="h-full overflow-y-auto">
+          // It's the page's <main> landmark — parity with ModuleView, and it disambiguates the
+          // landing wordmark from the sidebar's (both are <h1>Wavefront</h1>).
+          <main className="h-full overflow-y-auto">
             <TrackOverview />
-          </div>
+          </main>
         )}
       </div>
     </div>
