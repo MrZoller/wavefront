@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { aliasedFrequency } from '@/dsp/sampling';
@@ -109,9 +110,11 @@ export function AliasingModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          faint cyan = the true tone · red dots = the samples (all the receiver gets) · green = the
-          slowest tone that fits those dots · below 0.5 they match; above 0.5 the green
-          &ldquo;alias&rdquo; is slower than the truth — the fast tone is gone
+          <GlossedText>
+            faint cyan = the true tone · red dots = the samples (all the receiver gets) · green =
+            the slowest tone that fits those dots · below 0.5 they match; above 0.5 the green
+            &ldquo;alias&rdquo; is slower than the truth — the fast tone is gone
+          </GlossedText>
         </p>
       </div>
     </div>

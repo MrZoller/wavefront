@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -67,7 +68,9 @@ export function DftBasisModule() {
       </div>
 
       <div>
-        <p className="readout mb-1.5 text-xs text-text-faint">toggle a basis frequency (bin):</p>
+        <p className="readout mb-1.5 text-xs text-text-faint">
+          <GlossedText>toggle a basis frequency (bin):</GlossedText>
+        </p>
         <div className="flex flex-wrap gap-2">
           {BINS.map((k) => (
             <button
@@ -90,9 +93,11 @@ export function DftBasisModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          each spectrum bar is the signal correlated with one sinusoid (a dot product) · add a
-          frequency and its bin jumps up; the time waveform is just those sinusoids summed · that
-          two-way street is the whole FFT
+          <GlossedText>
+            each spectrum bar is the signal correlated with one sinusoid (a dot product) · add a
+            frequency and its bin jumps up; the time waveform is just those sinusoids summed · that
+            two-way street is the whole FFT
+          </GlossedText>
         </p>
       </div>
     </div>

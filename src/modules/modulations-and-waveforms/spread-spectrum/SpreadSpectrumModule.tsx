@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { type Complex } from '@/dsp/complex';
 import { dsssSpread, pnCode, processingGainDb } from '@/dsp/waveforms';
@@ -69,10 +70,12 @@ export function SpreadSpectrumModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          spreading by L widens the spectrum ~L× and drops it ~L× lower · de-spreading at the
-          receiver collapses it back, lifting the signal {processingGainDb(factor).toFixed(0)} dB
-          above interference — the &ldquo;hide under the noise floor&rdquo; trick behind GPS and
-          CDMA
+          <GlossedText>
+            spreading by L widens the spectrum ~L× and drops it ~L× lower · de-spreading at the
+            receiver collapses it back, lifting the signal {processingGainDb(factor).toFixed(0)} dB
+            above interference — the &ldquo;hide under the noise floor&rdquo; trick behind GPS and
+            CDMA
+          </GlossedText>
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { type Complex } from '@/dsp/complex';
 import { decimate } from '@/dsp/multirate';
@@ -75,9 +76,11 @@ export function MultirateModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          decimating by N keeps only the central 1/N of the band · with the filter ON the
-          out-of-band tone is removed first, so the result is clean · turn it OFF and that tone
-          folds back in as a false spur — aliasing, exactly as in the sampling module
+          <GlossedText>
+            decimating by N keeps only the central 1/N of the band · with the filter ON the
+            out-of-band tone is removed first, so the result is clean · turn it OFF and that tone
+            folds back in as a false spur — aliasing, exactly as in the sampling module
+          </GlossedText>
         </p>
       </div>
     </div>

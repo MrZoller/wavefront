@@ -1,5 +1,5 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { basename, dirname, join } from 'node:path';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { GLOSSARY, allTerms } from './glossary';
 import { getModule } from '@/registry';
@@ -78,49 +78,9 @@ describe('contributor contract: coverage', () => {
     }
     expect(dangling, `dangling <Term> ids: ${dangling.join(', ')}`).toEqual([]);
   });
-});
 
-describe('contributor contract: per-surface coverage', () => {
-  // Restraint is scoped per explanatory *surface*: each side-rail explanation should gloss its own
-  // first significant use of a concept-bearing term, independent of the body copy. We can't police
-  // "first use" mechanically without false positives, so this is a deliberately conservative net:
-  // a curated set of unambiguous, rarely-clustering acronyms that should never sit unglossed in an
-  // explanation panel unless that very module is the one teaching the term.
-  const SURFACE_CHECK = [
-    'fft',
-    'ofdm',
-    'gdop',
-    'tdoa',
-    'fdoa',
-    'awgn',
-    'dsss',
-    'fir',
-    'pfb',
-    'ber',
-  ];
-
-  /** The module id registered alongside an explanation file (its sibling index.ts). */
-  function ownerModuleId(file: string): string | undefined {
-    const idx = join(dirname(file), 'index.ts');
-    if (!existsSync(idx)) return undefined;
-    return readFileSync(idx, 'utf8').match(/id:\s*'([^']+)'/)?.[1];
-  }
-
-  it('explanation panels gloss their load-bearing acronyms (per-surface, not per-page)', () => {
-    const violations: string[] = [];
-    const files = tsxFiles(join(process.cwd(), 'src')).filter((f) => f.endsWith('Explanation.tsx'));
-    for (const file of files) {
-      const src = readFileSync(file, 'utf8');
-      const owner = ownerModuleId(file);
-      for (const id of SURFACE_CHECK) {
-        const entry = GLOSSARY[id];
-        if (!entry || entry.moduleId === owner) continue; // self-taught surfaces are exempt
-        const appears = new RegExp(`\\b${entry.term}\\b`).test(src);
-        if (appears && !src.includes(`<Term id="${id}"`)) {
-          violations.push(`${entry.term} unglossed in ${basename(file)}`);
-        }
-      }
-    }
-    expect(violations, `per-surface gaps: ${violations.join(', ')}`).toEqual([]);
-  });
+  // Marking is now automatic and map-driven (see match.ts + GlossedText): a surface's first
+  // significant use of a term per section is marked by construction, so "is X glossed?" reduces to
+  // "is X in the map?". The mechanism (tokenization, first-use, teaching exclusion) is covered by
+  // src/glossary/match.test.ts and src/components/GlossedText.test.tsx.
 });

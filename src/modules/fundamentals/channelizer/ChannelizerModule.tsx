@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -208,10 +209,12 @@ export function ChannelizerModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          green = the wide band · vertical lines = channel edges · cyan = the selected
-          channel&rsquo;s filter · on <strong>bare FFT</strong> that filter is a leaky sinc with
-          tall sidelobes — its neighbors&rsquo; energy bleeds in · switch to{' '}
-          <strong>polyphase</strong> and the sidelobes collapse, isolating the channel cleanly
+          <GlossedText>
+            green = the wide band · vertical lines = channel edges · cyan = the selected
+            channel&rsquo;s filter · on <strong>bare FFT</strong> that filter is a leaky sinc with
+            tall sidelobes — its neighbors&rsquo; energy bleeds in · switch to{' '}
+            <strong>polyphase</strong> and the sidelobes collapse, isolating the channel cleanly
+          </GlossedText>
         </p>
       </div>
     </div>

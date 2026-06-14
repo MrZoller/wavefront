@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
@@ -88,9 +89,11 @@ export function FirFilterModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          the taps are a windowed sinc — narrow them (lower cutoff) and the sinc stretches out ·
-          more taps = a sharper transition and deeper stopband, but more compute · the red dot marks
-          the −6 dB cutoff
+          <GlossedText>
+            the taps are a windowed sinc — narrow them (lower cutoff) and the sinc stretches out ·
+            more taps = a sharper transition and deeper stopband, but more compute · the red dot
+            marks the −6 dB cutoff
+          </GlossedText>
         </p>
       </div>
     </div>

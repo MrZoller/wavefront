@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { phaseDifference, wrapPhase, candidateBearings } from '@/dsp/phase';
@@ -209,8 +210,10 @@ export function InterferometerModule() {
             aria-label="Baseline separation in wavelengths"
           />
           <span className="readout text-xs text-text-faint">
-            cyan rays = inferred bearings · green ray = truth · drag the emitter or use the bearing
-            slider
+            <GlossedText>
+              cyan rays = inferred bearings · green ray = truth · drag the emitter or use the
+              bearing slider
+            </GlossedText>
           </span>
         </label>
       </div>

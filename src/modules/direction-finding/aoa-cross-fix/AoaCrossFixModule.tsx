@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { aoaFix, errorEllipse, type Bearing } from '@/dsp/geolocation';
@@ -140,8 +141,10 @@ export function AoaCrossFixModule() {
             aria-label="Per-bearing angular error in degrees"
           />
           <span className="readout text-xs text-text-faint">
-            drag DF sites / emitter · push the emitter far or flatten the crossing to watch the
-            error region stretch
+            <GlossedText>
+              drag DF sites / emitter · push the emitter far or flatten the crossing to watch the
+              error region stretch
+            </GlossedText>
           </span>
         </label>
       </div>

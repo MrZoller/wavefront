@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { fdoa, type MovingReceiver, type Point } from '@/dsp/geolocation';
@@ -151,8 +152,10 @@ export function FdoaModule() {
             aria-label="Carrier frequency in megahertz"
           />
           <span className="readout text-xs text-text-faint">
-            drag receivers, their velocity arrows (v1 / v2), or the emitter · higher f₀ ⇒ a larger
-            Doppler shift, so the same geometry yields a bigger Δf
+            <GlossedText>
+              drag receivers, their velocity arrows (v1 / v2), or the emitter · higher f₀ ⇒ a larger
+              Doppler shift, so the same geometry yields a bigger Δf
+            </GlossedText>
           </span>
         </label>
       </div>

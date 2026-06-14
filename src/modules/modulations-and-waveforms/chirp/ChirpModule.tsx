@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -54,9 +55,11 @@ export function ChirpModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          the spectrogram diagonal is the frequency climbing with time · a wider sweep covers more
-          bandwidth, which (after matched filtering) compresses to a sharper, stronger pulse — long
-          and gentle on transmit, sharp on receive
+          <GlossedText>
+            the spectrogram diagonal is the frequency climbing with time · a wider sweep covers more
+            bandwidth, which (after matched filtering) compresses to a sharper, stronger pulse —
+            long and gentle on transmit, sharp on receive
+          </GlossedText>
         </p>
       </div>
     </div>

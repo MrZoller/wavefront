@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { WorldMap, type MapPoint } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { gdop, type Point } from '@/dsp/geolocation';
@@ -84,9 +85,11 @@ export function GdopModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          green = a small measurement error stays small here · red = it balloons into large position
-          error · spread the receivers out for a wide green basin; cluster or line them up and watch
-          precision collapse
+          <GlossedText>
+            green = a small measurement error stays small here · red = it balloons into large
+            position error · spread the receivers out for a wide green basin; cluster or line them
+            up and watch precision collapse
+          </GlossedText>
         </p>
       </div>
     </div>

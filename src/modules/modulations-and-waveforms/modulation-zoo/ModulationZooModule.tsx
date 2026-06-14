@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { EyeDiagramPlot } from '@/components/plots/EyeDiagramPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
@@ -78,9 +79,11 @@ export function ModulationZooModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          five views of the same signal · linear schemes (PSK/QAM) show tidy constellation clusters;
-          constant-envelope schemes (FSK/MSK) hide their data in frequency — read the spectrum and
-          spectrogram instead · lower the SNR and watch which scheme degrades first
+          <GlossedText>
+            five views of the same signal · linear schemes (PSK/QAM) show tidy constellation
+            clusters; constant-envelope schemes (FSK/MSK) hide their data in frequency — read the
+            spectrum and spectrogram instead · lower the SNR and watch which scheme degrades first
+          </GlossedText>
         </p>
       </div>
     </div>
