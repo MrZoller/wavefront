@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Inline glossary (`<Term>`).** A flat source of truth (`src/glossary/glossary.ts`) seeded with
+  the jargon across Tracks A–D, surfaced at the point of use by a `<Term id="…">` component: a subtle
+  dotted underline that opens a popover with the term's expansion, a one-line gloss, and a "Learn
+  more →" link into the module that teaches it. Mobile-first (tap-to-toggle, Esc/outside-tap
+  dismiss), keyboard-focusable, and self-reference-aware. Backed by a coverage test that fails CI on
+  dangling ids, unresolved module links, or a `docs/dsp` page with no glossary entry — plus the
+  contributor contract (the "what to define" cutoff) in `CONTRIBUTING.md` / `ARCHITECTURE.md`.
+
 - **🚧 Track D — Fundamentals.** The foundational back-fill track, six modules across three layers:
   - **Sampling & Aliasing** — samples + the aliased reconstruction; the Nyquist fold.
   - **The DFT as a Change of Basis** — toggle basis bins; each spectrum bar is a dot product.
