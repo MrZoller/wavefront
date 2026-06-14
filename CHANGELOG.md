@@ -8,6 +8,19 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚧 Track D — Fundamentals.** The foundational back-fill track, six modules across three layers:
+  - **Sampling & Aliasing** — samples + the aliased reconstruction; the Nyquist fold.
+  - **The DFT as a Change of Basis** — toggle basis bins; each spectrum bar is a dot product.
+  - **Windowing & Leakage** — window shape vs. an off-bin tone's leakage (mainlobe/sidelobe trade).
+  - **FIR Filtering** — taps (impulse response) ↔ frequency response, with cutoff/length controls.
+  - **Decimation & Interpolation** — multirate with an anti-alias toggle (aliasing returns when off).
+  - **Channelizer (PFB)** (marquee) — a wide band tiled into channels; bare-FFT vs polyphase toggle
+    showing inter-channel leakage appear and vanish, with a channel grid + extracted channel.
+- **New `dsp/` primitives (9 tests):** `filter.ts` (`firLowpass` / `firResponseDb`), `multirate.ts`
+  (`filterComplex` / `decimate` / `interpolate`), `sampling.ts` (`aliasedFrequency`), and
+  `channelizer.ts` (`ddc`, `channelize`, `bareFftProto` / `pfbProto`).
+- `docs/dsp/channelization.md` and `docs/tracks/fundamentals.md`.
+
 - **Track B channel completeness (brief §5 Layer 2).** Three additions finish the channel story:
   - **Multipath & Fading** — a direct ray plus a draggable echo; live channel frequency response
     (fading notches), blurred constellation, and a closing eye (ISI).
