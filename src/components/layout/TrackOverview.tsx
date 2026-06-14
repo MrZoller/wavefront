@@ -1,4 +1,5 @@
-import { APP_NAME, APP_DESCRIPTION } from '@/config';
+import { Wordmark } from '@/components/Wordmark';
+import { APP_DESCRIPTION } from '@/config';
 import { TRACKS, getTrackLayers } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
@@ -8,8 +9,8 @@ export function TrackOverview() {
 
   return (
     <div className="mx-auto max-w-3xl px-8 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">
-        <span className="text-signal glow-signal">{APP_NAME}</span>
+      <h1 className="text-3xl">
+        <Wordmark />
       </h1>
       <p className="mt-3 max-w-2xl text-text-muted">{APP_DESCRIPTION}</p>
 

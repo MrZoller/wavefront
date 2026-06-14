@@ -1,6 +1,17 @@
-# Wavefront
+<p align="center">
+  <img src="./docs/images/wordmark.png" alt="Wavefront" width="360" />
+</p>
 
-**Learn signal processing by watching the math happen.**
+<p align="center"><strong>Learn signal processing by watching the math happen.</strong></p>
+
+<!--
+  Hero shot. The static GDOP heatmap is the documented fallback; the intended hero is a short GIF of
+  a live interaction (drag a receiver, watch the precision field repaint). Swap it in here once GIF
+  capture is wired into the screenshot pipeline. Both the wordmark above and this shot come from
+  `npm run screenshots`, so they never drift from the app. The mark is explained in docs/brand.md.
+-->
+
+![GDOP heatmap — drag the receivers and watch the precision field repaint](./docs/images/gdop-heatmap.png)
 
 Wavefront is an interactive, visually striking web app that teaches DSP to **strong software
 engineers who are not electrical engineers**. The first track is **Direction Finding &
@@ -10,8 +21,6 @@ Geolocation** — the most visual corner of DSP — built on a small foundation 
 > The signature interaction is **direct manipulation**: drag the emitter, drag a receiver,
 > sweep a slider — and watch _everything_ recompute and animate in real time. That live
 > feedback loop is the soul of the tool.
-
-![GDOP heatmap — drag the receivers and watch the precision field repaint](./docs/images/gdop-heatmap.png)
 
 ## What it is / who it's for
 

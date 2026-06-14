@@ -14,6 +14,36 @@ test('track overview (landing)', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'overview.png') });
 });
 
+test('wordmark (README header)', async ({ page }) => {
+  // Capture the real landing wordmark lockup (mark + word) so the README header tracks the app
+  // rather than a hand-made image. A little padding around the heading gives it room to breathe.
+  await page.goto('/');
+  // Scope to the landing's <main> — the sidebar also has an <h1>Wavefront</h1> (at a smaller size),
+  // and it renders first, so an unscoped `.first()` would capture the nav lockup instead.
+  const heading = page.getByRole('main').getByRole('heading', { name: 'Wavefront' });
+  await expect(heading).toBeVisible();
+  // Measure the inline lockup span, not the block-level <h1>: the heading stretches across the full
+  // max-w-3xl column, which would leave the wordmark in the left third of a mostly-empty frame (and
+  // shrunk to a third once the README sets width=360). The span is fit-content, so its box is tight.
+  const lockup = heading.locator('span').first();
+  const box = await lockup.boundingBox();
+  if (!box) throw new Error('wordmark lockup has no bounding box');
+  // Frame the lockup with room for the glow, but keep the bottom inside the 12px gap to the
+  // description below so only the mark + word are captured.
+  const padX = 20;
+  const padTop = 16;
+  const padBottom = 2;
+  await page.screenshot({
+    path: path.join(IMG_DIR, 'wordmark.png'),
+    clip: {
+      x: box.x - padX,
+      y: box.y - padTop,
+      width: box.width + padX * 2,
+      height: box.height + padTop + padBottom,
+    },
+  });
+});
+
 test('rotating phasor module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'The Rotating Phasor / IQ' }).first().click();
