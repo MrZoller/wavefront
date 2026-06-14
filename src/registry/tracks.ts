@@ -29,7 +29,7 @@ export const TRACKS: TrackDef[] = [
     id: 'fundamentals',
     title: 'Fundamentals',
     description: 'Why does any of this work? Sampling, filtering, the FFT, and channelization.',
-    status: 'planned',
+    status: 'building',
   },
   {
     id: 'propagation-and-bands',

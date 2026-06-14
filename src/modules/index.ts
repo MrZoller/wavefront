@@ -42,3 +42,14 @@ import './modulations-and-waveforms/ofdm';
 import './modulations-and-waveforms/spread-spectrum';
 import './modulations-and-waveforms/chirp';
 import './modulations-and-waveforms/classifier';
+
+// Track D — Fundamentals
+// Layer 0 — Sampling & the frequency domain
+import './fundamentals/aliasing';
+import './fundamentals/dft-basis';
+import './fundamentals/windowing';
+// Layer 1 — Filtering & multirate
+import './fundamentals/fir-filter';
+import './fundamentals/multirate';
+// Layer 2 — Channelization
+import './fundamentals/channelizer';
