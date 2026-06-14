@@ -11,10 +11,13 @@ export interface PolarMarker {
 export interface PolarPlotProps {
   /** Bearing samples in radians within [−π/2, π/2], ascending. */
   anglesRad: number[];
-  /** Normalized magnitude in [0, 1] at each angle. */
+  /** Normalized magnitude/power in [0, 1] at each angle. */
   values: number[];
   /** Optional radial markers (source bearing, steering direction, candidates…). */
   markers?: PolarMarker[];
+  /** If set, plot the radius on a dB scale from `floorDb` (center) to 0 dB (edge), treating
+   *  `values` as linear power. This makes low sidelobes visible instead of collapsing to the origin. */
+  floorDb?: number;
   size?: number;
   className?: string;
 }
@@ -28,9 +31,16 @@ export function PolarPlot({
   anglesRad,
   values,
   markers = [],
+  floorDb,
   size = 300,
   className,
 }: PolarPlotProps) {
+  // Map a value to a [0,1] radius — linear, or compressed onto a dB scale when `floorDb` is set.
+  const radial = (v: number) => {
+    if (floorDb == null) return Math.max(0, Math.min(1, v));
+    const db = 10 * Math.log10(Math.max(1e-12, v));
+    return Math.max(0, Math.min(1, (db - floorDb) / -floorDb));
+  };
   const canvasRef = useCanvas(
     (ctx, w, h) => {
       const cx = w / 2;
@@ -71,7 +81,7 @@ export function PolarPlot({
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       for (let i = 0; i < anglesRad.length; i++) {
-        const p = pt(anglesRad[i], r * Math.max(0, Math.min(1, values[i])));
+        const p = pt(anglesRad[i], r * radial(values[i]));
         ctx.lineTo(p.x, p.y);
       }
       ctx.closePath();
@@ -95,7 +105,7 @@ export function PolarPlot({
         ctx.setLineDash([]);
       }
     },
-    [anglesRad, values, markers]
+    [anglesRad, values, markers, floorDb]
   );
 
   return (

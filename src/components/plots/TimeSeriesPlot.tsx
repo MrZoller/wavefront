@@ -10,7 +10,8 @@ export interface Series {
 
 export interface TimeSeriesPlotProps {
   series: Series[];
-  /** y-axis range. Defaults to [-1, 1] (handy for normalized waveforms). */
+  /** Minimum y-axis range; the plot always expands this to fit the data so traces never clip.
+   *  Defaults to [-1, 1] (handy for normalized waveforms). */
   yDomain?: [number, number];
   /** Optional axis labels for the readout. */
   xLabel?: string;
@@ -22,7 +23,8 @@ export interface TimeSeriesPlotProps {
 /**
  * A generic time-series (waveform) plot on Canvas 2D — the workhorse for showing
  * signals in the time domain (brief §9, §10). Reused across tracks for I/Q tones,
- * pulse shapes, eye diagrams, etc.
+ * pulse shapes, eye diagrams, etc. The y-axis auto-expands to fit the data (with a little
+ * headroom) so no trace is ever cut off, using `yDomain` only as a minimum range.
  */
 export function TimeSeriesPlot({
   series,
@@ -34,7 +36,18 @@ export function TimeSeriesPlot({
 }: TimeSeriesPlotProps) {
   const canvasRef = useCanvas(
     (ctx, w, h) => {
-      const [yMin, yMax] = yDomain;
+      // Fit the axis to the data (never smaller than yDomain), then add 6% headroom.
+      let yMin = yDomain[0];
+      let yMax = yDomain[1];
+      for (const s of series) {
+        for (const v of s.samples) {
+          if (v < yMin) yMin = v;
+          if (v > yMax) yMax = v;
+        }
+      }
+      const pad = (yMax - yMin) * 0.06 || 1;
+      yMin -= pad;
+      yMax += pad;
       const yToPx = (y: number) => h - ((y - yMin) / (yMax - yMin)) * h;
 
       // Zero / mid gridline.
