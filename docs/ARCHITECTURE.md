@@ -52,7 +52,9 @@ The app derives **all** navigation from these. There is no hand-maintained route
 3. Register it: in the module's entry file, call `registerModule({ ... })`, then import
    that file for its side effect from `src/modules/index.ts`.
 4. Add a "go deeper" doc under `docs/dsp/` and link the test that verifies the math.
-5. Capture a screenshot (it'll be picked up by `npm run screenshots`).
+5. **Register any new jargon** in `src/glossary/glossary.ts` and wrap its first in-UI use in
+   `<Term>` (see the glossary contract below).
+6. Capture a screenshot (it'll be picked up by `npm run screenshots`).
 
 That's the whole loop. No shell, routing, or navigation edits.
 
@@ -62,6 +64,25 @@ That's the whole loop. No shell, routing, or navigation edits.
 2. Add the `TrackId` to the union in `src/registry/types.ts`.
 3. Add modules per the recipe above. The sidebar and overview pick the track up automatically.
 4. Add a track page under `docs/tracks/`.
+
+## The glossary contract (`<Term>`)
+
+Jargon is surfaced inline for non-EE readers from one flat source of truth,
+`src/glossary/glossary.ts` (`id → { term, expansion?, gloss, moduleId?, docsPage? }`), rendered by
+`src/components/Term.tsx`. Three lengths of the same idea: the `gloss` (one sentence, shown in the
+popover) → the linked `moduleId` (the interactive lesson) → the `docsPage` (the long-form write-up).
+
+This is **infrastructure, not a track**, and it is **enforced, not aspirational**:
+`src/glossary/glossary.test.ts` fails CI if any `<Term id>` is dangling, any `moduleId` doesn't
+resolve, or **any `docs/dsp/` page lacks a glossary entry referencing it** — so shipping a new
+primitive without defining its term breaks the build. The component is mobile-first (tap-to-toggle,
+Esc/outside-tap dismiss), keyboard-focusable, and hides self-referential "Learn more" links at
+runtime.
+
+Keep it a **flat map** — no categories, search, or nested entries. The cutoff for _what_ earns an
+entry (the conceptual-load test, and the `Hz`-vs-`dB` contrast) lives in
+[CONTRIBUTING.md](../CONTRIBUTING.md#inline-glossary-term); apply that line rather than re-litigating
+it per term.
 
 ## Data flow
 
