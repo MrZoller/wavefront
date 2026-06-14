@@ -33,12 +33,17 @@ export function BeamformingModule() {
           <PolarPlot
             anglesRad={pattern.anglesRad}
             values={pattern.power}
+            floorDb={-40}
             markers={[
               { angleRad: deg(steerDeg), color: colors.signal, label: 'steer' },
               { angleRad: deg(sourceDeg), color: colors.cyan, dashed: true, label: 'source' },
             ]}
             size={320}
           />
+          <p className="readout mt-1 text-xs text-text-faint">
+            radius = gain in dB (0 dB at the rim, −40 dB at the center) · the rings are 10 dB apart,
+            so the small bumps beside the mainlobe are the sidelobes
+          </p>
         </div>
 
         <div className="flex min-w-[220px] flex-1 flex-col gap-3">

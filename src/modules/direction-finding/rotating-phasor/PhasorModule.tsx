@@ -36,6 +36,7 @@ const prefill = (fn: (angle: number) => number, frequency: number, endPhase: num
 export function PhasorModule() {
   const [frequency, setFrequency] = useState(1.0);
   const [playing, setPlaying] = useState(false);
+  const [running, setRunning] = useState(true); // phasor rotation (pause/resume)
   const [frame, setFrame] = useState<Frame>(() => ({
     angle: 0,
     i: prefill(Math.cos, 1.0, 0),
@@ -63,7 +64,7 @@ export function PhasorModule() {
     qBuf.current.push(Math.sin(angle));
     qBuf.current.shift();
     setFrame({ angle, i: [...iBuf.current], q: [...qBuf.current] });
-  });
+  }, running);
 
   // Keep the audio pitch in sync while playing.
   useEffect(() => {
@@ -148,6 +149,14 @@ export function PhasorModule() {
             period = {period.toFixed(2)} s · {(frequency * 360).toFixed(0)}°/s
           </span>
         </label>
+
+        <button
+          onClick={() => setRunning((r) => !r)}
+          aria-pressed={!running}
+          className="rounded-md border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-signal-dim hover:text-signal"
+        >
+          {running ? '⏸ Pause' : '▶ Resume'}
+        </button>
 
         <button
           onClick={toggleAudio}
