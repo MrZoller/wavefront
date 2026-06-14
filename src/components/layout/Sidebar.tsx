@@ -1,5 +1,5 @@
 import { APP_NAME, APP_TAGLINE } from '@/config';
-import { TRACKS, getModulesForTrack } from '@/registry';
+import { TRACKS, getTrackLayers } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
 /**
@@ -28,7 +28,9 @@ export function Sidebar() {
       </header>
 
       {TRACKS.map((track) => {
-        const modules = getModulesForTrack(track.id);
+        const layers = getTrackLayers(track.id);
+        // Layer subheaders only earn their place once a track has more than one stage.
+        const showLayerNames = layers.length > 1;
         return (
           <section key={track.id} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between px-1">
@@ -47,37 +49,59 @@ export function Sidebar() {
               )}
             </div>
 
-            {modules.length === 0 ? (
+            {layers.length === 0 ? (
               <p className="px-1 text-xs text-text-faint">
                 {track.status === 'planned' ? 'Coming later.' : 'Modules in progress…'}
               </p>
             ) : (
-              <ul className="flex flex-col gap-0.5">
-                {modules.map((m) => {
-                  const isActive = m.id === activeModuleId;
-                  return (
-                    <li key={m.id}>
-                      <button
-                        onClick={() => setActiveModule(m.id)}
-                        aria-current={isActive ? 'page' : undefined}
-                        className={[
-                          'w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors',
-                          isActive
-                            ? 'bg-surface-raised text-signal'
-                            : 'text-text hover:bg-surface-raised hover:text-text',
-                        ].join(' ')}
-                      >
-                        {m.title}
-                        {m.status && m.status !== 'stable' && (
-                          <span className="ml-1.5 text-[10px] uppercase text-text-faint">
-                            {m.status}
-                          </span>
-                        )}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
+              <div className="flex flex-col gap-2">
+                {layers.map((layer) => (
+                  <div key={layer.layer} className="flex flex-col gap-0.5">
+                    {showLayerNames && (
+                      <h3 className="px-2 pt-0.5 text-[10px] font-medium uppercase tracking-wider text-text-faint">
+                        {layer.name}
+                      </h3>
+                    )}
+                    <ul className="flex flex-col gap-0.5">
+                      {layer.modules.map((m, i) => {
+                        const isActive = m.id === activeModuleId;
+                        return (
+                          <li key={m.id}>
+                            <button
+                              onClick={() => setActiveModule(m.id)}
+                              aria-current={isActive ? 'page' : undefined}
+                              className={[
+                                'flex w-full items-baseline gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors',
+                                isActive
+                                  ? 'bg-surface-raised text-signal'
+                                  : 'text-text hover:bg-surface-raised hover:text-text',
+                              ].join(' ')}
+                            >
+                              {/* Step within the layer — quiet directional cue. */}
+                              <span className="shrink-0 text-[11px] tabular-nums text-text-faint">
+                                {i + 1}
+                              </span>
+                              <span className="min-w-0 flex-1">{m.title}</span>
+                              {m.isCapstone ? (
+                                <span className="shrink-0 text-[10px] uppercase tracking-wide text-signal">
+                                  Capstone
+                                </span>
+                              ) : (
+                                m.status &&
+                                m.status !== 'stable' && (
+                                  <span className="shrink-0 text-[10px] uppercase text-text-faint">
+                                    {m.status}
+                                  </span>
+                                )
+                              )}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             )}
           </section>
         );
