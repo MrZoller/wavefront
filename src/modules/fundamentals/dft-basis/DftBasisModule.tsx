@@ -74,7 +74,9 @@ export function DftBasisModule() {
 
       <div>
         <p className="readout mb-1.5 text-xs text-text-faint">
-          <GlossedText>toggle a basis frequency (bin):</GlossedText>
+          <GlossedText>
+            build a signal by choosing its frequencies (the waveform above is their sum):
+          </GlossedText>
         </p>
         <div className="flex flex-wrap gap-2">
           {BINS.map((k) => (

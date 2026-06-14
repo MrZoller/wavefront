@@ -21,7 +21,9 @@ export function DftBasisExplanation() {
             new coordinates — like rotating axes. No information is created or lost (the inverse DFT
             rebuilds the signal exactly); you're only choosing to describe it by{' '}
             <em>frequency content</em>
-            instead of <em>sample values</em>.
+            instead of <em>sample values</em>. Here, though, the bins double as a signal{' '}
+            <em>editor</em> — a graphic equalizer: toggling one doesn&rsquo;t re-view a fixed
+            signal, it defines a <em>new</em> one, so the time waveform updates to match.
           </p>
         </section>
 
