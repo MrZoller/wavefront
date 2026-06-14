@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { convolve, raisedCosine, upsample } from '@/dsp/pulse';
@@ -131,10 +132,12 @@ export function PulseShapingModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          green = transmitted waveform · faint cyan = the individual pulse from each symbol · red
-          dots = sampling instants, where the waveform equals the symbol exactly · raise β for a
-          wider but better-behaved pulse; lower it toward 0 for a narrow band but long, ringing
-          tails
+          <GlossedText>
+            green = transmitted waveform · faint cyan = the individual pulse from each symbol · red
+            dots = sampling instants, where the waveform equals the symbol exactly · raise β for a
+            wider but better-behaved pulse; lower it toward 0 for a narrow band but long, ringing
+            tails
+          </GlossedText>
         </p>
       </div>
     </div>

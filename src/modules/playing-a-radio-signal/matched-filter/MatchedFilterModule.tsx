@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { noiseSigma } from '@/dsp/comms';
@@ -115,9 +116,11 @@ export function MatchedFilterModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          each faint trace is one symbol period of the matched-filter output, overlaid · the open
-          &ldquo;eye&rdquo; at the dashed sampling line is the decision margin · red = a symbol that
-          crossed zero and flipped · lower Eb/N0 and the eye slams shut
+          <GlossedText>
+            each faint trace is one symbol period of the matched-filter output, overlaid · the open
+            &ldquo;eye&rdquo; at the dashed sampling line is the decision margin · red = a symbol
+            that crossed zero and flipped · lower Eb/N0 and the eye slams shut
+          </GlossedText>
         </p>
       </div>
     </div>

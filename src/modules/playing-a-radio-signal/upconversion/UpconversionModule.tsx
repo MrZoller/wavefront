@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
 import type { Complex } from '@/dsp/complex';
@@ -95,9 +96,12 @@ export function UpconversionModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          top = the I/Q baseband you want to send · middle = the real passband actually radiated (a
-          carrier whose amplitude/phase carry I and Q) · bottom = what the receiver recovers after
-          mixing down and low-pass filtering — identical to the top, no matter the carrier frequency
+          <GlossedText>
+            top = the I/Q baseband you want to send · middle = the real passband actually radiated
+            (a carrier whose amplitude/phase carry I and Q) · bottom = what the receiver recovers
+            after mixing down and low-pass filtering — identical to the top, no matter the carrier
+            frequency
+          </GlossedText>
         </p>
       </div>
     </div>

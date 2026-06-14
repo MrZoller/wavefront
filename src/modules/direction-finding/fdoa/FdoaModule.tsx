@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { fdoa, type MovingReceiver, type Point } from '@/dsp/geolocation';
@@ -134,8 +135,8 @@ export function FdoaModule() {
         <Readout label="Rx2 speed" value={`${speed(rx1).toFixed(1)} km/s`} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
+      <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+        <label className="flex flex-col gap-1.5">
           <span className="readout flex justify-between text-xs text-text-muted">
             <span>Carrier f₀</span>
             <span className="text-signal">{f0MHz} MHz</span>
@@ -150,11 +151,13 @@ export function FdoaModule() {
             className="accent-[var(--color-signal)]"
             aria-label="Carrier frequency in megahertz"
           />
-          <span className="readout text-xs text-text-faint">
+        </label>
+        <span className="readout text-xs text-text-faint">
+          <GlossedText>
             drag receivers, their velocity arrows (v1 / v2), or the emitter · higher f₀ ⇒ a larger
             Doppler shift, so the same geometry yields a bigger Δf
-          </span>
-        </label>
+          </GlossedText>
+        </span>
       </div>
 
       {/* Legend */}

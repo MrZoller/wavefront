@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
@@ -91,9 +92,11 @@ export function OfdmModule() {
             <Readout label="Cyclic prefix" value={`${CP} samples`} accent />
           </div>
           <p className="readout text-xs text-text-faint">
-            the spectrum is a flat block of {active} occupied subcarriers (guard bands at the edges)
-            · the time waveform looks noise-like — the sum of many independent tones · each
-            subcarrier carries an ordinary QPSK symbol
+            <GlossedText>
+              the spectrum is a flat block of {active} occupied subcarriers (guard bands at the
+              edges) · the time waveform looks noise-like — the sum of many independent tones · each
+              subcarrier carries an ordinary QPSK symbol
+            </GlossedText>
           </p>
         </div>
       </div>

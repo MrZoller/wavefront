@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -109,9 +110,11 @@ export function AnalogModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          AM rides the message on the carrier&rsquo;s amplitude → a carrier line plus two sidebands
-          · FM/PM bend the frequency/phase → a fan of sidebands that widens with deviation
-          (Carson&rsquo;s rule) while the amplitude stays flat
+          <GlossedText>
+            AM rides the message on the carrier&rsquo;s amplitude → a carrier line plus two
+            sidebands · FM/PM bend the frequency/phase → a fan of sidebands that widens with
+            deviation (Carson&rsquo;s rule) while the amplitude stays flat
+          </GlossedText>
         </p>
       </div>
     </div>

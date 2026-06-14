@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -115,18 +116,22 @@ export function CarrierOffsetModule() {
             />
           </label>
           <p className="readout text-xs text-text-faint">
-            cyan rings = where the symbols should land · green cloud = what the receiver sees · a
-            phase offset rotates it to a fixed angle; a frequency offset spins it forever — set spin
-            to 0 and use phase alone to see the static rotation
+            <GlossedText>
+              cyan rings = where the symbols should land · green cloud = what the receiver sees · a
+              phase offset rotates it to a fixed angle; a frequency offset spins it forever — set
+              spin to 0 and use phase alone to see the static rotation
+            </GlossedText>
           </p>
         </div>
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          once the cloud rotates past a decision boundary, every symbol decodes wrong — so a real
-          receiver runs a carrier-recovery loop to spin it back upright. Same physics as Doppler
-          from a moving transmitter (Track A&rsquo;s FDOA).
+          <GlossedText>
+            once the cloud rotates past a decision boundary, every symbol decodes wrong — so a real
+            receiver runs a carrier-recovery loop to spin it back upright. Same physics as Doppler
+            from a moving transmitter (Track A&rsquo;s FDOA).
+          </GlossedText>
         </p>
       </div>
     </div>

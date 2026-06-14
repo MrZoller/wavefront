@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import {
@@ -111,8 +112,10 @@ export function TdoaModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          each hyperbola = points with a constant time difference between Rx1 and another receiver ·
-          drag receivers or the emitter and watch the curves intersect at the fix
+          <GlossedText>
+            each hyperbola = points with a constant time difference between Rx1 and another receiver
+            · drag receivers or the emitter and watch the curves intersect at the fix
+          </GlossedText>
         </p>
       </div>
     </div>

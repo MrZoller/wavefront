@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { getModule, TRACK_BY_ID } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
@@ -34,7 +35,9 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
             ← {track.title}
           </button>
           <h1 className="mt-1 text-xl font-semibold tracking-tight">{mod.title}</h1>
-          <p className="mt-0.5 max-w-2xl text-sm text-text-muted">{mod.oneLineIntuition}</p>
+          <p className="mt-0.5 max-w-2xl text-sm text-text-muted">
+            <GlossedText>{mod.oneLineIntuition}</GlossedText>
+          </p>
         </div>
         {Explanation && (
           <button

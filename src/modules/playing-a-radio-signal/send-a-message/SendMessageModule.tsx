@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { GlossedText } from '@/components/GlossedText';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
@@ -151,9 +152,11 @@ export function SendMessageModule() {
 
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
-          this is the whole chain: text → bits → symbols → noisy channel → nearest-point decision →
-          bits → text · green points decoded correctly, red flipped · keep Eb/N0 high for a clean
-          message; lower it (or pick 16-QAM) and watch characters garble
+          <GlossedText>
+            this is the whole chain: text → bits → symbols → noisy channel → nearest-point decision
+            → bits → text · green points decoded correctly, red flipped · keep Eb/N0 high for a
+            clean message; lower it (or pick 16-QAM) and watch characters garble
+          </GlossedText>
         </p>
       </div>
     </div>
