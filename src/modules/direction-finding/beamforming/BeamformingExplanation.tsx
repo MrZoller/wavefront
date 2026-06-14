@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the beamforming module. */
 export function BeamformingExplanation() {
   return (
@@ -45,8 +43,8 @@ export function BeamformingExplanation() {
       </section>
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-        Next: super-resolution (<Term id="music">MUSIC</Term>) sharpens past the mainlobe width to
-        split sources the delay-and-sum beam smears together. All signals here are synthetic.
+        Next: super-resolution (MUSIC) sharpens past the mainlobe width to split sources the
+        delay-and-sum beam smears together. All signals here are synthetic.
       </section>
     </div>
   );

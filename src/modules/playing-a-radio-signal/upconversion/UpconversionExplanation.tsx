@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the Up/Downconversion module. */
 export function UpconversionExplanation() {
   return (
@@ -19,8 +17,8 @@ export function UpconversionExplanation() {
         <p className="readout my-2 text-signal">s(t) = I(t)·cos(2πf꜀t) − Q(t)·sin(2πf꜀t)</p>
         <p>
           Cosine and sine are 90° apart (&ldquo;in-phase&rdquo; and &ldquo;quadrature&rdquo;), so
-          two independent streams ride one carrier without colliding — that&rsquo;s how{' '}
-          <Term id="qpsk">QPSK</Term>/<Term id="qam">QAM</Term> fit twice the data on the same tone.
+          two independent streams ride one carrier without colliding — that&rsquo;s how QPSK/QAM fit
+          twice the data on the same tone.
         </p>
       </section>
 

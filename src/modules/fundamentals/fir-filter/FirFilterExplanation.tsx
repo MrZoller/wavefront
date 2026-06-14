@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the FIR Filtering module. */
 export function FirFilterExplanation() {
   return (
@@ -32,8 +30,8 @@ export function FirFilterExplanation() {
       </section>
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-        Linear-phase, odd-length, unit-DC-gain design. The same `firLowpass` powers{' '}
-        <Term id="decimation">decimation</Term> and the channelizer. All signals are synthetic.
+        Linear-phase, odd-length, unit-DC-gain design. The same `firLowpass` powers decimation and
+        the channelizer. All signals are synthetic.
       </section>
     </div>
   );

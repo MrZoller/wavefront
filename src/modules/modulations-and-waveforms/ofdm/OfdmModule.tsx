@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Term } from '@/components/Term';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
@@ -94,7 +93,7 @@ export function OfdmModule() {
           <p className="readout text-xs text-text-faint">
             the spectrum is a flat block of {active} occupied subcarriers (guard bands at the edges)
             · the time waveform looks noise-like — the sum of many independent tones · each
-            subcarrier carries an ordinary <Term id="qpsk">QPSK</Term> symbol
+            subcarrier carries an ordinary QPSK symbol
           </p>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Term } from '@/components/Term';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { type Complex } from '@/dsp/complex';
 import { decimate } from '@/dsp/multirate';
@@ -78,8 +77,7 @@ export function MultirateModule() {
         <p className="readout text-xs text-text-faint">
           decimating by N keeps only the central 1/N of the band · with the filter ON the
           out-of-band tone is removed first, so the result is clean · turn it OFF and that tone
-          folds back in as a false spur — <Term id="aliasing">aliasing</Term>, exactly as in the
-          sampling module
+          folds back in as a false spur — aliasing, exactly as in the sampling module
         </p>
       </div>
     </div>

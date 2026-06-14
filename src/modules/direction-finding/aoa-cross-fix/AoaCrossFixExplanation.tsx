@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the AoA cross-fixing module. */
 export function AoaCrossFixExplanation() {
   return (
@@ -28,7 +26,7 @@ export function AoaCrossFixExplanation() {
         <p>
           Two bearings crossing near 90° give a tight, round region. As the crossing flattens —
           sites on the same side, or a distant emitter — the ellipse stretches into a long cigar.
-          That sensitivity to geometry is the whole story of the <Term id="gdop">GDOP</Term> module.
+          That sensitivity to geometry is the whole story of the GDOP module.
         </p>
       </section>
 

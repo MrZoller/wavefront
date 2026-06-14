@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the Windowing & Leakage module. */
 export function WindowingExplanation() {
   return (
@@ -7,9 +5,9 @@ export function WindowingExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">Why a finite block leaks</h3>
         <p>
-          The <Term id="dft">DFT</Term> assumes the block repeats forever. Unless the tone fits a
-          whole number of cycles in the window, the wrap-around has a jump — and a jump is
-          broadband, so the energy smears into every bin. That smear is <em>spectral leakage</em>.
+          The DFT assumes the block repeats forever. Unless the tone fits a whole number of cycles
+          in the window, the wrap-around has a jump — and a jump is broadband, so the energy smears
+          into every bin. That smear is <em>spectral leakage</em>.
         </p>
       </section>
 
@@ -24,9 +22,8 @@ export function WindowingExplanation() {
       </section>
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-        This is exactly why a <Term id="pfb">polyphase filter bank</Term> replaces the{' '}
-        <Term id="fft">FFT</Term>'s implicit rectangular window with a <em>designed</em> prototype
-        (Layer 2). All signals are synthetic.
+        This is exactly why a polyphase filter bank replaces the FFT's implicit rectangular window
+        with a <em>designed</em> prototype (Layer 2). All signals are synthetic.
       </section>
     </div>
   );

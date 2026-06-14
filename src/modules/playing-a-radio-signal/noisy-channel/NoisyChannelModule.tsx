@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Term } from '@/components/Term';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { colors } from '@/design/tokens';
 import { mulberry32 } from '@/dsp/random';
@@ -108,8 +107,7 @@ export function NoisyChannelModule() {
 
           <p className="readout text-xs text-text-faint">
             green = sliced back to the right symbol · red = pushed across a boundary into a bit
-            error · slide Eb/N0 down or switch to <Term id="qam">16-QAM</Term> and watch the clouds
-            collide
+            error · slide Eb/N0 down or switch to 16-QAM and watch the clouds collide
           </p>
         </div>
       </div>

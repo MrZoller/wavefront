@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the two-element interferometer module. */
 export function InterferometerExplanation() {
   return (
@@ -34,8 +32,7 @@ export function InterferometerExplanation() {
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
         Real systems resolve this with multiple baselines or by adding elements — which is exactly
-        the array in the <Term id="beamforming">beamforming</Term> module. All signals here are
-        synthetic.
+        the array in the beamforming module. All signals here are synthetic.
       </section>
     </div>
   );

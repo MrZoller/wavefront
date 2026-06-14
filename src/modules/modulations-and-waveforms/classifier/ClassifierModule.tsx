@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { Term } from '@/components/Term';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
@@ -154,10 +153,9 @@ export function ClassifierModule() {
       <div className="rounded-lg border border-border bg-surface p-4">
         <p className="readout text-xs text-text-faint">
           three cheap features place a signal in feature-space: constant-envelope (low envelope
-          variation) flags <Term id="fsk">FSK</Term>/<Term id="msk">MSK</Term>; near-zero Q-rail
-          flags BPSK; high envelope variation flags <Term id="qam">16-QAM</Term> · the classifier
-          just picks the nearest known scheme — the seed of how a neural net learns to recognize
-          modulations
+          variation) flags FSK/MSK; near-zero Q-rail flags BPSK; high envelope variation flags
+          16-QAM · the classifier just picks the nearest known scheme — the seed of how a neural net
+          learns to recognize modulations
         </p>
       </div>
     </div>

@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the Pulse Shaping module. */
 export function PulseShapingExplanation() {
   return (
@@ -35,8 +33,8 @@ export function PulseShapingExplanation() {
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
         Split the raised cosine into a root-raised-cosine at the transmitter and another at the
-        receiver and you also get the maximum-SNR <Term id="matched-filter">matched filter</Term> —
-        the next module. All signals are synthetic.
+        receiver and you also get the maximum-SNR matched filter — the next module. All signals are
+        synthetic.
       </section>
     </div>
   );

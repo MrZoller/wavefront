@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the Sampling & Aliasing module. */
 export function AliasingExplanation() {
   return (
@@ -28,7 +26,7 @@ export function AliasingExplanation() {
         <p>
           Aliasing is irreversible — once two tones collapse onto the same samples, no filter can
           separate them. That's why anti-alias filters sit <em>before</em> the sampler, and why
-          <Term id="decimation">decimation</Term> must low-pass first (next layer).
+          decimation must low-pass first (next layer).
         </p>
       </section>
 

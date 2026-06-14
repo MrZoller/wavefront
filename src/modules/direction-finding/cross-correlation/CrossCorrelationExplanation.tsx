@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the cross-correlation module. */
 export function CrossCorrelationExplanation() {
   return (
@@ -36,9 +34,9 @@ export function CrossCorrelationExplanation() {
       </section>
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-        This is the engine of <Term id="tdoa">TDOA</Term>: measure the same emitter at two
-        receivers, correlate, and the peak lag gives the time-difference-of-arrival that Layer 2
-        turns into a hyperbola. All signals here are synthetic.
+        This is the engine of TDOA: measure the same emitter at two receivers, correlate, and the
+        peak lag gives the time-difference-of-arrival that Layer 2 turns into a hyperbola. All
+        signals here are synthetic.
       </section>
     </div>
   );

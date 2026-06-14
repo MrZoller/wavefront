@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the Symbol Mapping module. */
 export function SymbolMappingExplanation() {
   return (
@@ -8,9 +6,9 @@ export function SymbolMappingExplanation() {
         <h3 className="mb-1 font-medium text-text">Bits don&rsquo;t fly — symbols do</h3>
         <p>
           A radio can&rsquo;t send a &ldquo;1&rdquo; or a &ldquo;0&rdquo; directly. It sends a brief
-          tone with a chosen <em>amplitude and phase</em> — a point in the <Term id="iq">I/Q</Term>{' '}
-          plane. Mapping bits to those points is <em>modulation</em>; the set of allowed points is
-          the <em>constellation</em>.
+          tone with a chosen <em>amplitude and phase</em> — a point in the I/Q plane. Mapping bits
+          to those points is <em>modulation</em>; the set of allowed points is the{' '}
+          <em>constellation</em>.
         </p>
       </section>
 

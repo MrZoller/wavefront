@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the Multipath & Fading module. */
 export function MultipathExplanation() {
   return (
@@ -8,7 +6,7 @@ export function MultipathExplanation() {
         <h3 className="mb-1 font-medium text-text">Many paths, one receiver</h3>
         <p>
           Signals bounce off buildings and terrain, so the receiver hears the direct ray plus
-          delayed, weaker echoes. Summed, they form an <Term id="fir">FIR</Term> channel:{' '}
+          delayed, weaker echoes. Summed, they form an FIR channel:{' '}
           <code>y = Σ gainₖ·x[n−delayₖ]</code>.
         </p>
       </section>
@@ -27,9 +25,8 @@ export function MultipathExplanation() {
         <h3 className="mb-1 font-medium text-text">Inter-symbol interference</h3>
         <p>
           In time, the echo bleeds one symbol into the next, so the sampling instants no longer land
-          on clean symbol values — the <Term id="constellation">constellation</Term> blurs and the
-          eye closes. Equalizers undo this; <Term id="ofdm">OFDM</Term> sidesteps it by making
-          symbols long compared to the echo (plus the cyclic prefix).
+          on clean symbol values — the constellation blurs and the eye closes. Equalizers undo this;
+          OFDM sidesteps it by making symbols long compared to the echo (plus the cyclic prefix).
         </p>
       </section>
 

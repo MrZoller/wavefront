@@ -1,5 +1,3 @@
-import { Term } from '@/components/Term';
-
 /** "Go deeper" content for the FDOA (Doppler-difference) module. */
 export function FdoaExplanation() {
   return (
@@ -7,10 +5,9 @@ export function FdoaExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">Motion bends frequency</h3>
         <p>
-          A receiver sweeping through the field sees the emitter&rsquo;s carrier{' '}
-          <Term id="doppler">Doppler-shifted</Term> by its motion <em>along the line of sight</em>:
-          closing on the emitter shifts it up, opening away shifts it down, moving across it does
-          nothing.
+          A receiver sweeping through the field sees the emitter&rsquo;s carrier Doppler-shifted by
+          its motion <em>along the line of sight</em>: closing on the emitter shifts it up, opening
+          away shifts it down, moving across it does nothing.
         </p>
         <p className="readout my-2 text-signal">Δf₍ᵢ₎ = (f₀ / c) · (vᵢ · ûᵢ)</p>
       </section>
@@ -24,8 +21,8 @@ export function FdoaExplanation() {
         </p>
         <p className="readout my-2 text-signal">Δf = (f₀ / c) · (v₁·û₁ − v₂·û₂)</p>
         <p>
-          This is the frequency twin of <Term id="tdoa">TDOA</Term>&rsquo;s time difference — same
-          idea, a different observable.
+          This is the frequency twin of TDOA&rsquo;s time difference — same idea, a different
+          observable.
         </p>
       </section>
 
