@@ -38,7 +38,7 @@ All notable changes to this project are documented here. The format is based on
     that opens and closes with Eb/N0, with live BER.
   - **Send a Message** (capstone) — type text and watch it ride symbols across the noisy channel and
     come back, characters garbling as Eb/N0 drops.
-- **New `dsp/` primitives (22 tests, 128 total):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
+- **New `dsp/` primitives (28 tests):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
   (`BPSK` / `QPSK` / `QAM16`), `bitsToSymbols` / `symbolsToBits` / `nearestSymbol`, `awgn` +
   `noiseSigma` (Eb/N0 → σ), `bitErrorRate`, and `textToBits` / `bitsToText`; `dsp/pulse.ts` —
   `raisedCosine` / `rootRaisedCosine`, `upsample`, FIR `convolve`; `dsp/carrier.ts` — `upconvert` /
