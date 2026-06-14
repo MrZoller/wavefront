@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { PlotTitle } from '@/components/plots/PlotTitle';
@@ -84,24 +85,16 @@ export function OfdmModule() {
           ariaLabel="QPSK symbols carried on the OFDM subcarriers"
         />
         <div className="flex min-w-[240px] flex-1 flex-col gap-4">
-          <label className="flex flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Active subcarriers</span>
-              <span className="text-signal">
-                {active} / {N_SUB}
-              </span>
-            </span>
-            <input
-              type="range"
-              min={8}
-              max={N_SUB}
-              step={4}
-              value={active}
-              onChange={(e) => setActive(parseInt(e.target.value, 10))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Number of active OFDM subcarriers"
-            />
-          </label>
+          <Slider
+            label="Active subcarriers"
+            value={active}
+            min={8}
+            max={N_SUB}
+            step={4}
+            display={`${active} / ${N_SUB}`}
+            onChange={setActive}
+            ariaLabel="Number of active OFDM subcarriers"
+          />
           <div className="flex flex-wrap gap-4">
             <Readout label="Subcarriers" value={`${N_SUB} (QPSK)`} />
             <Readout label="Cyclic prefix" value={`${CP} samples`} accent />

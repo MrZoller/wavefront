@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { aliasedFrequency } from '@/dsp/sampling';
@@ -90,22 +91,17 @@ export function AliasingModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Signal frequency</span>
-            <span className="text-signal">{freq.toFixed(2)}</span>
-          </span>
-          <input
-            type="range"
-            min={0.02}
-            max={1.5}
-            step={0.02}
-            value={freq}
-            onChange={(e) => setFreq(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Signal frequency in cycles per sample"
-          />
-        </label>
+        <Slider
+          label="Signal frequency"
+          value={freq}
+          min={0.02}
+          max={1.5}
+          step={0.02}
+          decimals={2}
+          onChange={setFreq}
+          style={{ minWidth: 240 }}
+          ariaLabel="Signal frequency in cycles per sample"
+        />
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">

@@ -13,14 +13,19 @@ export const colors = {
   surfaceRaised: '#121b21',
   border: '#1e2c33',
 
-  // Text.
+  // Text = STATIC content, the accent's counterpart. Labels, titles, units, axis captions, prose,
+  // and field *names* stay neutral (text > muted > faint hierarchy). See the accent note below.
   text: '#e6f0ee',
   textMuted: '#8aa1a0',
   // Tertiary text — a phosphor-tinted grey: AA-readable (~5.7:1 on the dark surface) yet still
   // dimmer than `textMuted`, so the hierarchy (text > muted > faint) holds.
   textFaint: '#74968a',
 
-  // Phosphor accents — signal-green primary, cyan secondary.
+  // Phosphor accents = LIVE / INTERACTIVE — the accent's one job. `signal` (primary) and `cyan`
+  // (secondary) mark what changes or responds to the user: current readout values, live slider
+  // values, the active nav item, links, and draggable-handle accents. Never put them on static
+  // labels, titles, units, or formulas — those are neutral `text*`. The learnable rule is
+  // "green = the stuff that's alive / that I can act on". (CONTRIBUTING → "Accent color semantics".)
   signal: '#3ef0a0',
   signalDim: '#1f7a55',
   cyan: '#42d4f4',

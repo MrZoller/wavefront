@@ -16,7 +16,7 @@ export function TdoaExplanation() {
         <section>
           <h3 className="mb-1 font-medium text-text">A time difference is a hyperbola</h3>
           <p>A fixed difference in arrival time means a fixed difference in distance:</p>
-          <p className="readout my-2 text-signal">Δr = |x − R₁| − |x − R₂| = c · τ</p>
+          <p className="readout my-2 text-text">Δr = |x − R₁| − |x − R₂| = c · τ</p>
           <p>
             The set of points with a constant range difference to two foci <em>is</em> a hyperbola.
             One receiver pair pins you to that curve.

@@ -11,7 +11,7 @@ export function FdoaExplanation() {
             by its motion <em>along the line of sight</em>: closing on the emitter shifts it up,
             opening away shifts it down, moving across it does nothing.
           </p>
-          <p className="readout my-2 text-signal">Δf₍ᵢ₎ = (f₀ / c) · (vᵢ · ûᵢ)</p>
+          <p className="readout my-2 text-text">Δf₍ᵢ₎ = (f₀ / c) · (vᵢ · ûᵢ)</p>
         </section>
 
         <section>
@@ -21,7 +21,7 @@ export function FdoaExplanation() {
             But the <em>difference</em> between two platforms&rsquo; shifts is measurable and
             depends only on geometry and motion:
           </p>
-          <p className="readout my-2 text-signal">Δf = (f₀ / c) · (v₁·û₁ − v₂·û₂)</p>
+          <p className="readout my-2 text-text">Δf = (f₀ / c) · (v₁·û₁ − v₂·û₂)</p>
           <p>
             This is the frequency twin of TDOA&rsquo;s time difference — same idea, a different
             observable.

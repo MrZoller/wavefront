@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { EyeDiagramPlot } from '@/components/plots/EyeDiagramPlot';
@@ -55,22 +56,17 @@ export function ModulationZooModule() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>SNR</span>
-            <span className="text-signal">{snrDb} dB</span>
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={30}
-            step={1}
-            value={snrDb}
-            onChange={(e) => setSnrDb(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Signal-to-noise ratio in decibels"
-          />
-        </label>
+        <Slider
+          label="SNR"
+          value={snrDb}
+          min={0}
+          max={30}
+          step={1}
+          unit=" dB"
+          onChange={setSnrDb}
+          style={{ minWidth: 220 }}
+          ariaLabel="Signal-to-noise ratio in decibels"
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

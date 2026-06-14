@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { XYPlot } from '@/components/plots/XYPlot';
@@ -90,22 +91,16 @@ export function SendMessageModule() {
             ))}
           </div>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Eb/N0</span>
-              <span className="text-signal">{ebN0dB} dB</span>
-            </span>
-            <input
-              type="range"
-              min={-2}
-              max={18}
-              step={1}
-              value={ebN0dB}
-              onChange={(e) => setEbN0dB(parseInt(e.target.value, 10))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Energy-per-bit to noise-density ratio in decibels"
-            />
-          </label>
+          <Slider
+            label="Eb/N0"
+            value={ebN0dB}
+            min={-2}
+            max={18}
+            step={1}
+            unit=" dB"
+            onChange={setEbN0dB}
+            ariaLabel="Energy-per-bit to noise-density ratio in decibels"
+          />
 
           <div>
             <span className="readout text-xs text-text-muted">Received</span>

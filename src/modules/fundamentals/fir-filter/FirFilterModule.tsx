@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
@@ -55,38 +56,28 @@ export function FirFilterModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Cutoff</span>
-            <span className="text-signal">{cutoff.toFixed(2)} cyc/sample</span>
-          </span>
-          <input
-            type="range"
-            min={0.05}
-            max={0.45}
-            step={0.01}
-            value={cutoff}
-            onChange={(e) => setCutoff(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Filter cutoff frequency"
-          />
-        </label>
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Number of taps</span>
-            <span className="text-signal">{numTaps}</span>
-          </span>
-          <input
-            type="range"
-            min={7}
-            max={81}
-            step={2}
-            value={numTaps}
-            onChange={(e) => setNumTaps(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Number of filter taps"
-          />
-        </label>
+        <Slider
+          label="Cutoff"
+          value={cutoff}
+          min={0.05}
+          max={0.45}
+          step={0.01}
+          decimals={2}
+          unit=" cyc/sample"
+          onChange={setCutoff}
+          style={{ minWidth: 220 }}
+          ariaLabel="Filter cutoff frequency"
+        />
+        <Slider
+          label="Number of taps"
+          value={numTaps}
+          min={7}
+          max={81}
+          step={2}
+          onChange={setNumTaps}
+          style={{ minWidth: 220 }}
+          ariaLabel="Number of filter taps"
+        />
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">

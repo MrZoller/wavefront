@@ -155,6 +155,47 @@ interface AxisLabel {
   render. Bespoke module canvases (built directly on `useCanvas`) aren't required props, but should
   follow the same rule.
 
+## Accent color semantics
+
+The green accent has **one job: live / interactive.** Keeping it to one meaning is what makes it
+learnable — green stops reading as "editable" and starts reliably meaning "this is alive / I can act
+on it."
+
+- **Green (`signal`, with `cyan` as the secondary) = the stuff that's alive or actable** — current
+  readout values, live slider values, the active nav item, links, and draggable-handle accents.
+- **Neutral (`text` / `text-muted` / `text-faint`) = static** — labels, titles, units, axis
+  captions, prose, and field _names_ (as opposed to their live values). Static formulas in the "Go
+  deeper" panels are neutral `text-text`, not green.
+- A control box should read as **"static label : live value"** — exactly the `Readout` pattern (name
+  `text-text-faint`, value `text-signal` only when it's a live/measured value).
+- **Glossary `<Term>` links** are also accent-colored; the **dotted underline** carries the
+  link-vs-value distinction within the same accent (live values are never underlined).
+- The one sanctioned exception is the **brand wordmark** (`<Wordmark>`): the accent _is_ the brand
+  color, and in the sidebar the lockup is itself the clickable "home" control.
+
+Roles are documented at the source in `src/design/tokens.ts`. When in doubt: if it changes or
+responds to the user it may be green; if it's a fixed label, it's neutral.
+
+## Interactive affordance
+
+Wavefront is direct-manipulation first, so **interactive elements must announce themselves**, the
+same way everywhere (documented so new tracks inherit it):
+
+- **Draggable canvas handles** (the `WorldMap` markers, the interferometer emitter): the cursor
+  becomes `grab` on hover and `grabbing` while dragging, a faint **persistent halo ring** marks each
+  handle as grabbable (not plotted data), and keyboard users get a focus ring + arrow-key nudge.
+  `WorldMap` owns this for the geolocation maps; bespoke canvases follow the same recipe.
+- **Sliders** all go through the shared **`<Slider>`** (`src/components/Slider.tsx`) — never a
+  hand-rolled `<input type="range">` (a test fails if one appears). It pairs the static field name
+  with its live accent value and renders one range input whose track surface, accent fill-to-value,
+  and grabbable handle are styled once in `index.css`, so a slider never reads as a bare dot on a
+  hairline regardless of the page it's on.
+- **Selectable chips / buttons** look pressable — border + surface fill, a hover state, and a clear
+  selected state (`border-signal-dim bg-surface-raised text-signal`). They must not read as a legend.
+- **Lean on passive affordance.** Cursor/hover/focus do the discovery; keep at most **one quiet
+  textual hint** per interactive map (a single `text-text-faint` line near the controls) — never
+  on-canvas "drag me" labels or persistent instructional chrome.
+
 ## Coding conventions
 
 - **TypeScript strict**; no `any` where a real type fits.

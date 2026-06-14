@@ -11,7 +11,7 @@ export function InterferometerExplanation() {
             backwards: measure <span className="readout">Δφ</span> between two antennas and solve
             for the bearing.
           </p>
-          <p className="readout my-2 text-signal">θ = asin( Δφ · λ / (2π·d) )</p>
+          <p className="readout my-2 text-text">θ = asin( Δφ · λ / (2π·d) )</p>
         </section>
 
         <section>

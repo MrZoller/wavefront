@@ -19,7 +19,7 @@ export function BeamformingExplanation() {
             A wave from bearing θ hits each element with a constant phase step{' '}
             <span className="readout">β = 2π·d·sin(θ)/λ</span>, so the array sees:
           </p>
-          <p className="readout my-2 text-signal">a(θ) = [1, e^(jβ), e^(j2β), …, e^(j(N−1)β)]</p>
+          <p className="readout my-2 text-text">a(θ) = [1, e^(jβ), e^(j2β), …, e^(j(N−1)β)]</p>
           <p>
             To steer at an angle, weight the elements by <span className="readout">a(θ)</span> and
             sum. The output power versus look angle is the gain pattern you see.

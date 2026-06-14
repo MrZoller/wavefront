@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { phaseDifference, wrapPhase, candidateBearings } from '@/dsp/phase';
@@ -88,7 +89,16 @@ export function InterferometerModule() {
         ctx.fill();
       }
 
-      // Emitter (draggable).
+      // Emitter (draggable): a faint handle ring marks it grabbable and the grab cursor confirms it
+      // on hover, so no on-canvas "drag me" label is needed (the hint lives once, below the controls).
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = colors.alert;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(emX, emY, 11, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.restore();
       ctx.fillStyle = colors.alert;
       ctx.shadowColor = colors.alert;
       ctx.shadowBlur = 10;
@@ -96,9 +106,6 @@ export function InterferometerModule() {
       ctx.arc(emX, emY, 7, 0, 2 * Math.PI);
       ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.fillStyle = colors.textMuted;
-      ctx.font = '11px ui-monospace, monospace';
-      ctx.fillText('emitter — drag me', emX + 12, emY + 4);
     },
     [dLambda, emitter, trueTheta, candidates]
   );
@@ -141,13 +148,14 @@ export function InterferometerModule() {
     <div className="flex flex-col gap-6">
       <canvas
         ref={canvasRef}
-        style={{ width: '100%', height: 340, touchAction: 'none', cursor: 'crosshair' }}
+        style={{ width: '100%', height: 340, touchAction: 'none', cursor: 'grab' }}
         className="rounded-md border border-border bg-surface"
         role="img"
         aria-label="Two antennas with a draggable emitter and its lines of bearing"
         onPointerDown={(e) => {
           dragging.current = true;
           e.currentTarget.setPointerCapture(e.pointerId);
+          e.currentTarget.style.cursor = 'grabbing';
           updateFromPointer(e);
         }}
         onPointerMove={(e) => {
@@ -156,6 +164,7 @@ export function InterferometerModule() {
         onPointerUp={(e) => {
           dragging.current = false;
           e.currentTarget.releasePointerCapture(e.pointerId);
+          e.currentTarget.style.cursor = 'grab';
         }}
       />
 
@@ -178,36 +187,28 @@ export function InterferometerModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Emitter bearing θ</span>
-            <span className="text-signal">{toDeg(trueTheta).toFixed(0)}°</span>
-          </span>
-          <input
-            type="range"
-            min={-85}
-            max={85}
-            step={1}
-            value={Math.round(toDeg(trueTheta))}
-            onChange={(e) => setBearing(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Emitter bearing in degrees (keyboard alternative to dragging)"
-          />
-        </label>
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Baseline d</span>
-            <span className="text-signal">{dLambda.toFixed(2)} λ</span>
-          </span>
-          <input
-            type="range"
+        <Slider
+          label="Emitter bearing θ"
+          value={Math.round(toDeg(trueTheta))}
+          min={-85}
+          max={85}
+          step={1}
+          display={`${toDeg(trueTheta).toFixed(0)}°`}
+          onChange={(v) => setBearing(v)}
+          style={{ minWidth: 220 }}
+          ariaLabel="Emitter bearing in degrees (keyboard alternative to dragging)"
+        />
+        <div className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
+          <Slider
+            label="Baseline d"
+            value={dLambda}
             min={0.1}
             max={2}
             step={0.05}
-            value={dLambda}
-            onChange={(e) => setDLambda(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Baseline separation in wavelengths"
+            decimals={2}
+            unit=" λ"
+            onChange={setDLambda}
+            ariaLabel="Baseline separation in wavelengths"
           />
           <span className="readout text-xs text-text-faint">
             <GlossedText>
@@ -215,7 +216,7 @@ export function InterferometerModule() {
               bearing slider
             </GlossedText>
           </span>
-        </label>
+        </div>
       </div>
     </div>
   );

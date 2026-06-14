@@ -126,13 +126,25 @@ export function WorldMap({
     // 3) Draggable markers.
     for (const p of points) {
       const { px, py } = t.toPx(p.x, p.y);
+      const draggable = p.draggable !== false;
       const focused = p.id === activeId;
+      // Persistent faint "handle" ring so draggable markers read as grabbable, not plotted data.
+      if (draggable) {
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(px, py, p.kind === 'emitter' ? 11 : 10, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+      }
       if (focused) {
         ctx.strokeStyle = p.color;
         ctx.lineWidth = 1.5;
         ctx.setLineDash([3, 3]);
         ctx.beginPath();
-        ctx.arc(px, py, 12, 0, 2 * Math.PI);
+        ctx.arc(px, py, 14, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.setLineDash([]);
       }
@@ -231,19 +243,30 @@ export function WorldMap({
             dragId.current = id;
             setActiveId(id);
             e.currentTarget.setPointerCapture(e.pointerId);
+            e.currentTarget.style.cursor = 'grabbing';
           }
         }}
         onPointerMove={(e) => {
-          if (!dragId.current || !onPointMove) return;
           const rect = e.currentTarget.getBoundingClientRect();
-          const t = makeTransform(size.w, size.h);
-          const wd = t.toWorld(e.clientX - rect.left, e.clientY - rect.top);
-          const c = clamp(wd.x, wd.y);
-          onPointMove(dragId.current, c.x, c.y);
+          const lx = e.clientX - rect.left;
+          const ly = e.clientY - rect.top;
+          if (dragId.current && onPointMove) {
+            const t = makeTransform(size.w, size.h);
+            const wd = t.toWorld(lx, ly);
+            const c = clamp(wd.x, wd.y);
+            onPointMove(dragId.current, c.x, c.y);
+          } else {
+            // The cursor announces the affordance: grab over a draggable handle, crosshair elsewhere.
+            e.currentTarget.style.cursor = hitTest(lx, ly) ? 'grab' : 'crosshair';
+          }
         }}
         onPointerUp={(e) => {
           dragId.current = null;
           e.currentTarget.releasePointerCapture(e.pointerId);
+          const rect = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.cursor = hitTest(e.clientX - rect.left, e.clientY - rect.top)
+            ? 'grab'
+            : 'crosshair';
         }}
         onKeyDown={(e) => {
           const id = activeId ?? draggablePoints[0]?.id;
@@ -269,10 +292,10 @@ export function WorldMap({
                 if (nudge(p.id, e.key)) e.preventDefault();
               }}
               className={[
-                'readout rounded-sm border px-2 py-0.5 text-[10px] transition-colors',
+                'readout cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors',
                 p.id === activeId
-                  ? 'border-signal-dim text-signal'
-                  : 'border-border text-text-muted hover:border-signal-dim',
+                  ? 'border-signal-dim bg-surface-raised text-signal'
+                  : 'border-border bg-surface text-text-muted hover:border-signal-dim hover:text-text',
               ].join(' ')}
               style={{ outlineColor: p.color }}
             >

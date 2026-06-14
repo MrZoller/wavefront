@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { noiseSigma } from '@/dsp/comms';
@@ -90,22 +91,17 @@ export function MatchedFilterModule() {
       />
 
       <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Eb/N0</span>
-            <span className="text-signal">{ebN0dB} dB</span>
-          </span>
-          <input
-            type="range"
-            min={-2}
-            max={16}
-            step={1}
-            value={ebN0dB}
-            onChange={(e) => setEbN0dB(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Energy-per-bit to noise-density ratio in decibels"
-          />
-        </label>
+        <Slider
+          label="Eb/N0"
+          value={ebN0dB}
+          min={-2}
+          max={16}
+          step={1}
+          unit=" dB"
+          onChange={setEbN0dB}
+          style={{ minWidth: 240 }}
+          ariaLabel="Energy-per-bit to noise-density ratio in decibels"
+        />
         <Readout
           label="Bit error rate"
           value={ber === 0 ? '0 (clean)' : ber.toExponential(2)}

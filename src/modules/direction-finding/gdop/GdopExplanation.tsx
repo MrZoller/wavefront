@@ -21,7 +21,7 @@ export function GdopExplanation() {
             is a <em>differenced</em> line-of-sight, <span className="readout">uᵢ − u₀</span>,
             relative to a reference receiver:
           </p>
-          <p className="readout my-2 text-signal">GDOP = √( trace( (HᵀH)⁻¹ ) )</p>
+          <p className="readout my-2 text-text">GDOP = √( trace( (HᵀH)⁻¹ ) )</p>
           <p>
             When the receivers surround the point from varied directions, HᵀH is well-conditioned
             and GDOP is small (green). When they bunch up or fall on a line, HᵀH becomes singular

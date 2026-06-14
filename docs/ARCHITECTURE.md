@@ -156,4 +156,10 @@ it per term.
 - **`@/` path alias** maps to `src/` (see `tsconfig.app.json` + `vite.config.ts`).
 - **Design tokens** live once in `src/design/tokens.ts`, mirrored as CSS variables in
   `src/index.css`. Read colors from there in canvas code; never hard-code hex in components.
+- **Accent semantics**: the green accent means **live / interactive** (readout values, live sliders,
+  the active nav item, links, draggable handles); static labels/titles/formulas are neutral `text*`.
+  Roles are documented in `src/design/tokens.ts`; full rule in CONTRIBUTING → "Accent color semantics".
+- **Interactive affordance**: draggable canvas handles use a `grab`/`grabbing` cursor + a persistent
+  halo + keyboard focus; sliders use a pointer cursor; chips look pressable; passive affordance is
+  primary, with at most one quiet textual hint per map. See CONTRIBUTING → "Interactive affordance".
 - **Tests** are colocated (`*.test.ts`) for `dsp/` and registry logic.

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -83,38 +84,27 @@ export function CarrierOffsetModule() {
           aria-label="QPSK constellation rotating under a carrier frequency and phase offset"
         />
         <div className="flex min-w-[260px] flex-1 flex-col gap-4">
-          <label className="flex flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Frequency offset (spin)</span>
-              <span className="text-signal">{cfoHz.toFixed(2)} rev/s</span>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.05}
-              value={cfoHz}
-              onChange={(e) => setCfoHz(parseFloat(e.target.value))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Carrier frequency offset (spin rate)"
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Phase offset</span>
-              <span className="text-signal">{phaseDeg}°</span>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={180}
-              step={5}
-              value={phaseDeg}
-              onChange={(e) => setPhaseDeg(parseInt(e.target.value, 10))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Carrier phase offset in degrees"
-            />
-          </label>
+          <Slider
+            label="Frequency offset (spin)"
+            value={cfoHz}
+            min={0}
+            max={1}
+            step={0.05}
+            decimals={2}
+            unit=" rev/s"
+            onChange={setCfoHz}
+            ariaLabel="Carrier frequency offset (spin rate)"
+          />
+          <Slider
+            label="Phase offset"
+            value={phaseDeg}
+            min={0}
+            max={180}
+            step={5}
+            unit="°"
+            onChange={setPhaseDeg}
+            ariaLabel="Carrier phase offset in degrees"
+          />
           <p className="readout text-xs text-text-faint">
             <GlossedText>
               cyan rings = where the symbols should land · green cloud = what the receiver sees · a

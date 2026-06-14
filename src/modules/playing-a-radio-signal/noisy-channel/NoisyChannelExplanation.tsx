@@ -21,7 +21,7 @@ export function NoisyChannelExplanation() {
             16-QAM symbol carries 4× the bits, so it needs more energy to hold the same per-bit
             margin.
           </p>
-          <p className="readout my-2 text-signal">σ = √(N₀/2), N₀ = Eb / (Eb/N0), Eb = 1/k</p>
+          <p className="readout my-2 text-text">σ = √(N₀/2), N₀ = Eb / (Eb/N0), Eb = 1/k</p>
         </section>
 
         <section>

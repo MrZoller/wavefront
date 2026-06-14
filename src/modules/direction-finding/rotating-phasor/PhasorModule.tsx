@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PhasorPlot } from '@/components/plots/PhasorPlot';
 import { PlotTitle } from '@/components/plots/PlotTitle';
@@ -138,25 +139,22 @@ export function PhasorModule() {
 
       {/* Controls — direct manipulation over forms (brief §3.3). */}
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5">
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Frequency</span>
-            <span className="text-signal">{frequency.toFixed(1)} Hz</span>
-          </span>
-          <input
-            type="range"
+        <div className="flex flex-1 flex-col gap-1.5">
+          <Slider
+            label="Frequency"
+            value={frequency}
             min={MIN_F}
             max={MAX_F}
             step={0.1}
-            value={frequency}
-            onChange={(e) => setFrequency(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Frequency in hertz"
+            decimals={1}
+            unit=" Hz"
+            onChange={setFrequency}
+            ariaLabel="Frequency in hertz"
           />
           <span className="readout text-xs text-text-faint">
             period = {period.toFixed(2)} s · {(frequency * 360).toFixed(0)}°/s
           </span>
-        </label>
+        </div>
 
         <button
           onClick={() => setRunning((r) => !r)}
