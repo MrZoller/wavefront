@@ -8,6 +8,16 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Visual identity: a wave mark, wordmark, and favicons.** A concept-driven mark — concentric wave
+  crests radiating from a source (the namesake, and the shape a wavefront actually makes), in the
+  signal-green token with no new palette. One source-of-truth glyph (`public/wavefront-mark.svg`)
+  feeds a reusable `Wordmark` lockup (mark + word, used in the landing header and the sidebar) and a
+  generated favicon set — SVG plus 16/32/180/192/512 PNGs, placed on a dark tile so the green stays
+  legible at 16×16 and on light browser chrome — wired into `index.html` with a web manifest. The
+  favicons are regenerated from the mark by `scripts/generate-favicons.mjs`; the README opens with
+  the wordmark and hero (both captured by the screenshot pipeline), and the mark is documented in
+  `docs/brand.md`.
+
 - **A plot's title reads as a title, not a second axis label.** The name of a plot and its top-left
   y-axis label share the same corner; rendered alike, they fused into what looked like one two-line
   caption, so a reader couldn't tell the heading from the axis annotation. A new shared `PlotTitle`

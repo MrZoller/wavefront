@@ -14,6 +14,30 @@ test('track overview (landing)', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'overview.png') });
 });
 
+test('wordmark (README header)', async ({ page }) => {
+  // Capture the real landing wordmark lockup (mark + word) so the README header tracks the app
+  // rather than a hand-made image. A little padding around the heading gives it room to breathe.
+  await page.goto('/');
+  const heading = page.getByRole('heading', { name: 'Wavefront' }).first();
+  await expect(heading).toBeVisible();
+  const box = await heading.boundingBox();
+  if (!box) throw new Error('wordmark heading has no bounding box');
+  // Frame the lockup with room for the glow, but keep the bottom inside the 12px gap to the
+  // description below so only the mark + word are captured.
+  const padX = 20;
+  const padTop = 16;
+  const padBottom = 2;
+  await page.screenshot({
+    path: path.join(IMG_DIR, 'wordmark.png'),
+    clip: {
+      x: box.x - padX,
+      y: box.y - padTop,
+      width: box.width + padX * 2,
+      height: box.height + padTop + padBottom,
+    },
+  });
+});
+
 test('rotating phasor module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'The Rotating Phasor / IQ' }).first().click();
