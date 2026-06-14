@@ -32,7 +32,7 @@ const ALIASES: Record<string, string[]> = {
   doppler: ['Doppler', 'Doppler-shifted'],
   iq: ['I/Q'],
   isi: ['inter-symbol interference'],
-  'matched-filter': ['matched filtering'],
+  'matched-filter': ['matched filtering', 'matched-filter'],
   nyquist: ['Nyquist'],
   pfb: ['polyphase filter bank'],
   'pulse-shaping': ['pulse-shaping'],

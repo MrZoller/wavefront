@@ -56,9 +56,7 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
         </main>
         {Explanation && drawerOpen && (
           <aside className="w-80 shrink-0 overflow-y-auto border-l border-border bg-surface px-5 py-5 text-sm leading-relaxed text-text-muted">
-            <GlossedText>
-              <Explanation />
-            </GlossedText>
+            <Explanation />
           </aside>
         )}
       </div>
