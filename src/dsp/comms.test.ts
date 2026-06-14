@@ -12,6 +12,8 @@ import {
   noiseSigma,
   awgn,
   bitErrorRate,
+  textToBits,
+  bitsToText,
 } from './comms';
 
 const SCHEMES = [BPSK, QPSK, QAM16];
@@ -102,5 +104,22 @@ describe('end-to-end BER', () => {
   it('bitErrorRate counts differing bits', () => {
     expect(bitErrorRate([0, 1, 0, 1], [0, 1, 1, 1])).toBeCloseTo(0.25, 12);
     expect(bitErrorRate([], [])).toBe(0);
+  });
+});
+
+describe('text ↔ bits', () => {
+  it('round-trips ASCII text', () => {
+    expect(bitsToText(textToBits('HELLO RADIO'))).toBe('HELLO RADIO');
+  });
+
+  it('uses 8 bits per character, MSB first', () => {
+    // 'A' = 0x41 = 0100_0001.
+    expect(textToBits('A')).toEqual([0, 1, 0, 0, 0, 0, 0, 1]);
+  });
+
+  it('survives a full text → symbols → text round-trip with no noise', () => {
+    const text = 'Wavefront';
+    const recovered = bitsToText(symbolsToBits(bitsToSymbols(textToBits(text), QPSK), QPSK));
+    expect(recovered).toBe(text);
   });
 });

@@ -112,3 +112,19 @@ test('matched filter module', async ({ page }) => {
   await expect(page.getByRole('img', { name: /eye diagram of the matched-filter/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'matched-filter.png') });
 });
+
+test('up/downconversion module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Up/Downconversion' }).first().click();
+  await expect(page.getByRole('img', { name: /passband on the wire/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'upconversion.png') });
+});
+
+test('send a message module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Send a Message' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /received symbols for the transmitted message/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'send-a-message.png') });
+});

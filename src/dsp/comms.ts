@@ -142,3 +142,24 @@ export function bitErrorRate(a: number[], b: number[]): number {
   for (let i = 0; i < n; i++) if (a[i] !== b[i]) errors++;
   return errors / n;
 }
+
+/** Encode text as a bit stream: each character's low byte, 8 bits MSB-first. */
+export function textToBits(text: string): number[] {
+  const bits: number[] = [];
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i) & 0xff;
+    for (let b = 7; b >= 0; b--) bits.push((code >> b) & 1);
+  }
+  return bits;
+}
+
+/** Decode a bit stream back to text (inverse of `textToBits`); a trailing partial byte is dropped. */
+export function bitsToText(bits: number[]): string {
+  let out = '';
+  for (let i = 0; i + 8 <= bits.length; i += 8) {
+    let code = 0;
+    for (let b = 0; b < 8; b++) code = (code << 1) | bits[i + b];
+    out += String.fromCharCode(code);
+  }
+  return out;
+}

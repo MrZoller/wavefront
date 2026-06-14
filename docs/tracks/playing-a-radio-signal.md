@@ -8,15 +8,17 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 
 ## Layer 0 — The transmit chain
 
-| Module             | Intuition                                                                        | Status      |
-| ------------------ | -------------------------------------------------------------------------------- | ----------- |
-| **Symbol Mapping** | Bits ride on I/Q symbols: group the bits, look them up in the constellation.     | ✅ shipping |
-| **Pulse Shaping**  | Turn discrete symbols into a band-limited waveform; the raised cosine kills ISI. | ✅ shipping |
-| Up/Downconversion  | Mix baseband onto a carrier and back — the spectrum slides, the bits don't.      | planned     |
+| Module                | Intuition                                                                        | Status      |
+| --------------------- | -------------------------------------------------------------------------------- | ----------- |
+| **Symbol Mapping**    | Bits ride on I/Q symbols: group the bits, look them up in the constellation.     | ✅ shipping |
+| **Pulse Shaping**     | Turn discrete symbols into a band-limited waveform; the raised cosine kills ISI. | ✅ shipping |
+| **Up/Downconversion** | Mix baseband onto a carrier and back — the spectrum slides, the bits don't.      | ✅ shipping |
 
 ![Symbol Mapping module](../images/symbol-mapping.png)
 
 ![Pulse Shaping module](../images/pulse-shaping.png)
+
+![Up/Downconversion module](../images/upconversion.png)
 
 ## Layer 1 — The channel & receiver
 
@@ -31,9 +33,11 @@ Built as a layered curriculum — each layer is a prerequisite for the next.
 
 ## Layer 2 — End to end
 
-| Module         | Intuition                                                                      | Status  |
-| -------------- | ------------------------------------------------------------------------------ | ------- |
-| Send a Message | Wire the whole chain: text → bits → symbols → channel → receiver → text + BER. | planned |
+| Module             | Intuition                                                                      | Status      |
+| ------------------ | ------------------------------------------------------------------------------ | ----------- |
+| **Send a Message** | Wire the whole chain: text → bits → symbols → channel → receiver → text + BER. | ✅ shipping |
+
+![Send a Message module](../images/send-a-message.png)
 
 > These scenes are hard-decision and symbol-synchronous (no timing/carrier recovery yet) — those
 > wrinkles arrive in the Fundamentals and Coding & Equalization tracks. All signals are synthetic.
