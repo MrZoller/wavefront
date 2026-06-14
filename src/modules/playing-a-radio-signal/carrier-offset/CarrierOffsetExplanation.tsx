@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Carrier Offset & Doppler module. */
 export function CarrierOffsetExplanation() {
   return (
@@ -5,9 +7,10 @@ export function CarrierOffsetExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">The receiver has its own clock</h3>
         <p>
-          To pull baseband back out, the receiver multiplies by its <em>own</em> oscillator at the
-          carrier frequency. If that oscillator is even slightly off, the leftover frequency rotates
-          every symbol a little more than the last — the constellation spins.
+          To pull <Term id="baseband">baseband</Term> back out, the receiver multiplies by its{' '}
+          <em>own</em> oscillator at the <Term id="carrier">carrier</Term> frequency. If that
+          oscillator is even slightly off, the leftover frequency rotates every symbol a little more
+          than the last — the <Term id="constellation">constellation</Term> spins.
         </p>
       </section>
 

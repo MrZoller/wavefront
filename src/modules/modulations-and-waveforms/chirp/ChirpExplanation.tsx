@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Chirp / LFM module. */
 export function ChirpExplanation() {
   return (
@@ -15,9 +17,9 @@ export function ChirpExplanation() {
         <h3 className="mb-1 font-medium text-text">Pulse compression</h3>
         <p>
           Because the chirp spreads its energy over both time <em>and</em> a wide bandwidth, a
-          receiver can matched-filter it down to a sharp, high-amplitude spike. That lets a radar
-          transmit a long, low-power pulse (easy on the hardware) yet resolve targets as if it sent
-          a very short, very strong one.
+          receiver can <Term id="matched-filter">matched-filter</Term> it down to a sharp,
+          high-amplitude spike. That lets a radar transmit a long, low-power pulse (easy on the
+          hardware) yet resolve targets as if it sent a very short, very strong one.
         </p>
       </section>
 

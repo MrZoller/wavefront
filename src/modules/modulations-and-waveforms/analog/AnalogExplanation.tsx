@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Analog on-ramp. */
 export function AnalogExplanation() {
   return (
@@ -5,9 +7,10 @@ export function AnalogExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">Three knobs on one carrier</h3>
         <p>
-          A carrier is a pure tone with an amplitude, a frequency, and a phase. Analog modulation
-          wiggles exactly one of them with your message: <em>AM</em> the amplitude, <em>FM</em> the
-          frequency, <em>PM</em> the phase. That&rsquo;s the whole idea behind a car radio.
+          A <Term id="carrier">carrier</Term> is a pure tone with an amplitude, a frequency, and a
+          phase. Analog modulation wiggles exactly one of them with your message: <em>AM</em> the
+          amplitude, <em>FM</em> the frequency, <em>PM</em> the phase. That&rsquo;s the whole idea
+          behind a car radio.
         </p>
       </section>
 
@@ -26,7 +29,8 @@ export function AnalogExplanation() {
         <p>
           Because FM/PM carry information in angle, not amplitude, a receiver can hard-limit the
           signal and throw away amplitude noise entirely — the reason FM radio sounds clean where AM
-          hisses. The constant envelope you see here is exactly that property.
+          hisses. The <Term id="constant-envelope">constant envelope</Term> you see here is exactly
+          that property.
         </p>
       </section>
 

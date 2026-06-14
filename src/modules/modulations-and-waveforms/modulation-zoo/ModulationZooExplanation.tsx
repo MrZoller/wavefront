@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Modulation Zoo. */
 export function ModulationZooExplanation() {
   return (
@@ -6,27 +8,30 @@ export function ModulationZooExplanation() {
         <h3 className="mb-1 font-medium text-text">Every scheme has a fingerprint</h3>
         <p>
           The same bits, modulated different ways, look completely different — but only if you look
-          in the right domain. Five views show the same signal at once: time-domain I/Q, the
-          constellation, the spectrum, the eye, and the spectrogram.
+          in the right domain. Five views show the same signal at once: time-domain{' '}
+          <Term id="iq">I/Q</Term>, the <Term id="constellation">constellation</Term>, the spectrum,
+          the eye, and the spectrogram.
         </p>
       </section>
 
       <section>
         <h3 className="mb-1 font-medium text-text">Linear vs. constant-envelope</h3>
         <p>
-          PSK and QAM are <em>linear</em>: bits map to points on the plane, so the constellation is
-          the natural view. FSK and MSK are <em>constant-envelope</em>: the data lives in frequency,
-          so the amplitude never changes — their &ldquo;constellation&rdquo; is just a ring, and you
-          read them in the spectrum and spectrogram instead. That difference is itself the lesson.
+          PSK and <Term id="qam">QAM</Term> are <em>linear</em>: bits map to points on the plane, so
+          the constellation is the natural view. FSK and MSK are <em>constant-envelope</em>: the
+          data lives in frequency, so the amplitude never changes — their
+          &ldquo;constellation&rdquo; is just a ring, and you read them in the spectrum and
+          spectrogram instead. That difference is itself the lesson.
         </p>
       </section>
 
       <section>
         <h3 className="mb-1 font-medium text-text">A/B at the same SNR</h3>
         <p>
-          Put two schemes side by side and drop the SNR. Denser constellations (16-QAM) blur and
-          mis-decide first; constant-envelope schemes shrug off amplitude noise but pay in
-          bandwidth. That is the rate-vs-robustness-vs-bandwidth triangle every link lives inside.
+          Put two schemes side by side and drop the <Term id="snr">SNR</Term>. Denser constellations
+          (16-QAM) blur and mis-decide first; constant-envelope schemes shrug off amplitude noise
+          but pay in bandwidth. That is the rate-vs-robustness-vs-bandwidth triangle every link
+          lives inside.
         </p>
       </section>
 

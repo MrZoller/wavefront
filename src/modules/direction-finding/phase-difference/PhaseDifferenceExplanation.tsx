@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the phase-difference module. */
 export function PhaseDifferenceExplanation() {
   return (
@@ -19,7 +21,9 @@ export function PhaseDifferenceExplanation() {
           sees an extra path length:
         </p>
         <p className="readout my-2 text-cyan">Δr = d · sin(θ)</p>
-        <p>That delay, expressed as a phase of the carrier, is:</p>
+        <p>
+          That delay, expressed as a phase of the <Term id="carrier">carrier</Term>, is:
+        </p>
         <p className="readout my-2 text-signal">Δφ = 2π · d · sin(θ) / λ</p>
         <p>
           Watch sensor B&rsquo;s waveform slide relative to A as you change θ — that slide{' '}
@@ -38,8 +42,8 @@ export function PhaseDifferenceExplanation() {
       </section>
 
       <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-        This is the seed of angle-of-arrival direction finding: invert Δφ to get θ. Layer 1 scales
-        it up to a whole array. All signals here are synthetic.
+        This is the seed of <Term id="aoa">angle-of-arrival</Term> direction finding: invert Δφ to
+        get θ. Layer 1 scales it up to a whole array. All signals here are synthetic.
       </section>
     </div>
   );

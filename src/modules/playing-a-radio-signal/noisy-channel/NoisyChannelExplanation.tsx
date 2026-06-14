@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Noisy Channel module. */
 export function NoisyChannelExplanation() {
   return (
@@ -14,9 +16,10 @@ export function NoisyChannelExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">Eb/N0, the fair yardstick</h3>
         <p>
-          Signal quality is energy per bit over noise density, <em>Eb/N0</em> (in dB). Measuring per{' '}
-          <em>bit</em> (not per symbol) lets BPSK, QPSK, and 16-QAM be compared honestly — a 16-QAM
-          symbol carries 4× the bits, so it needs more energy to hold the same per-bit margin.
+          Signal quality is energy per bit over noise density, <em>Eb/N0</em> (in{' '}
+          <Term id="db">dB</Term>). Measuring per <em>bit</em> (not per symbol) lets BPSK, QPSK, and{' '}
+          <Term id="qam">16-QAM</Term> be compared honestly — a 16-QAM symbol carries 4× the bits,
+          so it needs more energy to hold the same per-bit margin.
         </p>
         <p className="readout my-2 text-signal">σ = √(N₀/2), N₀ = Eb / (Eb/N0), Eb = 1/k</p>
       </section>
@@ -24,10 +27,11 @@ export function NoisyChannelExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">Decide, then count</h3>
         <p>
-          The receiver slices each received point to its <em>nearest</em> constellation point and
-          reads off the bits. When a cloud spills across a decision boundary, you get an error. The{' '}
-          <em>bit error rate</em> is the fraction of bits that come out wrong — it climbs steeply as
-          Eb/N0 drops or the points crowd closer.
+          The receiver slices each received point to its <em>nearest</em>{' '}
+          <Term id="constellation">constellation</Term> point and reads off the bits. When a cloud
+          spills across a decision boundary, you get an error. The <em>bit error rate</em> is the
+          fraction of bits that come out wrong — it climbs steeply as Eb/N0 drops or the points
+          crowd closer.
         </p>
       </section>
 

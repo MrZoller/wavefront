@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Matched Filter module. */
 export function MatchedFilterExplanation() {
   return (
@@ -6,9 +8,9 @@ export function MatchedFilterExplanation() {
         <h3 className="mb-1 font-medium text-text">Correlate against the pulse you sent</h3>
         <p>
           To pull a known pulse out of noise, correlate the received signal against a copy of that
-          pulse. This <em>matched filter</em> is provably the filter that maximizes signal-to-noise
-          ratio at the sampling instant — it gathers all the pulse&rsquo;s energy while the noise,
-          uncorrelated with the pulse, partly cancels.
+          pulse. This <em>matched filter</em> is provably the filter that maximizes{' '}
+          <Term id="snr">signal-to-noise ratio</Term> at the sampling instant — it gathers all the
+          pulse&rsquo;s energy while the noise, uncorrelated with the pulse, partly cancels.
         </p>
       </section>
 
@@ -17,7 +19,7 @@ export function MatchedFilterExplanation() {
         <p>
           Put a <em>root</em>-raised-cosine at the transmitter and another at the receiver. Their
           cascade is a full raised cosine — so you get both the matched-filter SNR gain <em>and</em>{' '}
-          the Nyquist no-ISI property, in one design.
+          the <Term id="nyquist">Nyquist</Term> no-ISI property, in one design.
         </p>
       </section>
 

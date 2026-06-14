@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the GDOP heatmap module. */
 export function GdopExplanation() {
   return (
@@ -15,9 +17,9 @@ export function GdopExplanation() {
       <section>
         <h3 className="mb-1 font-medium text-text">The formula</h3>
         <p>
-          Since TDOA only measures range <em>differences</em>, each row of the geometry matrix H is
-          a <em>differenced</em> line-of-sight, <span className="readout">uᵢ − u₀</span>, relative
-          to a reference receiver:
+          Since <Term id="tdoa">TDOA</Term> only measures range <em>differences</em>, each row of
+          the geometry matrix H is a <em>differenced</em> line-of-sight,{' '}
+          <span className="readout">uᵢ − u₀</span>, relative to a reference receiver:
         </p>
         <p className="readout my-2 text-signal">GDOP = √( trace( (HᵀH)⁻¹ ) )</p>
         <p>

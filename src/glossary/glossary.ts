@@ -113,6 +113,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'A pulse that sweeps its frequency over time — the classic radar waveform.',
     moduleId: 'chirp-lfm',
   },
+  'constant-envelope': {
+    id: 'constant-envelope',
+    term: 'constant-envelope',
+    gloss:
+      'A signal whose amplitude never changes — only its phase or frequency carries information (e.g. FSK, MSK), which keeps amplifiers efficient.',
+    moduleId: 'modulation-zoo',
+  },
   constellation: {
     id: 'constellation',
     term: 'constellation',
@@ -324,6 +331,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'pulse-shaping',
     docsPage: 'pulse',
   },
+  'q-rail': {
+    id: 'q-rail',
+    term: 'Q-rail',
+    gloss:
+      'The Q (quadrature) axis of an I/Q signal; e.g. BPSK rides only the I-rail, so its Q-rail stays near zero.',
+    moduleId: 'rotating-phasor',
+  },
   qam: {
     id: 'qam',
     term: 'QAM',
@@ -337,6 +351,12 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Quadrature Phase-Shift Keying',
     gloss: 'Two bits per symbol, sent as one of four carrier phases.',
     moduleId: 'symbol-mapping',
+  },
+  radioml: {
+    id: 'radioml',
+    term: 'RadioML',
+    gloss:
+      'A public benchmark dataset of recorded modulated signals, widely used to train and compare modulation-recognition models.',
   },
   snr: {
     id: 'snr',

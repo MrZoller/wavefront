@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the TDOA multilateration module. */
 export function TdoaExplanation() {
   return (
@@ -7,7 +9,8 @@ export function TdoaExplanation() {
         <p>
           You usually don&rsquo;t know <em>when</em> the emitter transmitted, so absolute travel
           time is unknown. But the <em>difference</em> in arrival time between two receivers is
-          measurable (that&rsquo;s the cross-correlation peak from Layer 0).
+          measurable (that&rsquo;s the <Term id="cross-correlation">cross-correlation</Term> peak
+          from Layer 0).
         </p>
       </section>
 

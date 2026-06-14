@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the DFT-as-a-change-of-basis module. */
 export function DftBasisExplanation() {
   return (
@@ -7,8 +9,9 @@ export function DftBasisExplanation() {
         <p>
           The DFT compares the signal against a bank of complex sinusoids, one per bin:{' '}
           <code>X[k] = Σ x[n]·e^{'{−j2πkn/N}'}</code>. Each output is the correlation of the signal
-          with that one frequency — exactly the sliding dot product from cross-correlation, but with
-          a pure tone as the reference.
+          with that one frequency — exactly the sliding dot product from{' '}
+          <Term id="cross-correlation">cross-correlation</Term>, but with a pure tone as the
+          reference.
         </p>
       </section>
 

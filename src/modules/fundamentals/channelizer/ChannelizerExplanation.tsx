@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Channelizer marquee. */
 export function ChannelizerExplanation() {
   return (
@@ -7,18 +9,18 @@ export function ChannelizerExplanation() {
         <p>
           A wideband receiver digitizes a fat chunk of spectrum, then splits it into many narrow
           channels to process each signal at its own low rate. One channel is a digital
-          downconverter: mix it to zero, low-pass, decimate. A filter bank does all the channels at
-          once.
+          downconverter: mix it to zero, low-pass, <Term id="decimation">decimate</Term>. A filter
+          bank does all the channels at once.
         </p>
       </section>
 
       <section>
         <h3 className="mb-1 font-medium text-text">The FFT is already a filter bank</h3>
         <p>
-          An N-point FFT splits the band into N bins — N crude channels, essentially for free. The
-          catch: each bin's effective filter is the leaky <code>sinc</code> of an implicit
-          rectangular window, so neighboring channels bleed into each other (the cyan shape's tall
-          sidelobes).
+          An N-point <Term id="fft">FFT</Term> splits the band into N bins — N crude channels,
+          essentially for free. The catch: each bin's effective filter is the leaky{' '}
+          <code>sinc</code> of an implicit rectangular window, so neighboring channels bleed into
+          each other (the cyan shape's tall sidelobes).
         </p>
       </section>
 
