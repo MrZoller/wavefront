@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { fdoa, type MovingReceiver, type Point } from '@/dsp/geolocation';
@@ -136,22 +137,16 @@ export function FdoaModule() {
       </div>
 
       <div className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-col gap-1.5">
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Carrier f₀</span>
-            <span className="text-signal">{f0MHz} MHz</span>
-          </span>
-          <input
-            type="range"
-            min={50}
-            max={1000}
-            step={10}
-            value={f0MHz}
-            onChange={(e) => setF0MHz(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Carrier frequency in megahertz"
-          />
-        </label>
+        <Slider
+          label="Carrier f₀"
+          value={f0MHz}
+          min={50}
+          max={1000}
+          step={10}
+          unit=" MHz"
+          onChange={setF0MHz}
+          ariaLabel="Carrier frequency in megahertz"
+        />
         <span className="readout text-xs text-text-faint">
           <GlossedText>
             drag receivers, their velocity arrows (v1 / v2), or the emitter · higher f₀ ⇒ a larger

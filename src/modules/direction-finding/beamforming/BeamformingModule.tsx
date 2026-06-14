@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { PolarPlot } from '@/components/plots/PolarPlot';
 import { colors } from '@/design/tokens';
 import { beamPattern, arrayResponse, toDb, gratingLobeAngles } from '@/dsp/array';
@@ -87,6 +88,7 @@ export function BeamformingModule() {
             step={1}
             unit="°"
             onChange={setSteerDeg}
+            style={{ minWidth: 180 }}
           />
           <Slider
             label="Source bearing"
@@ -97,10 +99,19 @@ export function BeamformingModule() {
             unit="°"
             onChange={setSourceDeg}
             accent={colors.cyan}
+            style={{ minWidth: 180 }}
           />
         </div>
         <div className="flex flex-wrap gap-6">
-          <Slider label="Elements N" value={n} min={2} max={12} step={1} onChange={setN} />
+          <Slider
+            label="Elements N"
+            value={n}
+            min={2}
+            max={12}
+            step={1}
+            onChange={setN}
+            style={{ minWidth: 180 }}
+          />
           <Slider
             label="Spacing d"
             value={dLambda}
@@ -110,6 +121,7 @@ export function BeamformingModule() {
             unit=" λ"
             decimals={2}
             onChange={setDLambda}
+            style={{ minWidth: 180 }}
           />
         </div>
       </div>
@@ -123,49 +135,5 @@ function Readout({ label, value, accent }: { label: string; value: string; accen
       <span className="text-text-faint">{label}</span>
       <span className={accent ? 'text-signal' : 'text-text'}>{value}</span>
     </div>
-  );
-}
-
-function Slider({
-  label,
-  value,
-  min,
-  max,
-  step,
-  unit = '',
-  decimals = 0,
-  accent = colors.signal,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  unit?: string;
-  decimals?: number;
-  accent?: string;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 180 }}>
-      <span className="readout flex justify-between text-xs text-text-muted">
-        <span>{label}</span>
-        <span style={{ color: accent }}>
-          {value.toFixed(decimals)}
-          {unit}
-        </span>
-      </span>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        style={{ accentColor: accent }}
-        aria-label={label}
-      />
-    </label>
   );
 }

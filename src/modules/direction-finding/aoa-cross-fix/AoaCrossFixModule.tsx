@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { aoaFix, errorEllipse, type Bearing } from '@/dsp/geolocation';
@@ -125,20 +126,17 @@ export function AoaCrossFixModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Angular error σθ</span>
-            <span className="text-signal">{sigmaDeg.toFixed(1)}°</span>
-          </span>
-          <input
-            type="range"
+        <div className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
+          <Slider
+            label="Angular error σθ"
+            value={sigmaDeg}
             min={0.5}
             max={8}
             step={0.5}
-            value={sigmaDeg}
-            onChange={(e) => setSigmaDeg(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Per-bearing angular error in degrees"
+            decimals={1}
+            unit="°"
+            onChange={setSigmaDeg}
+            ariaLabel="Per-bearing angular error in degrees"
           />
           <span className="readout text-xs text-text-faint">
             <GlossedText>
@@ -146,7 +144,7 @@ export function AoaCrossFixModule() {
               error region stretch
             </GlossedText>
           </span>
-        </label>
+        </div>
       </div>
     </div>
   );

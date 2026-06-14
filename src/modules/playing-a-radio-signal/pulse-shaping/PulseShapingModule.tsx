@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { convolve, raisedCosine, upsample } from '@/dsp/pulse';
@@ -107,22 +108,17 @@ export function PulseShapingModule() {
       />
 
       <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Roll-off β</span>
-            <span className="text-signal">{beta.toFixed(2)}</span>
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.05}
-            value={beta}
-            onChange={(e) => setBeta(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Raised-cosine roll-off factor"
-          />
-        </label>
+        <Slider
+          label="Roll-off β"
+          value={beta}
+          min={0}
+          max={1}
+          step={0.05}
+          decimals={2}
+          onChange={setBeta}
+          style={{ minWidth: 240 }}
+          ariaLabel="Raised-cosine roll-off factor"
+        />
         <Readout
           label="Occupied bandwidth"
           value={`${bandwidth.toFixed(2)} × symbol rate`}

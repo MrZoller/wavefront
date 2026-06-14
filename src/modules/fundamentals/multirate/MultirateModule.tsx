@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
@@ -57,22 +58,17 @@ export function MultirateModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Decimation factor</span>
-            <span className="text-signal">÷{factor}</span>
-          </span>
-          <input
-            type="range"
-            min={3}
-            max={6}
-            step={1}
-            value={factor}
-            onChange={(e) => setFactor(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Decimation factor"
-          />
-        </label>
+        <Slider
+          label="Decimation factor"
+          value={factor}
+          min={3}
+          max={6}
+          step={1}
+          display={`÷${factor}`}
+          onChange={setFactor}
+          style={{ minWidth: 220 }}
+          ariaLabel="Decimation factor"
+        />
         <button
           type="button"
           aria-pressed={antiAlias}

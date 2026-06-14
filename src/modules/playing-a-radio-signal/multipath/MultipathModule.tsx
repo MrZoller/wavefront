@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { EyeDiagramPlot } from '@/components/plots/EyeDiagramPlot';
@@ -101,38 +102,26 @@ export function MultipathModule() {
             yLabel={AXIS.amplitude}
             ariaLabel="Eye diagram closing under multipath"
           />
-          <label className="flex flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Echo delay</span>
-              <span className="text-signal">{delay} samples</span>
-            </span>
-            <input
-              type="range"
-              min={1}
-              max={16}
-              step={1}
-              value={delay}
-              onChange={(e) => setDelay(parseInt(e.target.value, 10))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Echo delay in samples"
-            />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Echo strength</span>
-              <span className="text-signal">{gain.toFixed(2)}</span>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={0.95}
-              step={0.05}
-              value={gain}
-              onChange={(e) => setGain(parseFloat(e.target.value))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Echo strength"
-            />
-          </label>
+          <Slider
+            label="Echo delay"
+            value={delay}
+            min={1}
+            max={16}
+            step={1}
+            unit=" samples"
+            onChange={setDelay}
+            ariaLabel="Echo delay in samples"
+          />
+          <Slider
+            label="Echo strength"
+            value={gain}
+            min={0}
+            max={0.95}
+            step={0.05}
+            decimals={2}
+            onChange={setGain}
+            ariaLabel="Echo strength"
+          />
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
@@ -60,22 +61,17 @@ export function SpreadSpectrumModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Spreading factor L</span>
-            <span className="text-signal">{factor} chips/bit</span>
-          </span>
-          <input
-            type="range"
-            min={2}
-            max={32}
-            step={2}
-            value={factor}
-            onChange={(e) => setFactor(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Spreading factor (chips per bit)"
-          />
-        </label>
+        <Slider
+          label="Spreading factor L"
+          value={factor}
+          min={2}
+          max={32}
+          step={2}
+          unit=" chips/bit"
+          onChange={setFactor}
+          style={{ minWidth: 240 }}
+          ariaLabel="Spreading factor (chips per bit)"
+        />
         <div className="readout flex flex-col rounded-md border border-border px-3 py-2 text-xs">
           <span className="text-text-faint">Processing gain</span>
           <span className="text-signal">{processingGainDb(factor).toFixed(1)} dB</span>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { Slider } from '@/components/Slider';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { phaseDifference, wrapPhase, candidateBearings } from '@/dsp/phase';
@@ -186,36 +187,28 @@ export function InterferometerModule() {
       </div>
 
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Emitter bearing θ</span>
-            <span className="text-signal">{toDeg(trueTheta).toFixed(0)}°</span>
-          </span>
-          <input
-            type="range"
-            min={-85}
-            max={85}
-            step={1}
-            value={Math.round(toDeg(trueTheta))}
-            onChange={(e) => setBearing(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Emitter bearing in degrees (keyboard alternative to dragging)"
-          />
-        </label>
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Baseline d</span>
-            <span className="text-signal">{dLambda.toFixed(2)} λ</span>
-          </span>
-          <input
-            type="range"
+        <Slider
+          label="Emitter bearing θ"
+          value={Math.round(toDeg(trueTheta))}
+          min={-85}
+          max={85}
+          step={1}
+          display={`${toDeg(trueTheta).toFixed(0)}°`}
+          onChange={(v) => setBearing(v)}
+          style={{ minWidth: 220 }}
+          ariaLabel="Emitter bearing in degrees (keyboard alternative to dragging)"
+        />
+        <div className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
+          <Slider
+            label="Baseline d"
+            value={dLambda}
             min={0.1}
             max={2}
             step={0.05}
-            value={dLambda}
-            onChange={(e) => setDLambda(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Baseline separation in wavelengths"
+            decimals={2}
+            unit=" λ"
+            onChange={setDLambda}
+            ariaLabel="Baseline separation in wavelengths"
           />
           <span className="readout text-xs text-text-faint">
             <GlossedText>
@@ -223,7 +216,7 @@ export function InterferometerModule() {
               bearing slider
             </GlossedText>
           </span>
-        </label>
+        </div>
       </div>
     </div>
   );

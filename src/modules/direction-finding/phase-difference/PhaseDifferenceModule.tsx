@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
@@ -189,38 +190,27 @@ export function PhaseDifferenceModule() {
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-1 flex-col gap-1.5">
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Bearing θ</span>
-            <span className="text-signal">{thetaDeg}°</span>
-          </span>
-          <input
-            type="range"
-            min={-90}
-            max={90}
-            step={1}
-            value={thetaDeg}
-            onChange={(e) => setThetaDeg(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Bearing in degrees from broadside"
-          />
-        </label>
-        <label className="flex flex-1 flex-col gap-1.5">
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Baseline d</span>
-            <span className="text-signal">{dLambda.toFixed(2)} λ</span>
-          </span>
-          <input
-            type="range"
-            min={0.1}
-            max={2}
-            step={0.05}
-            value={dLambda}
-            onChange={(e) => setDLambda(parseFloat(e.target.value))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Baseline separation in wavelengths"
-          />
-        </label>
+        <Slider
+          label="Bearing θ"
+          value={thetaDeg}
+          min={-90}
+          max={90}
+          step={1}
+          unit="°"
+          onChange={setThetaDeg}
+          ariaLabel="Bearing in degrees from broadside"
+        />
+        <Slider
+          label="Baseline d"
+          value={dLambda}
+          min={0.1}
+          max={2}
+          step={0.05}
+          decimals={2}
+          unit=" λ"
+          onChange={setDLambda}
+          ariaLabel="Baseline separation in wavelengths"
+        />
       </div>
     </div>
   );

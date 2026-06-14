@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
@@ -183,55 +184,36 @@ export function CrossCorrelationModule() {
 
       {/* Controls */}
       <div className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-4">
-        <label className="flex flex-col gap-1.5">
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Slide the reference (lag)</span>
-            <span className="text-cyan">{scrubLag}</span>
-          </span>
-          <input
-            type="range"
+        <Slider
+          label="Slide the reference (lag)"
+          value={scrubLag}
+          min={0}
+          max={MAX_LAG}
+          step={1}
+          onChange={setScrubLag}
+          accent={colors.cyan}
+          ariaLabel="Scrub the reference position"
+        />
+        <div className="flex flex-wrap gap-6">
+          <Slider
+            label="True delay"
+            value={trueDelay}
             min={0}
             max={MAX_LAG}
             step={1}
-            value={scrubLag}
-            onChange={(e) => setScrubLag(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-cyan)]"
-            aria-label="Scrub the reference position"
+            onChange={setTrueDelay}
+            ariaLabel="True delay applied to the received signal"
           />
-        </label>
-        <div className="flex flex-wrap gap-6">
-          <label className="flex flex-1 flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>True delay</span>
-              <span className="text-signal">{trueDelay}</span>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={MAX_LAG}
-              step={1}
-              value={trueDelay}
-              onChange={(e) => setTrueDelay(parseInt(e.target.value, 10))}
-              className="accent-[var(--color-signal)]"
-              aria-label="True delay applied to the received signal"
-            />
-          </label>
-          <label className="flex flex-1 flex-col gap-1.5">
-            <span className="readout flex justify-between text-xs text-text-muted">
-              <span>Noise level σ</span>
-              <span className="text-signal">{noise.toFixed(2)}</span>
-            </span>
-            <input
-              type="range"
-              min={0}
-              max={1.5}
-              step={0.05}
-              value={noise}
-              onChange={(e) => setNoise(parseFloat(e.target.value))}
-              className="accent-[var(--color-signal)]"
-              aria-label="Noise standard deviation"
-            />
-          </label>
+          <Slider
+            label="Noise level σ"
+            value={noise}
+            min={0}
+            max={1.5}
+            step={0.05}
+            decimals={2}
+            onChange={setNoise}
+            ariaLabel="Noise standard deviation"
+          />
         </div>
       </div>
     </div>
