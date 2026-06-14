@@ -135,6 +135,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'When a signal overruns the converter’s range and its peaks flatten against the rails, adding harmonic distortion.',
     moduleId: 'gain-agc',
+    docsPage: 'gain',
   },
   'constant-envelope': {
     id: 'constant-envelope',
@@ -438,6 +439,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'How far a quantized signal sits above the noise its own rounding creates — about 6.02·N + 1.76 dB for N bits.',
     moduleId: 'quantization',
+    docsPage: 'quantization',
   },
   'spectral-leakage': {
     id: 'spectral-leakage',

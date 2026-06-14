@@ -259,3 +259,31 @@ test('channelizer module', async ({ page }) => {
   await expect(page.getByRole('img', { name: /Wide spectrum tiled into channels/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'channelizer.png') });
 });
+
+test('quantization module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Quantization & Bit Depth' }).first().click();
+  await expect(page.getByRole('img', { name: /quantized staircase/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'quantization.png') });
+});
+
+test('gain / AGC module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Gain, Clipping & AGC' }).first().click();
+  await expect(page.getByRole('img', { name: /amplified, clipped/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'gain-agc.png') });
+});
+
+test('receiver signal chain module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Receiver Signal Chain' }).first().click();
+  await expect(page.getByRole('group', { name: /Receive signal chain/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'signal-chain.png') });
+});
+
+test('SDR architectures module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'SDR Architectures' }).first().click();
+  await expect(page.getByRole('group', { name: /Superheterodyne architecture/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'sdr-architectures.png') });
+});

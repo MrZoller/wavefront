@@ -62,6 +62,7 @@ Then open the printed local URL.
 | **Playing a Radio Signal**          | What happens when you send data over the air, end to end?            | 🚢 v1       |
 | **Modulations & Waveforms**         | Every modulation scheme's fingerprint, side by side.                 | 🚢 v1       |
 | **Fundamentals**                    | Why does any of this work? Sampling, filtering, FFT, channelization. | 🚧 building |
+| **Signal Chain & SDR**              | Where do the IQ samples come from? The analog↔digital boundary.      | 🚧 building |
 | Propagation & Bands                 | The RF physics around the signal (bands, line-of-sight, skywave).    | planned     |
 
 See [`docs/tracks/`](./docs/tracks/) for the per-track curriculum.
