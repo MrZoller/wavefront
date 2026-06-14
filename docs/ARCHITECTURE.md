@@ -49,19 +49,35 @@ route map and no ordering/markers hand-kept in the views.
 
 ### Capstone = marquee, not "last"
 
-`isCapstone` marks a track's **marquee** — the one destination chip per track that a newcomer is
-drawn to, so the rest read as steps toward it. It is a _navigational_ signal and is **not**
-necessarily the last module by `order`. Two distinct ideas:
+`isCapstone` marks a track's **marquee** — the one chip per track that a newcomer is drawn to, the
+destination of the track's **core climb**, so the rest read as steps toward it. It is a
+_navigational_ signal, distinct from raw position:
 
-- **`order`** expresses the **terminal / synthesis** module (what the track builds up to, last).
-- **`isCapstone`** expresses the **marquee** (the representative, demo-able payoff).
+- **`order`** is the literal render sequence.
+- **`isCapstone`** is the destination of the **core** sequence — **not** necessarily the last module
+  by `order`.
 
-In most tracks these coincide (GDOP Heatmap, Send a Message, Channelizer are both last _and_ the
-marquee). In Modulations & Waveforms they split: the **Modulation Zoo** is the marquee/capstone
-(stable, central), while the **Modulation Classifier** is the terminal synthesis (last by `order`,
-flagged `advanced`) — so it is _not_ the capstone. When the two diverge, prefer two explicit
-signals over overloading one, and don't tag a module `isCapstone` **and** `advanced` (a "skippable
-destination" is a contradiction).
+Usually the capstone _is_ the last core module (GDOP Heatmap, Send a Message, Modulation Zoo, and
+Channelizer are each their track's marquee). What makes the last-rendered module differ from the
+capstone is an **optional / `advanced` module that sits outside the core climb** — and that's fine,
+because its `advanced` tag is exactly what signals "offshoot, not a mandatory rung." Two shapes of
+this, both real in the app:
+
+- **A harder terminal synthesis after the marquee.** Modulations & Waveforms: the **Modulation Zoo**
+  is the capstone (stable, central), while the **Modulation Classifier** is the terminal synthesis —
+  last by `order`, `advanced`, in its own `Classification` stage — so it is _not_ the capstone.
+- **A sideways variant trailing the capstone in the same layer.** Direction Finding's `Geolocation`
+  layer ends on the **GDOP Heatmap** capstone, then **FDOA (Doppler Difference)** trails it. FDOA is
+  `advanced` because it's an optional Doppler offshoot, _not_ a step you pass through to reach GDOP;
+  reordering it before GDOP would falsely encode it as a prerequisite rung.
+
+So the capstone marks the end of the **core** sequence, not necessarily the last item rendered; an
+`advanced` module may legitimately follow it.
+
+**Rule of thumb (esp. for new tracks E/F):** when a module causes ordering friction because it's
+neither a clean rung nor the destination, tag it **`advanced`** — don't bend `order` or invent a
+one-module layer to tidy the sequence. And never tag a module both `isCapstone` **and** `advanced`
+(a "skippable destination" is a contradiction).
 
 ## Recipe: add a new module
 

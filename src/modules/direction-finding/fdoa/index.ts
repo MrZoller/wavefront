@@ -12,5 +12,7 @@ registerModule({
     'Two moving platforms see the carrier Doppler-shifted differently; a constant difference is an isodoppler curve through the emitter.',
   component: FdoaModule,
   explanation: FdoaExplanation,
-  status: 'stable',
+  // Advanced/optional offshoot: a Doppler-difference variant, not a rung you pass through to reach
+  // the GDOP capstone — the tag is what places it outside Geolocation's core climb.
+  status: 'advanced',
 });
