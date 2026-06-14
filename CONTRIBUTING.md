@@ -33,13 +33,20 @@ In short:
    fully-tested core is the project's whole discipline.
 2. Build the interactive component under `src/modules/<track>/<module-id>/`, reusing the shared
    plots in `src/components/plots/`.
-3. `registerModule({ ... })` and import the file from `src/modules/index.ts`.
+3. `registerModule({ ... })` — declare the module's `track`, **`layer`**, and **`order`** (its place
+   in the track's climb; `order` is unique within a track, ascending through layers) — and import
+   the file from `src/modules/index.ts`. The sidebar and landing card slot it into the right stage
+   automatically.
 4. Add a `docs/dsp/` page linking the verifying test.
 5. **Register any new jargon in the glossary** and wrap its first in-UI use in `<Term>` (below).
 
 ## Adding a track
 
-See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md#recipe-add-a-new-track).
+See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md#recipe-add-a-new-track). A track declares
+`layerNames` (a human name per layer index) and designates **exactly one** module `isCapstone: true`
+— its **marquee** destination, which is _not_ necessarily the last module by `order` (see
+[Capstone = marquee, not "last"](./docs/ARCHITECTURE.md#capstone--marquee-not-last)). The registry
+test enforces one capstone per track, named layers, and unique order.
 
 ## Inline glossary (`<Term>`)
 

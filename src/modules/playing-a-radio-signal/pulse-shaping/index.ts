@@ -6,6 +6,8 @@ registerModule({
   id: 'pulse-shaping',
   title: 'Pulse Shaping',
   track: 'playing-a-radio-signal',
+  layer: 0,
+  order: 1,
   oneLineIntuition:
     'Each symbol launches a raised-cosine pulse that is zero at every other symbol time — overlapping yet ISI-free.',
   component: PulseShapingModule,

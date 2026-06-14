@@ -1,5 +1,5 @@
 import { GlossedText } from '@/components/GlossedText';
-/** "Go deeper" content for the modulation-classification capstone. */
+/** "Go deeper" content for the modulation-classification module. */
 export function ClassifierExplanation() {
   return (
     <GlossedText>

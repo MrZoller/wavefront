@@ -6,6 +6,8 @@ registerModule({
   id: 'aoa-cross-fix',
   title: 'AoA Cross-Fixing',
   track: 'direction-finding',
+  layer: 2,
+  order: 5,
   oneLineIntuition: 'Two lines of bearing cross to fix an emitter — with an error region to match.',
   component: AoaCrossFixModule,
   explanation: AoaCrossFixExplanation,

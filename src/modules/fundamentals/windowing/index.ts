@@ -6,6 +6,8 @@ registerModule({
   id: 'windowing-leakage',
   title: 'Windowing & Leakage',
   track: 'fundamentals',
+  layer: 0,
+  order: 2,
   oneLineIntuition:
     'Tapering a block before the FFT trades mainlobe width for sidelobe level — the resolution-vs-leakage knob.',
   component: WindowingModule,
