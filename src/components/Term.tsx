@@ -67,7 +67,7 @@ export function Term({ id, children }: TermProps) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-describedby={open ? popoverId : undefined}
-        className="cursor-help border-b border-dotted border-text-faint/70 text-inherit underline-offset-2 transition-colors hover:border-signal hover:text-signal focus-visible:border-signal focus-visible:text-signal focus-visible:outline-none"
+        className="cursor-help text-cyan underline decoration-dotted decoration-cyan/70 underline-offset-[3px] transition-colors hover:text-signal hover:decoration-signal focus-visible:text-signal focus-visible:decoration-signal focus-visible:outline-none"
       >
         {label}
       </button>
