@@ -29,6 +29,7 @@ const ALIASES: Record<string, string[]> = {
   'constant-envelope': ['constant envelope'],
   ddc: ['digital downconverter', 'digital down-conversion', 'digital downconversion'],
   decimation: ['decimate', 'decimating'],
+  'direct-sampling': ['direct-sampling'],
   doppler: ['Doppler', 'Doppler-shifted'],
   iq: ['I/Q'],
   isi: ['inter-symbol interference'],
