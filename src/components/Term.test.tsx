@@ -19,21 +19,24 @@ describe('<Term>', () => {
     expect(screen.getByRole('button', { name: 'the transform' })).toBeInTheDocument();
   });
 
-  it('shows the expansion and gloss only after interaction', () => {
+  it('exposes the definition to assistive tech without opening (aria-describedby)', () => {
     render(<Term id="snr" />);
-    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button'));
-    const tip = screen.getByRole('tooltip');
-    expect(tip).toHaveTextContent('Signal-to-Noise Ratio');
-    expect(tip).toHaveTextContent(/above the background noise/);
+    const trigger = screen.getByRole('button');
+    const descId = trigger.getAttribute('aria-describedby');
+    expect(descId).toBeTruthy();
+    const desc = document.getElementById(descId!);
+    expect(desc).toHaveTextContent('Signal-to-Noise Ratio');
+    expect(desc).toHaveTextContent(/above the background noise/);
   });
 
-  it('dismisses on Escape', () => {
+  it('opens a disclosure with a "Learn more" action on click, and Escape dismisses it', () => {
     render(<Term id="snr" />);
-    fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByRole('tooltip')).toBeInTheDocument();
+    // snr is taught by noisy-channel; with no active module the "Learn more" link shows when open.
+    expect(screen.queryByRole('button', { name: /Learn more/ })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'SNR' }));
+    expect(screen.getByRole('button', { name: /Learn more/ })).toBeInTheDocument();
     fireEvent.keyDown(document, { key: 'Escape' });
-    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Learn more/ })).not.toBeInTheDocument();
   });
 
   it('navigates to the teaching module via "Learn more"', () => {

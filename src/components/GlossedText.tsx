@@ -21,7 +21,22 @@ import { Term } from './Term';
  * one (it's passed through and counts toward the section's first-use).
  */
 
-const SKIP_TAGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code']);
+const SKIP_TAGS = new Set([
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'code',
+  // Controls: a glossary button must never end up inside a label/control (invalid + steals clicks).
+  'label',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'option',
+]);
 
 /** Suppress auto-glossing for its subtree (the manual escape hatch). */
 export function NoGloss({ children }: { children: ReactNode }) {
