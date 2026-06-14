@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { getTerm } from '@/glossary/glossary';
 import { getModule } from '@/registry';
 import { useAppStore } from '@/store/appStore';
@@ -27,9 +27,25 @@ export function Term({ id, children }: TermProps) {
   const entry = getTerm(id);
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLSpanElement>(null);
+  const popoverRef = useRef<HTMLSpanElement>(null);
   const popoverId = useId();
   const activeModuleId = useAppStore((s) => s.activeModuleId);
   const setActiveModule = useAppStore((s) => s.setActiveModule);
+
+  // Keep the popover on-screen: it anchors to the left of the term, so terms in the right rail
+  // would otherwise overflow off the page. Measure once open and nudge it back inside the viewport
+  // by writing the transform directly (no state → no extra render before paint).
+  useLayoutEffect(() => {
+    const el = popoverRef.current;
+    if (!open || !el) return;
+    el.style.transform = '';
+    const margin = 8;
+    const rect = el.getBoundingClientRect();
+    let dx = 0;
+    if (rect.right > window.innerWidth - margin) dx = window.innerWidth - margin - rect.right;
+    if (rect.left + dx < margin) dx = margin - rect.left;
+    el.style.transform = `translateX(${dx}px)`;
+  }, [open]);
 
   // Dismiss on outside-tap / Esc while open. Listeners are only attached when needed.
   useEffect(() => {
@@ -74,9 +90,10 @@ export function Term({ id, children }: TermProps) {
 
       {open && (
         <span
+          ref={popoverRef}
           id={popoverId}
           role="tooltip"
-          className="absolute left-0 top-full z-20 mt-1.5 block w-64 rounded-md border border-border bg-surface-raised p-3 text-left shadow-lg"
+          className="absolute left-0 top-full z-20 mt-1.5 block w-64 max-w-[calc(100vw-1rem)] rounded-md border border-border bg-surface-raised p-3 text-left shadow-lg"
         >
           <span className="block text-sm font-medium text-text">
             {entry.term}

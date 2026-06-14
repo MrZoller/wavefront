@@ -20,7 +20,7 @@ export function UpconversionExplanation() {
         <p>
           Cosine and sine are 90° apart (&ldquo;in-phase&rdquo; and &ldquo;quadrature&rdquo;), so
           two independent streams ride one carrier without colliding — that&rsquo;s how{' '}
-          <Term id="qpsk">QPSK</Term>/QAM fit twice the data on the same tone.
+          <Term id="qpsk">QPSK</Term>/<Term id="qam">QAM</Term> fit twice the data on the same tone.
         </p>
       </section>
 
