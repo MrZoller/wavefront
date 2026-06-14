@@ -105,7 +105,7 @@ export function NoisyChannelModule() {
             <Readout label="Noise σ (per axis)" value={sigma.toFixed(3)} />
           </div>
 
-          <p className="readout text-[10px] text-text-faint">
+          <p className="readout text-xs text-text-faint">
             green = sliced back to the right symbol · red = pushed across a boundary into a bit
             error · slide Eb/N0 down or switch to 16-QAM and watch the clouds collide
           </p>

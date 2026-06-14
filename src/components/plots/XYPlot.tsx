@@ -97,7 +97,7 @@ export function XYPlot({
         aria-label={ariaLabel}
       />
       {(xLabel || yLabel) && (
-        <figcaption className="readout mt-1 flex justify-between text-[10px] text-text-faint">
+        <figcaption className="readout mt-1 flex justify-between text-xs text-text-faint">
           <span>{yLabel}</span>
           <span>{xLabel}</span>
         </figcaption>

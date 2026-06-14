@@ -139,7 +139,7 @@ export function AoaCrossFixModule() {
             className="accent-[var(--color-signal)]"
             aria-label="Per-bearing angular error in degrees"
           />
-          <span className="readout text-[10px] text-text-faint">
+          <span className="readout text-xs text-text-faint">
             drag DF sites / emitter · push the emitter far or flatten the crossing to watch the
             error region stretch
           </span>

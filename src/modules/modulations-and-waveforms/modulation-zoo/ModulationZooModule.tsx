@@ -77,7 +77,7 @@ export function ModulationZooModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           five views of the same signal · linear schemes (PSK/QAM) show tidy constellation clusters;
           constant-envelope schemes (FSK/MSK) hide their data in frequency — read the spectrum and
           spectrogram instead · lower the SNR and watch which scheme degrades first

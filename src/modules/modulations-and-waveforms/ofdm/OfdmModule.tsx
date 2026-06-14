@@ -90,7 +90,7 @@ export function OfdmModule() {
             <Readout label="Subcarriers" value={`${N_SUB} (QPSK)`} />
             <Readout label="Cyclic prefix" value={`${CP} samples`} accent />
           </div>
-          <p className="readout text-[10px] text-text-faint">
+          <p className="readout text-xs text-text-faint">
             the spectrum is a flat block of {active} occupied subcarriers (guard bands at the edges)
             · the time waveform looks noise-like — the sum of many independent tones · each
             subcarrier carries an ordinary QPSK symbol

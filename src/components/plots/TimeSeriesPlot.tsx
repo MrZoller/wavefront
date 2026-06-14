@@ -76,7 +76,7 @@ export function TimeSeriesPlot({
         aria-label={[yLabel, xLabel].filter(Boolean).join(' versus ') || 'Time-series plot'}
       />
       {(xLabel || yLabel) && (
-        <figcaption className="mt-1 flex justify-between readout text-[10px] text-text-faint">
+        <figcaption className="mt-1 flex justify-between readout text-xs text-text-faint">
           <span>{yLabel}</span>
           <span>{xLabel}</span>
         </figcaption>

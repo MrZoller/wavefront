@@ -16,7 +16,8 @@ export const colors = {
   // Text.
   text: '#e6f0ee',
   textMuted: '#8aa1a0',
-  textFaint: '#54686a',
+  // Tertiary text — a readable phosphor-tinted grey (AA on the dark surface, ~5:1).
+  textFaint: '#8fb6a6',
 
   // Phosphor accents — signal-green primary, cyan secondary.
   signal: '#3ef0a0',

@@ -144,7 +144,7 @@ export function PhasorModule() {
             className="accent-[var(--color-signal)]"
             aria-label="Frequency in hertz"
           />
-          <span className="readout text-[10px] text-text-faint">
+          <span className="readout text-xs text-text-faint">
             period = {period.toFixed(2)} s · {(frequency * 360).toFixed(0)}°/s
           </span>
         </label>

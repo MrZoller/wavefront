@@ -108,7 +108,7 @@ export function AnalogModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           AM rides the message on the carrier&rsquo;s amplitude → a carrier line plus two sidebands
           · FM/PM bend the frequency/phase → a fan of sidebands that widens with deviation
           (Carson&rsquo;s rule) while the amplitude stays flat

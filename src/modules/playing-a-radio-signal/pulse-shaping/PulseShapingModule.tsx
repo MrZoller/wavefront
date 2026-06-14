@@ -130,7 +130,7 @@ export function PulseShapingModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           green = transmitted waveform · faint cyan = the individual pulse from each symbol · red
           dots = sampling instants, where the waveform equals the symbol exactly · raise β for a
           wider but better-behaved pulse; lower it toward 0 for a narrow band but long, ringing

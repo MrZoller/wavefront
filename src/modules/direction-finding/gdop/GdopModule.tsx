@@ -83,7 +83,7 @@ export function GdopModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           green = a small measurement error stays small here · red = it balloons into large position
           error · spread the receivers out for a wide green basin; cluster or line them up and watch
           precision collapse

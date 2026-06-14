@@ -208,7 +208,7 @@ export function InterferometerModule() {
             className="accent-[var(--color-signal)]"
             aria-label="Baseline separation in wavelengths"
           />
-          <span className="readout text-[10px] text-text-faint">
+          <span className="readout text-xs text-text-faint">
             cyan rays = inferred bearings · green ray = truth · drag the emitter or use the bearing
             slider
           </span>

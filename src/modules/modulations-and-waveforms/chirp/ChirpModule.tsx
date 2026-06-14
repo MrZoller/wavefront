@@ -53,7 +53,7 @@ export function ChirpModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           the spectrogram diagonal is the frequency climbing with time · a wider sweep covers more
           bandwidth, which (after matched filtering) compresses to a sharper, stronger pulse — long
           and gentle on transmit, sharp on receive

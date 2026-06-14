@@ -151,7 +151,7 @@ export function ClassifierModule() {
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
-        <p className="readout text-[10px] text-text-faint">
+        <p className="readout text-xs text-text-faint">
           three cheap features place a signal in feature-space: constant-envelope (low envelope
           variation) flags FSK/MSK; near-zero Q-rail flags BPSK; high envelope variation flags
           16-QAM · the classifier just picks the nearest known scheme — the seed of how a neural net
