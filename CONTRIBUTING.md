@@ -48,35 +48,35 @@ single source of truth, [`src/glossary/glossary.ts`](./src/glossary/glossary.ts)
 by `<Term id="…">`. **This is a standing contract, not a one-time pass** — a coverage test
 (`src/glossary/glossary.test.ts`) fails CI if it drifts.
 
-When you add a module or a `dsp/` primitive that introduces a non-obvious term or acronym:
+**Marking is automatic and map-driven — do not hand-wrap mentions.** Author copy as **plain text**;
+a render-time matcher (`src/glossary/match.ts`) inside `<GlossedText>` marks glossary terms for you.
+"Is QAM highlighted?" reduces to "is QAM in the map?", never "did the author remember to wrap it" —
+so highlighting can't drift page to page. When you add a module or a `dsp/` primitive that
+introduces a non-obvious term or acronym, you do **one** thing:
 
-1. Add a glossary entry (`id`, `term`, optional `expansion`, one-sentence `gloss`, optional
-   `moduleId` link, optional `docsPage`). The `gloss` **must stay in sync** with that term's
-   `docs/dsp` one-liner — they're the same idea at two lengths.
-2. Wrap its **first significant use within each primary explanatory surface** in
-   `<Term id="…">…</Term>`. Use `<Term id="…" />` to render the display term itself.
+- Add a glossary entry (`id`, `term`, optional `expansion`, one-sentence `gloss`, optional `moduleId`
+  link, optional `docsPage`). The `gloss` **must stay in sync** with that term's `docs/dsp`
+  one-liner — they're the same idea at two lengths. Match-only surface variants (plurals, phrases,
+  `I/Q` for `IQ`, `16-QAM` for `QAM`) go in the `ALIASES` map in `match.ts`.
 
-```tsx
-// glossary.ts
-fft: { id: 'fft', term: 'FFT', expansion: 'Fast Fourier Transform',
-       gloss: 'A fast algorithm that converts a signal between its time view and its frequency view.',
-       moduleId: 'dft-basis', docsPage: 'fft' },
+Then just write plain prose — `the FFT turns the waveform into its spectrum…` — and the side rail,
+captions, and module intro all gloss it automatically. Prose surfaces are wrapped centrally
+(`ModuleView` wraps the explanation + intro; module captions wrap their text in `<GlossedText>`), so
+new copy is glossed by construction.
 
-// in a module's copy
-the <Term id="fft">FFT</Term> turns the waveform into its spectrum…
-```
+**The marking rules the matcher enforces (you don't think about these):**
 
-**Scope first-use _per explanatory surface_, not per page.** A module page has distinct surfaces a
-reader navigates independently — the **side-rail explanation panel**, the **body copy / captions**,
-and the **module intro/description**. Each should stand on its own, so a term gets its marker on its
-first significant use _within each surface_ (the side rail glosses `FFT` even if a body caption
-already did). Don't let a terse caption "spend" the first-use that the explanation panel needs.
+- **Teaching-page exclusion:** a term is never marked on the module that teaches it.
+- **First use per section:** marked once per `<section>` (a reading chunk), not every occurrence and
+  not just once for a whole long page — predictable, never a minefield.
+- **Excluded surfaces:** headings, `code`, and controls (buttons/sliders/labels) are never glossed.
+- **Tokenization:** boundary-aware and case-sensitive (no `FM` inside "confirm"), separator-aware
+  (`QPSK/QAM` → both), longest-match-first (`16-QAM` is one unit), phrases and simple plurals.
 
-**Restraint is still the whole game.** _Within_ a surface: first significant use only, not every
-occurrence — the goal is "every surface is self-sufficient," not "underline everything." Never wrap
-a term in a heading, control, or axis label, and never self-referentially inside the module that
-teaches it (the popover hides its own "Learn more" link in that case anyway). The popover is a
-definition, not a lesson: one expansion + one sentence.
+**Overrides (exceptions only):** wrap a span in `<NoGloss>…</NoGloss>` to suppress marking, or
+hand-place a `<Term id="…">…</Term>` to force one. These are escape hatches, not the default.
+
+**The popover is a definition, not a lesson:** one expansion + one sentence.
 
 **What to define (the cutoff).** The test is **conceptual load, not the unit or how technical it
 looks.** Define what is domain-specific _or_ compresses a non-obvious concept; do **not** define

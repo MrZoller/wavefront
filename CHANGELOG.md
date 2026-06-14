@@ -9,12 +9,18 @@ All notable changes to this project are documented here. The format is based on
 ### Added
 
 - **Inline glossary (`<Term>`).** A flat source of truth (`src/glossary/glossary.ts`) seeded with
-  the jargon across Tracks A–D, surfaced at the point of use by a `<Term id="…">` component: a subtle
-  dotted underline that opens a popover with the term's expansion, a one-line gloss, and a "Learn
-  more →" link into the module that teaches it. Mobile-first (tap-to-toggle, Esc/outside-tap
-  dismiss), keyboard-focusable, and self-reference-aware. Backed by a coverage test that fails CI on
-  dangling ids, unresolved module links, or a `docs/dsp` page with no glossary entry — plus the
-  contributor contract (the "what to define" cutoff) in `CONTRIBUTING.md` / `ARCHITECTURE.md`.
+  the jargon across Tracks A–D, surfaced at the point of use by a `<Term id="…">` popover: a phosphor
+  dotted underline that opens the term's expansion, a one-line gloss, and a "Learn more →" link into
+  the module that teaches it. Mobile-first (tap-to-toggle, Esc/outside-tap dismiss), keyboard-focusable,
+  self-reference-aware, and viewport-clamped so it never runs off-page.
+- **Consistent-by-construction marking.** Authors write plain copy; a render-time, map-driven matcher
+  (`src/glossary/match.ts`) inside `<GlossedText>` marks terms automatically, so highlighting can't
+  drift page to page. It is boundary-aware and case-sensitive (no `FM` in "confirm"), separator-aware
+  (`QPSK/QAM` → both), longest-match-first (`16-QAM` as one unit), and handles phrases + plurals; it
+  enforces teaching-page exclusion and first-use **per section**, with `<NoGloss>` / forced `<Term>`
+  escape hatches. Backed by a coverage test (dangling ids, unresolved links, `docs/dsp` coverage) plus
+  tokenization and marking regression tests, and the contributor contract in `CONTRIBUTING.md` /
+  `ARCHITECTURE.md`.
 
 - **🚧 Track D — Fundamentals.** The foundational back-fill track, six modules across three layers:
   - **Sampling & Aliasing** — samples + the aliased reconstruction; the Nyquist fold.

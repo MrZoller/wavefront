@@ -52,8 +52,8 @@ The app derives **all** navigation from these. There is no hand-maintained route
 3. Register it: in the module's entry file, call `registerModule({ ... })`, then import
    that file for its side effect from `src/modules/index.ts`.
 4. Add a "go deeper" doc under `docs/dsp/` and link the test that verifies the math.
-5. **Register any new jargon** in `src/glossary/glossary.ts` and wrap its first in-UI use in
-   `<Term>` (see the glossary contract below).
+5. **Register any new jargon** in `src/glossary/glossary.ts` (and match-only variants in the
+   `ALIASES` map in `match.ts`). Write plain copy — `<GlossedText>` marks it automatically.
 6. Capture a screenshot (it'll be picked up by `npm run screenshots`).
 
 That's the whole loop. No shell, routing, or navigation edits.
@@ -68,21 +68,26 @@ That's the whole loop. No shell, routing, or navigation edits.
 ## The glossary contract (`<Term>`)
 
 Jargon is surfaced inline for non-EE readers from one flat source of truth,
-`src/glossary/glossary.ts` (`id → { term, expansion?, gloss, moduleId?, docsPage? }`), rendered by
-`src/components/Term.tsx`. Three lengths of the same idea: the `gloss` (one sentence, shown in the
-popover) → the linked `moduleId` (the interactive lesson) → the `docsPage` (the long-form write-up).
+`src/glossary/glossary.ts` (`id → { term, expansion?, gloss, moduleId?, docsPage? }`). Three lengths
+of the same idea: the `gloss` (one sentence, in the popover) → the linked `moduleId` (the interactive
+lesson) → the `docsPage` (the long-form write-up).
 
-First-use is scoped **per explanatory surface** (side-rail explanation, body copy, intro), not per
-page: each surface a reader can land on independently glosses its own first significant use of a
-concept-bearing term. See [CONTRIBUTING.md](../CONTRIBUTING.md#inline-glossary-term).
+**Marking is map-driven and consistent by construction.** Authors write **plain copy**; a render-time
+matcher (`src/glossary/match.ts`) inside `<GlossedText>` marks terms automatically, and `Term.tsx`
+renders each marker's popover. Nothing is hand-wrapped, so highlighting can't drift page to page —
+"is X glossed?" reduces to "is X in the map?". Prose surfaces are wrapped centrally: `ModuleView`
+wraps the explanation rail + module intro, and module captions wrap their text in `<GlossedText>`.
+The matcher enforces the deliberate rules — teaching-page exclusion, first-use **per `<section>`**,
+excluded surfaces (headings/code/controls), and boundary-aware tokenization (`QPSK/QAM` → both,
+`16-QAM` as one unit, no `FM`-in-"confirm"). Escape hatches: `<NoGloss>` suppresses, a hand-placed
+`<Term>` forces.
 
 This is **infrastructure, not a track**, and it is **enforced, not aspirational**:
 `src/glossary/glossary.test.ts` fails CI if any `<Term id>` is dangling, any `moduleId` doesn't
-resolve, **any `docs/dsp/` page lacks a glossary entry referencing it**, or an explanation panel
-leaves a curated load-bearing acronym unglossed (the per-surface net) — so shipping a new primitive
-without defining its term breaks the build. The component is mobile-first (tap-to-toggle,
-Esc/outside-tap dismiss), keyboard-focusable, and hides self-referential "Learn more" links at
-runtime.
+resolve, or **any `docs/dsp/` page lacks a glossary entry referencing it**; `match.test.ts` pins the
+tokenization edge cases and `GlossedText.test.tsx` pins the marking rules. The popover is mobile-first
+(tap-to-toggle, Esc/outside-tap dismiss), keyboard-focusable, stays within the viewport, and hides
+self-referential "Learn more" links at runtime.
 
 Keep it a **flat map** — no categories, search, or nested entries. The cutoff for _what_ earns an
 entry (the conceptual-load test, and the `Hz`-vs-`dB` contrast) lives in
