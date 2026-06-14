@@ -22,8 +22,12 @@ test('wordmark (README header)', async ({ page }) => {
   // and it renders first, so an unscoped `.first()` would capture the nav lockup instead.
   const heading = page.getByRole('main').getByRole('heading', { name: 'Wavefront' });
   await expect(heading).toBeVisible();
-  const box = await heading.boundingBox();
-  if (!box) throw new Error('wordmark heading has no bounding box');
+  // Measure the inline lockup span, not the block-level <h1>: the heading stretches across the full
+  // max-w-3xl column, which would leave the wordmark in the left third of a mostly-empty frame (and
+  // shrunk to a third once the README sets width=360). The span is fit-content, so its box is tight.
+  const lockup = heading.locator('span').first();
+  const box = await lockup.boundingBox();
+  if (!box) throw new Error('wordmark lockup has no bounding box');
   // Frame the lockup with room for the glow, but keep the bottom inside the 12px gap to the
   // description below so only the mark + word are captured.
   const padX = 20;
