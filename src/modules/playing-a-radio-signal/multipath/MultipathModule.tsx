@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Term } from '@/components/Term';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { EyeDiagramPlot } from '@/components/plots/EyeDiagramPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
@@ -136,7 +137,8 @@ export function MultipathModule() {
         <p className="readout text-xs text-text-faint">
           top = the channel the echo creates — deep notches where the direct and delayed rays cancel
           (frequency-selective fading) · the constellation smears and the eye closes as the echo
-          grows · this ISI is exactly what equalizers (and OFDM&rsquo;s cyclic prefix) exist to undo
+          grows · this <Term id="isi">ISI</Term> is exactly what equalizers (and{' '}
+          <Term id="ofdm">OFDM</Term>&rsquo;s cyclic prefix) exist to undo
         </p>
       </div>
     </div>

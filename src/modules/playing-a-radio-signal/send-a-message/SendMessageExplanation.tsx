@@ -1,3 +1,5 @@
+import { Term } from '@/components/Term';
+
 /** "Go deeper" content for the Send a Message capstone. */
 export function SendMessageExplanation() {
   return (
@@ -6,18 +8,19 @@ export function SendMessageExplanation() {
         <h3 className="mb-1 font-medium text-text">The whole chain, in one view</h3>
         <p>
           Everything from this track, wired together: each character becomes 8 bits, the bits group
-          into constellation symbols, the symbols cross an AWGN channel, and the receiver slices
-          each one to its nearest point and reassembles the text. This is a (simplified) modem.
+          into <Term id="constellation">constellation</Term> symbols, the symbols cross an{' '}
+          <Term id="awgn">AWGN</Term> channel, and the receiver slices each one to its nearest point
+          and reassembles the text. This is a (simplified) modem.
         </p>
       </section>
 
       <section>
         <h3 className="mb-1 font-medium text-text">Why text garbles all at once</h3>
         <p>
-          Below a certain Eb/N0 the bit error rate climbs fast (the &ldquo;waterfall&rdquo;), so the
-          message goes from perfect to unreadable over just a few dB. A single flipped bit can
-          change a character entirely — which is exactly why real systems add error-correcting
-          codes.
+          Below a certain Eb/N0 the <Term id="ber">bit error rate</Term> climbs fast (the
+          &ldquo;waterfall&rdquo;), so the message goes from perfect to unreadable over just a few
+          dB. A single flipped bit can change a character entirely — which is exactly why real
+          systems add error-correcting codes.
         </p>
       </section>
 

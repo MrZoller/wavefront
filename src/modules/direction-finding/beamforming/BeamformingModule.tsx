@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Term } from '@/components/Term';
 import { PolarPlot } from '@/components/plots/PolarPlot';
 import { colors } from '@/design/tokens';
 import { beamPattern, arrayResponse, toDb, gratingLobeAngles } from '@/dsp/array';
@@ -41,8 +42,8 @@ export function BeamformingModule() {
             size={320}
           />
           <p className="readout mt-1 text-xs text-text-faint">
-            radius = gain in dB (0 dB at the rim, −40 dB at the center) · the rings are 10 dB apart,
-            so the small bumps beside the mainlobe are the sidelobes
+            radius = gain in <Term id="db">dB</Term> (0 dB at the rim, −40 dB at the center) · the
+            rings are 10 dB apart, so the small bumps beside the mainlobe are the sidelobes
           </p>
         </div>
 
