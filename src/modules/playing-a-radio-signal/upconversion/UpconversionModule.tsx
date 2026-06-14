@@ -10,12 +10,16 @@ const SPAN = 6;
 const I_SYMS = [1, -1, 1, 1, -1];
 const Q_SYMS = [1, 1, -1, 1, -1];
 const S = 1 / Math.SQRT2; // unit-energy QPSK rail amplitude
+// Selectable carriers: each divides SPS (so the box low-pass spans whole image periods → exact
+// recovery) and stays below Nyquist (SPS/2 = 12) with guard — at fc = 12 the sine rail samples to
+// zero and Q would be lost.
+const CARRIERS = [2, 3, 4, 6, 8];
 
 /**
  * Up/down-conversion (brief §5, Track B). Baseband I/Q is slow; radios transmit a fast real carrier.
  * The transmitter mixes baseband up — `s = I·cos − Q·sin` — into the single real waveform that goes
  * on the wire; the receiver mixes back down with the same carrier and low-pass filters to recover I
- * and Q unchanged. Slide the carrier frequency and watch the passband tighten while baseband returns.
+ * and Q unchanged. Pick a carrier frequency and watch the passband tighten while baseband returns.
  */
 export function UpconversionModule() {
   const [fc, setFc] = useState(6); // carrier in cycles per symbol
@@ -69,23 +73,24 @@ export function UpconversionModule() {
         xLabel="time"
       />
 
-      <div className="flex flex-wrap items-center gap-6">
-        <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>
-          <span className="readout flex justify-between text-xs text-text-muted">
-            <span>Carrier frequency</span>
-            <span className="text-signal">{fc} cycles/symbol</span>
-          </span>
-          <input
-            type="range"
-            min={2}
-            max={12}
-            step={1}
-            value={fc}
-            onChange={(e) => setFc(parseInt(e.target.value, 10))}
-            className="accent-[var(--color-signal)]"
-            aria-label="Carrier frequency in cycles per symbol"
-          />
-        </label>
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="readout text-xs text-text-muted">Carrier frequency</span>
+        {CARRIERS.map((c) => (
+          <button
+            key={c}
+            type="button"
+            aria-pressed={c === fc}
+            onClick={() => setFc(c)}
+            className={[
+              'readout rounded-md border px-3 py-1 text-xs transition-colors',
+              c === fc
+                ? 'border-signal-dim text-signal'
+                : 'border-border text-text-muted hover:border-signal-dim',
+            ].join(' ')}
+          >
+            {c} cyc/sym
+          </button>
+        ))}
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">

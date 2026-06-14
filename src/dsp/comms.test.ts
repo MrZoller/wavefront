@@ -117,6 +117,10 @@ describe('text ↔ bits', () => {
     expect(textToBits('A')).toEqual([0, 1, 0, 0, 0, 0, 0, 1]);
   });
 
+  it('round-trips non-ASCII text via UTF-8', () => {
+    expect(bitsToText(textToBits('héllo · ✓ 北'))).toBe('héllo · ✓ 北');
+  });
+
   it('survives a full text → symbols → text round-trip with no noise', () => {
     const text = 'Wavefront';
     const recovered = bitsToText(symbolsToBits(bitsToSymbols(textToBits(text), QPSK), QPSK));

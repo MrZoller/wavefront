@@ -143,23 +143,25 @@ export function bitErrorRate(a: number[], b: number[]): number {
   return errors / n;
 }
 
-/** Encode text as a bit stream: each character's low byte, 8 bits MSB-first. */
+/** Encode text as a bit stream: its UTF-8 bytes, 8 bits MSB-first (so any Unicode survives). */
 export function textToBits(text: string): number[] {
+  const bytes = new TextEncoder().encode(text);
   const bits: number[] = [];
-  for (let i = 0; i < text.length; i++) {
-    const code = text.charCodeAt(i) & 0xff;
-    for (let b = 7; b >= 0; b--) bits.push((code >> b) & 1);
+  for (const byte of bytes) {
+    for (let b = 7; b >= 0; b--) bits.push((byte >> b) & 1);
   }
   return bits;
 }
 
-/** Decode a bit stream back to text (inverse of `textToBits`); a trailing partial byte is dropped. */
+/** Decode a UTF-8 bit stream back to text (inverse of `textToBits`); a trailing partial byte is
+ *  dropped, and bytes corrupted by the channel become the Unicode replacement character. */
 export function bitsToText(bits: number[]): string {
-  let out = '';
-  for (let i = 0; i + 8 <= bits.length; i += 8) {
+  const n = Math.floor(bits.length / 8);
+  const bytes = new Uint8Array(n);
+  for (let i = 0; i < n; i++) {
     let code = 0;
-    for (let b = 0; b < 8; b++) code = (code << 1) | bits[i + b];
-    out += String.fromCharCode(code);
+    for (let b = 0; b < 8; b++) code = (code << 1) | bits[i * 8 + b];
+    bytes[i] = code;
   }
-  return out;
+  return new TextDecoder().decode(bytes);
 }
