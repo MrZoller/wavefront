@@ -108,15 +108,23 @@ export function PolarPlot({
     [anglesRad, values, markers, floorDb]
   );
 
+  // Radius encodes power; on a dB scale when `floorDb` is set, otherwise normalized [0, 1].
+  const radialLabel = floorDb == null ? 'Power (normalized)' : 'Power (dB)';
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height: size }}
-      className={['rounded-md border border-border bg-surface', className]
-        .filter(Boolean)
-        .join(' ')}
-      role="img"
-      aria-label="Polar array gain pattern versus bearing"
-    />
+    <figure className={className}>
+      <canvas
+        ref={canvasRef}
+        style={{ width: '100%', height: size }}
+        className="rounded-md border border-border bg-surface"
+        role="img"
+        aria-label="Polar array gain pattern versus bearing"
+      />
+      {/* The angular axis is already tick-labeled in degrees on the fan; this names both axes. */}
+      <figcaption className="readout mt-1 flex justify-between text-xs text-text-faint">
+        <span>Radius: {radialLabel}</span>
+        <span>Angle: Bearing (°)</span>
+      </figcaption>
+    </figure>
   );
 }

@@ -54,6 +54,13 @@ export function ConstellationPlot({
       ctx.lineTo(cx, h);
       ctx.stroke();
 
+      // Intrinsic axis labels — a constellation is always In-phase (I) × Quadrature (Q), so the
+      // axes name themselves (no caller needed). Both are normalized symbol units, hence no unit.
+      ctx.fillStyle = colors.textFaint;
+      ctx.font = '11px ui-monospace, monospace';
+      ctx.fillText('I', w - 12, cy - 6);
+      ctx.fillText('Q', cx + 6, 12);
+
       // Received scatter (under the lattice so reference rings stay readable).
       for (const p of scatter) {
         ctx.fillStyle = p.color ?? colors.signal;
