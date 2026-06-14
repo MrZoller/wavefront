@@ -20,9 +20,9 @@ export function PhaseDifferenceExplanation() {
             broadside) on sensors a distance <span className="readout">d</span> apart, the far
             sensor sees an extra path length:
           </p>
-          <p className="readout my-2 text-cyan">Δr = d · sin(θ)</p>
+          <p className="readout my-2 text-text">Δr = d · sin(θ)</p>
           <p>That delay, expressed as a phase of the carrier, is:</p>
-          <p className="readout my-2 text-signal">Δφ = 2π · d · sin(θ) / λ</p>
+          <p className="readout my-2 text-text">Δφ = 2π · d · sin(θ) / λ</p>
           <p>
             Watch sensor B&rsquo;s waveform slide relative to A as you change θ — that slide{' '}
             <em>is</em> Δφ.

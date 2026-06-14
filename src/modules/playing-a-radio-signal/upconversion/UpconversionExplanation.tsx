@@ -16,7 +16,7 @@ export function UpconversionExplanation() {
         <section>
           <h3 className="mb-1 font-medium text-text">One real wire, two rails</h3>
           <p>The complex baseband I + jQ becomes a single real waveform:</p>
-          <p className="readout my-2 text-signal">s(t) = I(t)·cos(2πf꜀t) − Q(t)·sin(2πf꜀t)</p>
+          <p className="readout my-2 text-text">s(t) = I(t)·cos(2πf꜀t) − Q(t)·sin(2πf꜀t)</p>
           <p>
             Cosine and sine are 90° apart (&ldquo;in-phase&rdquo; and &ldquo;quadrature&rdquo;), so
             two independent streams ride one carrier without colliding — that&rsquo;s how QPSK/QAM

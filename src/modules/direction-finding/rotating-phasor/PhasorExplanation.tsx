@@ -8,7 +8,7 @@ export function PhasorExplanation() {
           <h3 className="mb-1 font-medium text-text">A complex sample is a 2D point</h3>
           <p>
             Forget &ldquo;imaginary numbers.&rdquo; A complex number is just a 2D vector:{' '}
-            <span className="readout text-cyan">(I, Q)</span>. <strong>I</strong> (in-phase) is the
+            <span className="readout text-text">(I, Q)</span>. <strong>I</strong> (in-phase) is the
             horizontal part, <strong>Q</strong> (quadrature) is the vertical part. One IQ sample is
             one arrow on this plane.
           </p>
@@ -19,7 +19,7 @@ export function PhasorExplanation() {
           <p>
             A tone is that arrow rotating at a steady rate. Its angle advances linearly with time:
           </p>
-          <p className="readout my-2 text-signal">x(t) = A · e^(j·2π·f·t)</p>
+          <p className="readout my-2 text-text">x(t) = A · e^(j·2π·f·t)</p>
           <p>
             That&rsquo;s Euler&rsquo;s formula — the real part traces a cosine (the I plot), the
             imaginary part traces a sine (the Q plot). Frequency <span className="readout">f</span>{' '}

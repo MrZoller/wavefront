@@ -10,7 +10,7 @@ export function CrossCorrelationExplanation() {
             Cross-correlation is just this loop: shift one signal by some lag, multiply it
             point-by-point against the other, and sum. That sum is one number per lag:
           </p>
-          <p className="readout my-2 text-signal">c[ℓ] = Σ&thinsp;ref[n] · sig[n + ℓ]</p>
+          <p className="readout my-2 text-text">c[ℓ] = Σ&thinsp;ref[n] · sig[n + ℓ]</p>
           <p>
             Drag the reference across the noisy record and watch the dot product. When the burst
             lines up with its buried copy, every term reinforces and the sum spikes.
