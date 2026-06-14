@@ -17,7 +17,7 @@ All notable changes to this project are documented here. The format is based on
   - **Spread Spectrum** — PN spreading with live processing gain.
   - **Chirp / LFM** — the swept-tone spectrogram diagonal.
   - **Modulation Classifier** (capstone) — identify an unknown scheme from three features.
-- **New `dsp/` primitives (27 tests):** `fft.ts` (DFT reference + radix-2 FFT/IFFT), `window.ts`,
+- **New `dsp/` primitives (22 tests, 128 total):** `fft.ts` (DFT reference + radix-2 FFT/IFFT), `window.ts`,
   `spectrum.ts` (magnitude spectrum + spectrogram), `modulation.ts` (pluggable `Modulator` + linear
   PSK/QAM, CPFSK/MSK, analog AM/FM/PM), `waveforms.ts` (OFDM, chirp, DSSS), and `features.ts`
   (modulation features + nearest-prototype classifier).
@@ -38,7 +38,7 @@ All notable changes to this project are documented here. The format is based on
     that opens and closes with Eb/N0, with live BER.
   - **Send a Message** (capstone) — type text and watch it ride symbols across the noisy channel and
     come back, characters garbling as Eb/N0 drops.
-- **New `dsp/` primitives (27 tests):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
+- **New `dsp/` primitives (22 tests, 128 total):** `dsp/comms.ts` — energy-normalized Gray-coded constellations
   (`BPSK` / `QPSK` / `QAM16`), `bitsToSymbols` / `symbolsToBits` / `nearestSymbol`, `awgn` +
   `noiseSigma` (Eb/N0 → σ), `bitErrorRate`, and `textToBits` / `bitsToText`; `dsp/pulse.ts` —
   `raisedCosine` / `rootRaisedCosine`, `upsample`, FIR `convolve`; `dsp/carrier.ts` — `upconvert` /
