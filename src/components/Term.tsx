@@ -35,7 +35,9 @@ export function Term({ id, children }: TermProps) {
 
   // Keep the popover on-screen. It defaults to below-left of the term; on open, measure and (a) nudge
   // horizontally so it doesn't run off the side, and (b) flip above the term when it would overflow
-  // the bottom of the viewport (terms near the bottom of a scroll area). Written imperatively so
+  // the bottom. Bounds are the nearest scroll/clipping ancestor (the module body and rail are scroll
+  // containers) intersected with the viewport — measuring against the window alone would miss a term
+  // clipped at a scrollport edge that still has window space beyond it. Written imperatively so
   // there's no extra render before paint.
   useLayoutEffect(() => {
     const el = popoverRef.current;
@@ -48,16 +50,27 @@ export function Term({ id, children }: TermProps) {
     el.style.marginBottom = '';
     const margin = 8;
 
+    // Nearest ancestor that clips its overflow → the box the popover must stay inside.
+    let clip = trigger.parentElement;
+    while (clip) {
+      const o = getComputedStyle(clip);
+      if (/(auto|scroll|hidden)/.test(o.overflowX + o.overflowY + o.overflow)) break;
+      clip = clip.parentElement;
+    }
+    const cb = clip?.getBoundingClientRect();
+    const left = Math.max(margin, (cb?.left ?? 0) + margin);
+    const right = Math.min(window.innerWidth, cb?.right ?? window.innerWidth) - margin;
+    const top = Math.max(margin, (cb?.top ?? 0) + margin);
+    const bottom = Math.min(window.innerHeight, cb?.bottom ?? window.innerHeight) - margin;
+
     const rect = el.getBoundingClientRect();
     let dx = 0;
-    if (rect.right > window.innerWidth - margin) dx = window.innerWidth - margin - rect.right;
-    if (rect.left + dx < margin) dx = margin - rect.left;
+    if (rect.right > right) dx = right - rect.right;
+    if (rect.left + dx < left) dx = left - rect.left;
     el.style.transform = `translateX(${dx}px)`;
 
     const tRect = trigger.getBoundingClientRect();
-    const overflowsBottom = rect.bottom > window.innerHeight - margin;
-    const roomAbove = tRect.top - rect.height - margin > 0;
-    if (overflowsBottom && roomAbove) {
+    if (rect.bottom > bottom && tRect.top - rect.height - margin > top) {
       el.style.top = 'auto';
       el.style.bottom = '100%';
       el.style.marginTop = '0';
