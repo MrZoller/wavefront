@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -142,9 +143,9 @@ export function PhaseDifferenceModule() {
 
         <div className="flex min-w-[280px] flex-1 flex-col gap-4">
           <div>
-            <p className="readout mb-1 text-xs text-text-muted">
+            <PlotTitle>
               Sensor A <span className="text-text-faint">— reference</span>
-            </p>
+            </PlotTitle>
             <TimeSeriesPlot
               series={[{ color: colors.signal, samples: sensorWave(0) }]}
               yDomain={[-1.1, 1.1]}
@@ -155,9 +156,9 @@ export function PhaseDifferenceModule() {
             />
           </div>
           <div>
-            <p className="readout mb-1 text-xs text-text-muted">
+            <PlotTitle>
               Sensor B <span className="text-text-faint">— shifted by Δφ</span>
-            </p>
+            </PlotTitle>
             <TimeSeriesPlot
               series={[{ color: colors.cyan, samples: sensorWave(deltaPhi) }]}
               yDomain={[-1.1, 1.1]}

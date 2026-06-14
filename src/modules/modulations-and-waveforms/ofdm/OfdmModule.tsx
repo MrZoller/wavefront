@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -54,7 +55,7 @@ export function OfdmModule() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">occupied-band spectrum</p>
+        <PlotTitle>occupied-band spectrum</PlotTitle>
         <SpectrumPlot
           data={spectrum}
           height={150}
@@ -64,7 +65,7 @@ export function OfdmModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">time waveform (I)</p>
+        <PlotTitle>time waveform (I)</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.signal, samples: signal.slice(0, 320).map((c) => c.re) }]}
           height={110}

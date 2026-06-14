@@ -8,6 +8,16 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **A plot's title reads as a title, not a second axis label.** The name of a plot and its top-left
+  y-axis label share the same corner; rendered alike, they fused into what looked like one two-line
+  caption, so a reader couldn't tell the heading from the axis annotation. A new shared `PlotTitle`
+  (`src/components/plots/`) gives the title a proportional heading treatment — distinct from the
+  quiet monospace `readout` styling the x- and y-axis captions share as peers — so at a glance
+  "Sensor A — reference" reads as the plot's name and "Amplitude" reads as the vertical axis. Adopted
+  by every titled plot across Tracks A–D; the styling lives in one component (change it once,
+  everywhere), and a test pins that the title never borrows the axis labels' mono treatment. Wording,
+  axis placement, and the meaning-vs-unit rules are unchanged — this is purely visual hierarchy.
+
 - **Legible curriculum structure in the nav.** Each track's climb is now visible, driven entirely by
   registry metadata so the sidebar and landing page stay in sync. Modules declare a `layer`, an
   `order` (unique within a track), and at most one `isCapstone`; tracks declare `layerNames`. Both

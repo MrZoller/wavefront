@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -78,7 +79,7 @@ export function AnalogModule() {
       </div>
 
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">baseband message</p>
+        <PlotTitle>baseband message</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.cyan, samples: message.slice(0, 256) }]}
           height={90}
@@ -88,7 +89,7 @@ export function AnalogModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">{scheme} signal (I)</p>
+        <PlotTitle>{scheme} signal (I)</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.signal, samples: signalI }]}
           height={110}

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
 import {
@@ -132,9 +133,9 @@ export function SendMessageModule() {
       </div>
 
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
+        <PlotTitle>
           BER vs Eb/N0 ({scheme.name}) — the waterfall, with your current setting marked
-        </p>
+        </PlotTitle>
         <XYPlot
           series={[
             { x: curve.map((p) => p.ebN0), y: curve.map((p) => p.ber), color: colors.signal },

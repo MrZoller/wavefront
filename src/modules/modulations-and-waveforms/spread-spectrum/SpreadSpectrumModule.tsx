@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { type Complex } from '@/dsp/complex';
 import { dsssSpread, pnCode, processingGainDb } from '@/dsp/waveforms';
@@ -38,7 +39,7 @@ export function SpreadSpectrumModule() {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">Narrowband data (before spreading)</p>
+        <PlotTitle>Narrowband data (before spreading)</PlotTitle>
         <SpectrumPlot
           data={narrow}
           height={130}
@@ -48,7 +49,7 @@ export function SpreadSpectrumModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">Spread signal (after × PN code)</p>
+        <PlotTitle>Spread signal (after × PN code)</PlotTitle>
         <SpectrumPlot
           data={spread}
           height={130}

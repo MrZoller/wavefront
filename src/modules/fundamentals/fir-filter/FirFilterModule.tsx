@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
@@ -23,9 +24,7 @@ export function FirFilterModule() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
-          impulse response (the {numTaps} taps)
-        </p>
+        <PlotTitle>impulse response (the {numTaps} taps)</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.cyan, samples: taps }]}
           height={110}
@@ -36,7 +35,7 @@ export function FirFilterModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">frequency response |H(f)|</p>
+        <PlotTitle>frequency response |H(f)|</PlotTitle>
         <XYPlot
           series={[
             {

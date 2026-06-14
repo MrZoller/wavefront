@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
 import type { Complex } from '@/dsp/complex';
@@ -51,7 +52,7 @@ export function UpconversionModule() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">baseband I/Q (transmit)</p>
+        <PlotTitle>baseband I/Q (transmit)</PlotTitle>
         <TimeSeriesPlot
           series={[
             { label: 'I', color: colors.signal, samples: I },
@@ -64,7 +65,7 @@ export function UpconversionModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">passband on the wire (I·cos − Q·sin)</p>
+        <PlotTitle>passband on the wire (I·cos − Q·sin)</PlotTitle>
         <TimeSeriesPlot
           series={[{ label: 'passband', color: colors.trace[2], samples: passband }]}
           height={120}
@@ -74,7 +75,7 @@ export function UpconversionModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">recovered baseband (receive)</p>
+        <PlotTitle>recovered baseband (receive)</PlotTitle>
         <TimeSeriesPlot
           series={[
             { label: 'I', color: colors.signal, samples: recI },

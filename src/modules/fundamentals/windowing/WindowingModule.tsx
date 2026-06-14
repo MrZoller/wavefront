@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { AXIS } from '@/components/plots/axisLabel';
+import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -51,7 +52,7 @@ export function WindowingModule() {
       </div>
 
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">window shape (the taper applied)</p>
+        <PlotTitle>window shape (the taper applied)</PlotTitle>
         <TimeSeriesPlot
           series={[{ color: colors.cyan, samples: shape }]}
           height={90}
@@ -62,9 +63,7 @@ export function WindowingModule() {
         />
       </div>
       <div>
-        <p className="readout mb-1 text-xs text-text-muted">
-          spectrum of an off-bin tone through this window
-        </p>
+        <PlotTitle>spectrum of an off-bin tone through this window</PlotTitle>
         <SpectrumPlot
           data={spectrum}
           height={180}
