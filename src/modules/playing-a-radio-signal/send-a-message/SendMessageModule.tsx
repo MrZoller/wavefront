@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
+import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
 import {
   CONSTELLATIONS,
@@ -13,8 +14,10 @@ import {
   textToBits,
   type Constellation,
 } from '@/dsp/comms';
+import { berVsSnr } from '@/dsp/channel';
 
 const SCHEMES = Object.values(CONSTELLATIONS);
+const EBN0_AXIS = Array.from({ length: 21 }, (_, i) => -2 + i); // −2 … 18 dB
 
 /**
  * Send a Message (brief §5, Track B — the capstone). The whole chain end to end: type text, watch it
@@ -37,6 +40,10 @@ export function SendMessageModule() {
     });
     return { received: bitsToText(decoded), scatter, ber: bitErrorRate(bits, decoded) };
   }, [text, scheme, ebN0dB]);
+
+  // BER-vs-Eb/N0 waterfall for the chosen scheme, with the live operating point marked.
+  const curve = useMemo(() => berVsSnr(scheme, EBN0_AXIS, 4000, 11), [scheme]);
+  const opBer = curve.find((p) => p.ebN0 === ebN0dB)?.ber ?? 0;
 
   return (
     <div className="flex flex-col gap-6">
@@ -121,6 +128,25 @@ export function SendMessageModule() {
             <Readout label="Bits sent" value={`${text.length * 8}`} />
           </div>
         </div>
+      </div>
+
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">
+          BER vs Eb/N0 ({scheme.name}) — the waterfall, with your current setting marked
+        </p>
+        <XYPlot
+          series={[
+            { x: curve.map((p) => p.ebN0), y: curve.map((p) => p.ber), color: colors.signal },
+          ]}
+          xDomain={[-2, 18]}
+          yDomain={[1e-4, 0.5]}
+          logY
+          marker={{ x: ebN0dB, y: Math.max(opBer, 1e-4) }}
+          height={170}
+          yLabel="BER (log)"
+          xLabel="Eb/N0 (dB)"
+          ariaLabel={`Bit error rate versus Eb/N0 curve for ${scheme.name}`}
+        />
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
