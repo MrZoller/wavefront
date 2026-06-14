@@ -185,3 +185,47 @@ test('modulation classifier module', async ({ page }) => {
   await expect(page.getByRole('img', { name: /Unknown signal spectrum/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'modulation-classifier.png') });
 });
+
+test('sampling & aliasing module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Sampling & Aliasing' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /aliased low-frequency reconstruction/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'sampling-aliasing.png') });
+});
+
+test('dft basis module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'The DFT as a Change of Basis' }).first().click();
+  await expect(page.getByRole('img', { name: /DFT magnitude spectrum bars/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'dft-basis.png') });
+});
+
+test('windowing module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Windowing & Leakage' }).first().click();
+  await expect(page.getByRole('img', { name: /window spectral leakage/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'windowing.png') });
+});
+
+test('fir filter module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'FIR Filtering' }).first().click();
+  await expect(page.getByRole('img', { name: /FIR low-pass frequency response/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'fir-filter.png') });
+});
+
+test('multirate module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Decimation & Interpolation' }).first().click();
+  await expect(page.getByRole('img', { name: /Original wideband spectrum/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'multirate.png') });
+});
+
+test('channelizer module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Channelizer (PFB)' }).first().click();
+  await expect(page.getByRole('img', { name: /Wide spectrum tiled into channels/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'channelizer.png') });
+});
