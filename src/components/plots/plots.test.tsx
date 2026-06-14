@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { AXIS } from './axisLabel';
 import { EyeDiagramPlot } from './EyeDiagramPlot';
@@ -86,13 +86,34 @@ describe('shared Cartesian plots label both axes', () => {
     },
   ];
 
-  it.each(cases)('$name shows its y and x quantity captions', ({ element, y, x }) => {
-    render(element);
-    const figure = screen.getByRole('img').closest('figure');
-    expect(figure).not.toBeNull();
-    expect(within(figure!).getByText(y)).toBeInTheDocument();
-    expect(within(figure!).getByText(x)).toBeInTheDocument();
-  });
+  it.each(cases)(
+    '$name puts the y-label on the vertical axis and the x-label on the horizontal axis',
+    ({ element, y, x }) => {
+      render(element);
+      const canvas = screen.getByRole('img');
+      const figure = canvas.closest('figure');
+      expect(figure).not.toBeNull();
+
+      const yEl = figure!.querySelector('[data-axis="y"]');
+      const xEl = figure!.querySelector('[data-axis="x"]');
+      expect(yEl).not.toBeNull();
+      expect(xEl).not.toBeNull();
+
+      // The right text is wired to the right axis.
+      expect(yEl).toHaveTextContent(y);
+      expect(xEl).toHaveTextContent(x);
+
+      // Placement is the whole point of this test: the y-label (the vertical quantity) renders
+      // *before* the plot canvas — above the vertical axis — while the x-label renders *after* it,
+      // along the bottom edge. The earlier bug dropped both into one bottom footer, which this
+      // ordering check would have caught (the y-label would have followed the canvas, not preceded).
+      expect(canvas.compareDocumentPosition(yEl!) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+      expect(canvas.compareDocumentPosition(xEl!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+
+      // And the vertical quantity must not also sit in the bottom (x) caption.
+      expect(xEl).not.toHaveTextContent(y);
+    }
+  );
 
   it('builds the default aria-label as "{y} versus {x}", and an explicit ariaLabel overrides it', () => {
     const { rerender } = render(

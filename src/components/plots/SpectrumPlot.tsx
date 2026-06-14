@@ -1,6 +1,6 @@
 import { colors } from '@/design/tokens';
 import { type AxisLabel, axisAriaLabel } from './axisLabel';
-import { AxisCaption } from './AxisCaption';
+import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
 export interface SpectrumPlotProps {
@@ -73,7 +73,7 @@ export function SpectrumPlot({
   );
 
   return (
-    <figure className={className}>
+    <PlotFrame className={className} xLabel={xLabel} yLabel={yLabel}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height }}
@@ -81,7 +81,6 @@ export function SpectrumPlot({
         role="img"
         aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
       />
-      <AxisCaption xLabel={xLabel} yLabel={yLabel} />
-    </figure>
+    </PlotFrame>
   );
 }

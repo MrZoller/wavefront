@@ -1,5 +1,5 @@
 import { type AxisLabel, axisAriaLabel } from './axisLabel';
-import { AxisCaption } from './AxisCaption';
+import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
 export interface SpectrogramPlotProps {
@@ -72,7 +72,7 @@ export function SpectrogramPlot({
   );
 
   return (
-    <figure className={className}>
+    <PlotFrame className={className} xLabel={xLabel} yLabel={yLabel}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height }}
@@ -80,7 +80,6 @@ export function SpectrogramPlot({
         role="img"
         aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
       />
-      <AxisCaption xLabel={xLabel} yLabel={yLabel} />
-    </figure>
+    </PlotFrame>
   );
 }
