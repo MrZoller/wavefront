@@ -1,4 +1,6 @@
 import { colors } from '@/design/tokens';
+import { type AxisLabel, axisAriaLabel } from './axisLabel';
+import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
 export interface SpectrumPlotProps {
@@ -8,6 +10,12 @@ export interface SpectrumPlotProps {
   color?: string;
   height?: number;
   className?: string;
+  /** What each axis represents — required so a spectrum never renders unlabeled. y is essentially
+   *  always `AXIS.magnitudeDb` (the dB *is* the lesson); x is `AXIS.normalizedFrequency` unless
+   *  there's a real sample rate, in which case pass `{ quantity: 'Frequency', unit: 'Hz' }`. */
+  yLabel: AxisLabel;
+  xLabel: AxisLabel;
+  /** Richer screen-reader description; defaults to "{y} versus {x}". */
   ariaLabel?: string;
 }
 
@@ -21,7 +29,9 @@ export function SpectrumPlot({
   color = colors.signal,
   height = 150,
   className,
-  ariaLabel = 'Magnitude spectrum',
+  yLabel,
+  xLabel,
+  ariaLabel,
 }: SpectrumPlotProps) {
   const canvasRef = useCanvas(
     (ctx, w, h) => {
@@ -63,14 +73,14 @@ export function SpectrumPlot({
   );
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height }}
-      className={['rounded-md border border-border bg-surface', className]
-        .filter(Boolean)
-        .join(' ')}
-      role="img"
-      aria-label={ariaLabel}
-    />
+    <PlotFrame className={className} xLabel={xLabel} yLabel={yLabel}>
+      <canvas
+        ref={canvasRef}
+        style={{ width: '100%', height }}
+        className="rounded-md border border-border bg-surface"
+        role="img"
+        aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
+      />
+    </PlotFrame>
   );
 }

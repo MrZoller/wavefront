@@ -94,6 +94,57 @@ sides of the line:
 And **gloss the concept, not the letters**: `dBm` → "a power level on a logarithmic scale,"
 not "decibel-milliwatts" (that's the `expansion` field's job).
 
+## Labeling plot axes
+
+Wavefront's premise is that the **visualization** carries the intuition and the prose only supports
+it — so an unlabeled axis inverts the whole tool. Every plot must say what its axes represent, and it
+does so **through the shared plot components** (`src/components/plots/`), not plot-by-plot. The rule:
+
+1. **Always label the quantity** (and its scale): `Time`, `Frequency`, `Magnitude (dB)`, `Amplitude`,
+   `Phase (°)`, `Sample`, `Bit error rate (log)`… This is mandatory.
+2. **Show a unit only when the quantity actually has one.** Don't fabricate units for normalized or
+   unitless axes — a window taper is `Amplitude` (a 0→1 weight, no unit) over `Sample` (an index).
+3. **Where the scale is the lesson, the label is doing teaching work — never omit it.** This is the
+   point of the **dB**, **normalized-frequency**, and **log** cases:
+   - A spectrum's y is `Magnitude (dB)` — here the dB _is_ the concept, so it must appear.
+   - A spectrum's x is `Frequency (Hz)` **only** when there's a real sample rate; otherwise it's
+     `Normalized frequency (cycles/sample)`. "Frequency doesn't have to be in Hz" is worth teaching,
+     not hiding — so label normalized axes as normalized.
+4. **Keep it lightweight.** A small, quiet caption from the design tokens — not tick/gridline spam.
+   Add numeric ticks only where a reader must read magnitudes off the plot; for pure-intuition plots
+   the quantity label alone is enough. This is about labels, not a charting-library rebuild.
+
+### How it's enforced (so it can't drift)
+
+Axis labels are a structured type, splitting meaning from unit so rule 2 is structural:
+
+```ts
+import { AXIS, type AxisLabel } from '@/components/plots/axisLabel';
+
+interface AxisLabel {
+  quantity: string; // required, non-empty — what the axis represents (and its scale)
+  unit?: string; // only when the quantity genuinely has one: 'Hz', 'dB', '°', 'cycles/sample'
+}
+
+<SpectrumPlot data={spectrum} yLabel={AXIS.magnitudeDb} xLabel={AXIS.normalizedFrequency} />;
+// module-specific axes pass an inline object:
+<XYPlot … yLabel={{ quantity: 'Bit error rate (log)' }} xLabel={{ quantity: 'Eb/N0', unit: 'dB' }} />;
+```
+
+- The Cartesian plots (`TimeSeriesPlot`, `SpectrumPlot`, `XYPlot`, `SpectrogramPlot`,
+  `EyeDiagramPlot`) make `xLabel`/`yLabel` **required props** — a plot that doesn't name its axes
+  won't compile, so new modules are labeled by default rather than by remembering. Reuse the `AXIS`
+  presets for recurring axes (`magnitudeDb`, `normalizedFrequency`, `sample`, `time`, `amplitude`) so
+  every spectrum is worded the same way; put descriptive titles ("passband on the wire") in a `<p>`
+  above the plot, not in the axis label.
+- The plots with **intrinsic** axes label themselves: `ConstellationPlot` and `PhasorPlot` draw the
+  `I`/`Q` axes, and `PolarPlot` captions its bearing/power axes. `WorldMap` is exempt — its
+  latitude/longitude graticule is self-describing.
+- This is **backed by a test** (`src/components/plots/{axisLabel,plots}.test.tsx`): the quantity must
+  be non-empty (`formatAxisLabel` throws otherwise) and the captions/aria-labels are checked on
+  render. Bespoke module canvases (built directly on `useCanvas`) aren't required props, but should
+  follow the same rule.
+
 ## Coding conventions
 
 - **TypeScript strict**; no `any` where a real type fits.

@@ -1,3 +1,5 @@
+import { type AxisLabel, axisAriaLabel } from './axisLabel';
+import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
 export interface SpectrogramPlotProps {
@@ -6,6 +8,11 @@ export interface SpectrogramPlotProps {
   floorDb?: number;
   height?: number;
   className?: string;
+  /** What each axis represents — required. Time runs along x, frequency up y (color = energy).
+   *  Typically `AXIS.time` and `AXIS.normalizedFrequency`. */
+  xLabel: AxisLabel;
+  yLabel: AxisLabel;
+  /** Richer screen-reader description; defaults to "{y} versus {x}". */
   ariaLabel?: string;
 }
 
@@ -40,7 +47,9 @@ export function SpectrogramPlot({
   floorDb = -80,
   height = 180,
   className,
-  ariaLabel = 'Spectrogram',
+  xLabel,
+  yLabel,
+  ariaLabel,
 }: SpectrogramPlotProps) {
   const canvasRef = useCanvas(
     (ctx, w, h) => {
@@ -63,14 +72,14 @@ export function SpectrogramPlot({
   );
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height }}
-      className={['rounded-md border border-border bg-surface', className]
-        .filter(Boolean)
-        .join(' ')}
-      role="img"
-      aria-label={ariaLabel}
-    />
+    <PlotFrame className={className} xLabel={xLabel} yLabel={yLabel}>
+      <canvas
+        ref={canvasRef}
+        style={{ width: '100%', height }}
+        className="rounded-md border border-border bg-surface"
+        role="img"
+        aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
+      />
+    </PlotFrame>
   );
 }

@@ -1,4 +1,6 @@
 import { colors } from '@/design/tokens';
+import { type AxisLabel, axisAriaLabel } from './axisLabel';
+import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
 export interface EyeDiagramPlotProps {
@@ -9,6 +11,11 @@ export interface EyeDiagramPlotProps {
   height?: number;
   color?: string;
   className?: string;
+  /** What each axis represents — required. x is time folded over a two-symbol span, y is amplitude.
+   *  Defaults to `{ quantity: 'Time (two symbols)' }` and `AXIS.amplitude` at the call sites. */
+  xLabel: AxisLabel;
+  yLabel: AxisLabel;
+  /** Richer screen-reader description; defaults to "{y} versus {x}". */
   ariaLabel?: string;
 }
 
@@ -22,7 +29,9 @@ export function EyeDiagramPlot({
   height = 150,
   color = colors.signal,
   className,
-  ariaLabel = 'Eye diagram',
+  xLabel,
+  yLabel,
+  ariaLabel,
 }: EyeDiagramPlotProps) {
   const canvasRef = useCanvas(
     (ctx, w, h) => {
@@ -60,14 +69,14 @@ export function EyeDiagramPlot({
   );
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '100%', height }}
-      className={['rounded-md border border-border bg-surface', className]
-        .filter(Boolean)
-        .join(' ')}
-      role="img"
-      aria-label={ariaLabel}
-    />
+    <PlotFrame className={className} xLabel={xLabel} yLabel={yLabel}>
+      <canvas
+        ref={canvasRef}
+        style={{ width: '100%', height }}
+        className="rounded-md border border-border bg-surface"
+        role="img"
+        aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
+      />
+    </PlotFrame>
   );
 }

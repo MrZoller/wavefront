@@ -48,7 +48,9 @@ The app derives **all** navigation from these. There is no hand-maintained route
    Every exported function gets a doc comment with its equation and a Vitest spec.
 2. Build the interactive component under `src/modules/<track>/<module-id>/`.
    Lean on the shared viz library in `src/components/plots/`; add to it only when a
-   genuinely new view type is needed.
+   genuinely new view type is needed. **Label every plot's axes** — the Cartesian plots require
+   `xLabel`/`yLabel` (quantity + honest unit; see
+   [CONTRIBUTING.md → Labeling plot axes](../CONTRIBUTING.md#labeling-plot-axes)).
 3. Register it: in the module's entry file, call `registerModule({ ... })`, then import
    that file for its side effect from `src/modules/index.ts`.
 4. Add a "go deeper" doc under `docs/dsp/` and link the test that verifies the math.

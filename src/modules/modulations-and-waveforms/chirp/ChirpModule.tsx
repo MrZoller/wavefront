@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -26,13 +27,22 @@ export function ChirpModule() {
       <SpectrogramPlot
         data={sgram}
         height={200}
+        xLabel={AXIS.time}
+        yLabel={AXIS.normalizedFrequency}
         ariaLabel="Chirp spectrogram showing the swept-frequency diagonal"
       />
-      <TimeSeriesPlot
-        series={[{ color: colors.signal, samples: wave }]}
-        height={110}
-        yLabel="chirp waveform (I) — note the rising frequency"
-      />
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">
+          chirp waveform (I) — note the rising frequency
+        </p>
+        <TimeSeriesPlot
+          series={[{ color: colors.signal, samples: wave }]}
+          height={110}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+          ariaLabel="Chirp waveform, in-phase rail"
+        />
+      </div>
 
       <div className="flex flex-wrap items-center gap-6">
         <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>

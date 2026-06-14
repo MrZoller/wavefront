@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
@@ -112,8 +113,20 @@ export function ClassifierModule() {
         />
 
         <div className="flex min-w-[260px] flex-1 flex-col gap-4">
-          <SpectrumPlot data={spectrum} height={110} ariaLabel="Unknown signal spectrum" />
-          <SpectrogramPlot data={sgram} height={110} ariaLabel="Unknown signal spectrogram" />
+          <SpectrumPlot
+            data={spectrum}
+            height={110}
+            yLabel={AXIS.magnitudeDb}
+            xLabel={AXIS.normalizedFrequency}
+            ariaLabel="Unknown signal spectrum"
+          />
+          <SpectrogramPlot
+            data={sgram}
+            height={110}
+            xLabel={AXIS.time}
+            yLabel={AXIS.normalizedFrequency}
+            ariaLabel="Unknown signal spectrogram"
+          />
         </div>
       </div>
 

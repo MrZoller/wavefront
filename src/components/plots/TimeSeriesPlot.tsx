@@ -1,4 +1,6 @@
 import { colors } from '@/design/tokens';
+import { type AxisLabel, axisAriaLabel } from './axisLabel';
+import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
 export interface Series {
@@ -13,11 +15,14 @@ export interface TimeSeriesPlotProps {
   /** Minimum y-axis range; the plot always expands this to fit the data so traces never clip.
    *  Defaults to [-1, 1] (handy for normalized waveforms). */
   yDomain?: [number, number];
-  /** Optional axis labels for the readout. */
-  xLabel?: string;
-  yLabel?: string;
+  /** What each axis represents — required so no waveform renders unlabeled (see {@link AxisLabel}).
+   *  Typically `Time`/`Sample` on x and `Amplitude` on y. */
+  xLabel: AxisLabel;
+  yLabel: AxisLabel;
   height?: number;
   className?: string;
+  /** Richer screen-reader description; defaults to "{y} versus {x}". */
+  ariaLabel?: string;
 }
 
 /**
@@ -33,6 +38,7 @@ export function TimeSeriesPlot({
   yLabel,
   height = 160,
   className,
+  ariaLabel,
 }: TimeSeriesPlotProps) {
   const canvasRef = useCanvas(
     (ctx, w, h) => {
@@ -80,20 +86,14 @@ export function TimeSeriesPlot({
   );
 
   return (
-    <figure className={className}>
+    <PlotFrame className={className} xLabel={xLabel} yLabel={yLabel}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height }}
         className="rounded-md border border-border bg-surface"
         role="img"
-        aria-label={[yLabel, xLabel].filter(Boolean).join(' versus ') || 'Time-series plot'}
+        aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
       />
-      {(xLabel || yLabel) && (
-        <figcaption className="mt-1 flex justify-between readout text-xs text-text-faint">
-          <span>{yLabel}</span>
-          <span>{xLabel}</span>
-        </figcaption>
-      )}
-    </figure>
+    </PlotFrame>
   );
 }

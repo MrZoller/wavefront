@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
 import type { Complex } from '@/dsp/complex';
@@ -49,30 +50,42 @@ export function UpconversionModule() {
 
   return (
     <div className="flex flex-col gap-5">
-      <TimeSeriesPlot
-        series={[
-          { label: 'I', color: colors.signal, samples: I },
-          { label: 'Q', color: colors.cyan, samples: Q },
-        ]}
-        height={120}
-        yLabel="baseband I/Q (transmit)"
-        xLabel="time"
-      />
-      <TimeSeriesPlot
-        series={[{ label: 'passband', color: colors.trace[2], samples: passband }]}
-        height={120}
-        yLabel="passband on the wire (I·cos − Q·sin)"
-        xLabel="time"
-      />
-      <TimeSeriesPlot
-        series={[
-          { label: 'I', color: colors.signal, samples: recI },
-          { label: 'Q', color: colors.cyan, samples: recQ },
-        ]}
-        height={120}
-        yLabel="recovered baseband (receive)"
-        xLabel="time"
-      />
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">baseband I/Q (transmit)</p>
+        <TimeSeriesPlot
+          series={[
+            { label: 'I', color: colors.signal, samples: I },
+            { label: 'Q', color: colors.cyan, samples: Q },
+          ]}
+          height={120}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+          ariaLabel="Baseband I/Q before upconversion (transmit)"
+        />
+      </div>
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">passband on the wire (I·cos − Q·sin)</p>
+        <TimeSeriesPlot
+          series={[{ label: 'passband', color: colors.trace[2], samples: passband }]}
+          height={120}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+          ariaLabel="passband on the wire (I·cos − Q·sin)"
+        />
+      </div>
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">recovered baseband (receive)</p>
+        <TimeSeriesPlot
+          series={[
+            { label: 'I', color: colors.signal, samples: recI },
+            { label: 'Q', color: colors.cyan, samples: recQ },
+          ]}
+          height={120}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+          ariaLabel="Recovered baseband after downconversion (receive)"
+        />
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <span className="readout text-xs text-text-muted">Carrier frequency</span>

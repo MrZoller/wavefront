@@ -40,6 +40,13 @@ export function PhasorPlot({
       ctx.lineTo(cx, h);
       ctx.stroke();
 
+      // Intrinsic axis labels — the complex plane's axes are always the real (I) and imaginary (Q)
+      // parts, so they name themselves. These are the projections the time plots read off.
+      ctx.fillStyle = colors.textFaint;
+      ctx.font = '11px ui-monospace, monospace';
+      ctx.fillText('I', w - 12, cy - 6);
+      ctx.fillText('Q', cx + 6, 12);
+
       // Unit circle.
       ctx.strokeStyle = colors.surfaceRaised;
       ctx.lineWidth = 1.5;

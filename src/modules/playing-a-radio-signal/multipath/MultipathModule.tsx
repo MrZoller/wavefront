@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { EyeDiagramPlot } from '@/components/plots/EyeDiagramPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
@@ -78,8 +79,8 @@ export function MultipathModule() {
         xDomain={[-0.5, 0.5]}
         yDomain={[-40, 10]}
         height={140}
-        yLabel="channel response |H(f)| dB"
-        xLabel="normalized frequency"
+        yLabel={{ quantity: 'Channel response |H(f)|', unit: 'dB' }}
+        xLabel={AXIS.normalizedFrequency}
         ariaLabel="Multipath channel frequency response with fading notches"
       />
 
@@ -96,6 +97,8 @@ export function MultipathModule() {
             samples={eye}
             sps={SPS}
             height={130}
+            xLabel={{ quantity: 'Time (two symbols)' }}
+            yLabel={AXIS.amplitude}
             ariaLabel="Eye diagram closing under multipath"
           />
           <label className="flex flex-col gap-1.5">

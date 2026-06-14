@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { EyeDiagramPlot } from '@/components/plots/EyeDiagramPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
@@ -161,11 +162,32 @@ function SchemeColumn({
         ]}
         height={90}
         yDomain={[-2, 2]}
-        yLabel={`${name} I/Q`}
+        yLabel={AXIS.amplitude}
+        xLabel={AXIS.time}
+        ariaLabel={`${name} I/Q waveform`}
       />
-      <SpectrumPlot data={spectrum} height={110} ariaLabel={`${name} spectrum`} />
-      <EyeDiagramPlot samples={iq.i} sps={SPS} height={100} ariaLabel={`${name} eye diagram`} />
-      <SpectrogramPlot data={sgram} height={120} ariaLabel={`${name} spectrogram`} />
+      <SpectrumPlot
+        data={spectrum}
+        height={110}
+        yLabel={AXIS.magnitudeDb}
+        xLabel={AXIS.normalizedFrequency}
+        ariaLabel={`${name} spectrum`}
+      />
+      <EyeDiagramPlot
+        samples={iq.i}
+        sps={SPS}
+        height={100}
+        xLabel={{ quantity: 'Time (two symbols)' }}
+        yLabel={AXIS.amplitude}
+        ariaLabel={`${name} eye diagram`}
+      />
+      <SpectrogramPlot
+        data={sgram}
+        height={120}
+        xLabel={AXIS.time}
+        yLabel={AXIS.normalizedFrequency}
+        ariaLabel={`${name} spectrogram`}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -76,18 +77,34 @@ export function AnalogModule() {
         </button>
       </div>
 
-      <TimeSeriesPlot
-        series={[{ color: colors.cyan, samples: message.slice(0, 256) }]}
-        height={90}
-        yLabel="message"
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">baseband message</p>
+        <TimeSeriesPlot
+          series={[{ color: colors.cyan, samples: message.slice(0, 256) }]}
+          height={90}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+          ariaLabel="Baseband message waveform"
+        />
+      </div>
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">{scheme} signal (I)</p>
+        <TimeSeriesPlot
+          series={[{ color: colors.signal, samples: signalI }]}
+          height={110}
+          yDomain={scheme === 'AM' ? [-2, 2] : [-1.2, 1.2]}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+          ariaLabel={`${scheme} modulated signal, in-phase rail`}
+        />
+      </div>
+      <SpectrumPlot
+        data={spectrum}
+        height={150}
+        yLabel={AXIS.magnitudeDb}
+        xLabel={AXIS.normalizedFrequency}
+        ariaLabel={`${scheme} spectrum`}
       />
-      <TimeSeriesPlot
-        series={[{ color: colors.signal, samples: signalI }]}
-        height={110}
-        yDomain={scheme === 'AM' ? [-2, 2] : [-1.2, 1.2]}
-        yLabel={`${scheme} signal (I)`}
-      />
-      <SpectrumPlot data={spectrum} height={150} ariaLabel={`${scheme} spectrum`} />
 
       <div className="flex flex-wrap items-center gap-6">
         <label className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 240 }}>
