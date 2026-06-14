@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { AXIS } from '@/components/plots/axisLabel';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -129,6 +130,9 @@ export function CrossCorrelationModule() {
             series={[{ color: colors.cyan, samples: ref }]}
             yDomain={[-1.3, 1.3]}
             height={80}
+            yLabel={AXIS.amplitude}
+            xLabel={AXIS.sample}
+            ariaLabel="Reference burst waveform"
           />
         </div>
 
@@ -146,6 +150,9 @@ export function CrossCorrelationModule() {
             ]}
             yDomain={[-2, 2]}
             height={120}
+            yLabel={AXIS.amplitude}
+            xLabel={AXIS.sample}
+            ariaLabel="Received signal with the reference overlaid at the chosen lag"
           />
         </div>
 

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { AXIS } from '@/components/plots/axisLabel';
 import { PhasorPlot } from '@/components/plots/PhasorPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
@@ -113,6 +114,9 @@ export function PhasorModule() {
               series={[{ color: colors.signal, samples: frame.i }]}
               yDomain={[-1.1, 1.1]}
               height={120}
+              yLabel={AXIS.amplitude}
+              xLabel={AXIS.time}
+              ariaLabel="In-phase component I(t) over time"
             />
           </div>
           <div>
@@ -123,6 +127,9 @@ export function PhasorModule() {
               series={[{ color: colors.cyan, samples: frame.q }]}
               yDomain={[-1.1, 1.1]}
               height={120}
+              yLabel={AXIS.amplitude}
+              xLabel={AXIS.time}
+              ariaLabel="Quadrature component Q(t) over time"
             />
           </div>
         </div>

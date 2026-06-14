@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
@@ -29,7 +30,9 @@ export function FirFilterModule() {
           series={[{ color: colors.cyan, samples: taps }]}
           height={110}
           yDomain={[-Math.max(...taps) * 0.5, Math.max(...taps) * 1.1]}
-          yLabel="h[n]"
+          yLabel={{ quantity: 'Tap weight h[n]' }}
+          xLabel={AXIS.sample}
+          ariaLabel="FIR impulse response (filter taps)"
         />
       </div>
       <div>
@@ -46,8 +49,8 @@ export function FirFilterModule() {
           yDomain={[-90, 5]}
           marker={{ x: cutoff, y: -6, color: colors.alert }}
           height={160}
-          yLabel="|H(f)| dB"
-          xLabel="normalized frequency"
+          yLabel={{ quantity: 'Magnitude |H(f)|', unit: 'dB' }}
+          xLabel={AXIS.normalizedFrequency}
           ariaLabel="FIR low-pass frequency response"
         />
       </div>

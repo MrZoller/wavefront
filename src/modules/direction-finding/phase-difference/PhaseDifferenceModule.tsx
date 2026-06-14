@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AXIS } from '@/components/plots/axisLabel';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -148,6 +149,9 @@ export function PhaseDifferenceModule() {
               series={[{ color: colors.signal, samples: sensorWave(0) }]}
               yDomain={[-1.1, 1.1]}
               height={110}
+              yLabel={AXIS.amplitude}
+              xLabel={AXIS.time}
+              ariaLabel="Sensor A reference waveform over time"
             />
           </div>
           <div>
@@ -158,6 +162,9 @@ export function PhaseDifferenceModule() {
               series={[{ color: colors.cyan, samples: sensorWave(deltaPhi) }]}
               yDomain={[-1.1, 1.1]}
               height={110}
+              yLabel={AXIS.amplitude}
+              xLabel={AXIS.time}
+              ariaLabel="Sensor B waveform, shifted by the phase difference"
             />
           </div>
         </div>

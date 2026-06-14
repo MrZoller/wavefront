@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -48,12 +49,17 @@ export function DftBasisModule() {
 
   return (
     <div className="flex flex-col gap-5">
-      <TimeSeriesPlot
-        series={[{ color: colors.signal, samples: wave }]}
-        height={120}
-        yDomain={[-BINS.length, BINS.length]}
-        yLabel="signal = sum of the chosen sinusoids"
-      />
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">signal = sum of the chosen sinusoids</p>
+        <TimeSeriesPlot
+          series={[{ color: colors.signal, samples: wave }]}
+          height={120}
+          yDomain={[-BINS.length, BINS.length]}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.sample}
+          ariaLabel="Synthesized time-domain signal (sum of the chosen sinusoids)"
+        />
+      </div>
       <div>
         <p className="readout mb-1 text-xs text-text-muted">
           magnitude spectrum |X[k]| — one bar per bin

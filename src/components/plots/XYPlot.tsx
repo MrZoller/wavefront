@@ -1,4 +1,6 @@
 import { colors } from '@/design/tokens';
+import { type AxisLabel, axisAriaLabel } from './axisLabel';
+import { AxisCaption } from './AxisCaption';
 import { useCanvas } from './useCanvas';
 
 export interface XYSeries {
@@ -11,14 +13,18 @@ export interface XYPlotProps {
   series: XYSeries[];
   xDomain: [number, number];
   yDomain: [number, number];
-  /** Plot y on a log10 axis (for BER curves). Values are clamped to `yDomain` before the log. */
+  /** Plot y on a log10 axis (for BER curves). Values are clamped to `yDomain` before the log.
+   *  When set, say so in `yLabel` (e.g. `{ quantity: 'Bit error rate (log)' }`) — the scale is the
+   *  lesson, so it must show. */
   logY?: boolean;
   /** A highlighted point (e.g. the current operating point). */
   marker?: { x: number; y: number; color?: string };
   height?: number;
-  xLabel?: string;
-  yLabel?: string;
+  /** What each axis represents — required, since this generic plot has no intrinsic axes. */
+  xLabel: AxisLabel;
+  yLabel: AxisLabel;
   className?: string;
+  /** Richer screen-reader description; defaults to "{y} versus {x}". */
   ariaLabel?: string;
 }
 
@@ -36,7 +42,7 @@ export function XYPlot({
   xLabel,
   yLabel,
   className,
-  ariaLabel = 'x-y plot',
+  ariaLabel,
 }: XYPlotProps) {
   const tY = (v: number) => {
     const [lo, hi] = yDomain;
@@ -94,14 +100,9 @@ export function XYPlot({
         style={{ width: '100%', height }}
         className="rounded-md border border-border bg-surface"
         role="img"
-        aria-label={ariaLabel}
+        aria-label={ariaLabel ?? axisAriaLabel(yLabel, xLabel)}
       />
-      {(xLabel || yLabel) && (
-        <figcaption className="readout mt-1 flex justify-between text-xs text-text-faint">
-          <span>{yLabel}</span>
-          <span>{xLabel}</span>
-        </figcaption>
-      )}
+      <AxisCaption xLabel={xLabel} yLabel={yLabel} />
     </figure>
   );
 }

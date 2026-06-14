@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
@@ -49,17 +50,28 @@ export function WindowingModule() {
         ))}
       </div>
 
-      <TimeSeriesPlot
-        series={[{ color: colors.cyan, samples: shape }]}
-        height={90}
-        yDomain={[0, 1.05]}
-        yLabel="window shape"
-      />
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">window shape (the taper applied)</p>
+        <TimeSeriesPlot
+          series={[{ color: colors.cyan, samples: shape }]}
+          height={90}
+          yDomain={[0, 1.05]}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.sample}
+          ariaLabel={`${win} window shape`}
+        />
+      </div>
       <div>
         <p className="readout mb-1 text-xs text-text-muted">
           spectrum of an off-bin tone through this window
         </p>
-        <SpectrumPlot data={spectrum} height={180} ariaLabel={`${win} window spectral leakage`} />
+        <SpectrumPlot
+          data={spectrum}
+          height={180}
+          yLabel={AXIS.magnitudeDb}
+          xLabel={AXIS.normalizedFrequency}
+          ariaLabel={`${win} window spectral leakage`}
+        />
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">

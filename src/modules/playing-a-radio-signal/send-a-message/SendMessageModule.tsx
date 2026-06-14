@@ -144,8 +144,8 @@ export function SendMessageModule() {
           logY
           marker={{ x: ebN0dB, y: Math.max(opBer, 1e-4) }}
           height={170}
-          yLabel="BER (log)"
-          xLabel="Eb/N0 (dB)"
+          yLabel={{ quantity: 'Bit error rate (log)' }}
+          xLabel={{ quantity: 'Eb/N0', unit: 'dB' }}
           ariaLabel={`Bit error rate versus Eb/N0 curve for ${scheme.name}`}
         />
       </div>

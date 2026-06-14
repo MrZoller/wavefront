@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
@@ -203,6 +204,8 @@ export function ChannelizerModule() {
           data={extracted}
           floorDb={FLOOR}
           height={120}
+          yLabel={AXIS.magnitudeDb}
+          xLabel={AXIS.normalizedFrequency}
           ariaLabel={`Extracted channel ${sel} spectrum`}
         />
       </div>

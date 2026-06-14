@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
+import { AXIS } from '@/components/plots/axisLabel';
 import { ConstellationPlot, type ScatterPoint } from '@/components/plots/ConstellationPlot';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
@@ -52,13 +53,26 @@ export function OfdmModule() {
 
   return (
     <div className="flex flex-col gap-5">
-      <SpectrumPlot data={spectrum} height={150} ariaLabel="OFDM occupied-band spectrum" />
-      <TimeSeriesPlot
-        series={[{ color: colors.signal, samples: signal.slice(0, 320).map((c) => c.re) }]}
-        height={110}
-        yDomain={[-0.6, 0.6]}
-        yLabel="OFDM time waveform (I)"
-      />
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">occupied-band spectrum</p>
+        <SpectrumPlot
+          data={spectrum}
+          height={150}
+          yLabel={AXIS.magnitudeDb}
+          xLabel={AXIS.normalizedFrequency}
+          ariaLabel="OFDM occupied-band spectrum"
+        />
+      </div>
+      <div>
+        <p className="readout mb-1 text-xs text-text-muted">time waveform (I)</p>
+        <TimeSeriesPlot
+          series={[{ color: colors.signal, samples: signal.slice(0, 320).map((c) => c.re) }]}
+          height={110}
+          yDomain={[-0.6, 0.6]}
+          yLabel={AXIS.amplitude}
+          xLabel={AXIS.time}
+        />
+      </div>
 
       <div className="flex flex-wrap items-start gap-6">
         <ConstellationPlot
