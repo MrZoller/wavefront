@@ -168,7 +168,7 @@ export function QuantizationModule() {
         <Slider
           label="ADC bit depth"
           value={bits}
-          min={1}
+          min={2}
           max={16}
           step={1}
           display={`${bits} bit`}

@@ -34,9 +34,12 @@ export interface QuantizeOptions {
 }
 
 /**
- * Uniform mid-rise quantizer: round `x` to the nearest of `2^bits` levels across
- * [−fullScale, +fullScale], clamping out-of-range inputs to the rails (that clamp *is* clipping —
- * the gain stage explores it). With `dither`, ±1 LSB of triangular noise is added before rounding.
+ * Uniform mid-tread, signed quantizer: round `x` to the nearest of `2^bits` levels across
+ * [−fullScale, +fullScale), clamping out-of-range inputs to the rails (that clamp *is* clipping — the
+ * gain stage explores it). The index range is the usual two's-complement one (e.g. −128…127 for 8
+ * bits), so it is asymmetric by one level. Meaningful for `bits ≥ 2`; a single bit is just a sign
+ * comparator, not a depth, so the UI exposes 2–16. With `dither`, ±1 LSB of triangular noise is added
+ * before rounding.
  */
 export function quantize(x: number, bits: number, opts: QuantizeOptions = {}): number {
   const { fullScale = 1, dither = false, rand = Math.random } = opts;
