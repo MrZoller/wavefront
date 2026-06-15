@@ -14,6 +14,7 @@ export type TrackId =
   | 'playing-a-radio-signal'
   | 'modulations-and-waveforms'
   | 'fundamentals'
+  | 'signal-chain-sdr'
   | 'propagation-and-bands'
   | 'coding-and-equalization';
 

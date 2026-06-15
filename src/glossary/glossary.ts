@@ -40,6 +40,22 @@ export interface GlossaryEntry {
  * Seeded from the glosses already written across Tracks A–D (docs/dsp + inline doc comments).
  */
 export const GLOSSARY: Record<string, GlossaryEntry> = {
+  adc: {
+    id: 'adc',
+    term: 'ADC',
+    expansion: 'Analog-to-Digital Converter',
+    gloss:
+      'The converter that turns a continuous voltage into numbered samples — sampling it in time, then rounding each reading to a level.',
+    moduleId: 'quantization',
+  },
+  agc: {
+    id: 'agc',
+    term: 'AGC',
+    expansion: 'Automatic Gain Control',
+    gloss:
+      'A feedback loop that keeps adjusting the amplifier so the signal fills the converter’s range without clipping.',
+    moduleId: 'gain-agc',
+  },
   am: {
     id: 'am',
     term: 'AM',
@@ -113,6 +129,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'A pulse that sweeps its frequency over time — the classic radar waveform.',
     moduleId: 'chirp-lfm',
   },
+  clipping: {
+    id: 'clipping',
+    term: 'clipping',
+    gloss:
+      'When a signal overruns the converter’s range and its peaks flatten against the rails, adding harmonic distortion.',
+    moduleId: 'gain-agc',
+    docsPage: 'gain',
+  },
   'constant-envelope': {
     id: 'constant-envelope',
     term: 'constant-envelope',
@@ -132,6 +156,12 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Sliding one signal past another to find the lag where they line up best.',
     moduleId: 'cross-correlation',
     docsPage: 'cross-correlation',
+  },
+  dac: {
+    id: 'dac',
+    term: 'DAC',
+    expansion: 'Digital-to-Analog Converter',
+    gloss: 'The ADC run backwards — turns a stream of samples back into a continuous waveform.',
   },
   db: {
     id: 'db',
@@ -169,6 +199,20 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'dft-basis',
     docsPage: 'fft',
   },
+  'direct-sampling': {
+    id: 'direct-sampling',
+    term: 'direct sampling',
+    gloss:
+      'An SDR architecture that digitizes the antenna signal almost immediately, doing the tuning and filtering in software.',
+    moduleId: 'sdr-architectures',
+  },
+  dither: {
+    id: 'dither',
+    term: 'dither',
+    gloss:
+      'A sliver of noise added before quantizing; it decorrelates the rounding error, trading a slightly higher noise floor for no harmonic spurs.',
+    moduleId: 'quantization',
+  },
   doppler: {
     id: 'doppler',
     term: 'Doppler shift',
@@ -182,6 +226,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Direct-Sequence Spread Spectrum',
     gloss: 'Smearing a signal across a wide band with a code, to hide it and resist jamming.',
     moduleId: 'spread-spectrum',
+  },
+  'dynamic-range': {
+    id: 'dynamic-range',
+    term: 'dynamic range',
+    gloss:
+      'The span between the strongest and faintest signal a system can carry at once — for an ADC, roughly 6 dB per bit.',
+    moduleId: 'quantization',
   },
   fdoa: {
     id: 'fdoa',
@@ -238,6 +289,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'A false second mainlobe that appears when array antennas are spaced too far apart.',
     moduleId: 'beamforming',
   },
+  headroom: {
+    id: 'headroom',
+    term: 'headroom',
+    gloss:
+      'The margin left before a signal hits the rails and clips — what a gain stage tries to preserve.',
+    moduleId: 'gain-agc',
+  },
   iq: {
     id: 'iq',
     term: 'IQ',
@@ -252,6 +310,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Inter-Symbol Interference',
     gloss: 'When poorly shaped symbols smear in time and bleed into their neighbors.',
     moduleId: 'pulse-shaping',
+  },
+  lna: {
+    id: 'lna',
+    term: 'LNA',
+    expansion: 'Low-Noise Amplifier',
+    gloss:
+      'The first amplifier after the antenna, built to lift a weak signal while adding as little noise of its own as possible.',
   },
   'matched-filter': {
     id: 'matched-filter',
@@ -367,6 +432,15 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'noisy-channel',
     docsPage: 'comms',
   },
+  sqnr: {
+    id: 'sqnr',
+    term: 'SQNR',
+    expansion: 'Signal-to-Quantization-Noise Ratio',
+    gloss:
+      'How far a quantized signal sits above the noise its own rounding creates — about 6.02·N + 1.76 dB for N bits.',
+    moduleId: 'quantization',
+    docsPage: 'quantization',
+  },
   'spectral-leakage': {
     id: 'spectral-leakage',
     term: 'spectral leakage',
@@ -380,6 +454,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'The set of per-antenna phases that points an array at a particular bearing.',
     moduleId: 'beamforming',
     docsPage: 'steering-and-beamforming',
+  },
+  superheterodyne: {
+    id: 'superheterodyne',
+    term: 'superheterodyne',
+    gloss:
+      'A receiver that mixes the signal down to a fixed intermediate frequency, where it can be filtered sharply before digitizing.',
+    moduleId: 'sdr-architectures',
   },
   tdoa: {
     id: 'tdoa',
@@ -402,6 +483,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     term: 'window',
     gloss: 'A taper applied to a signal’s edges before an FFT to cut down spectral leakage.',
     moduleId: 'windowing-leakage',
+  },
+  'zero-if': {
+    id: 'zero-if',
+    term: 'zero-IF',
+    expansion: 'zero intermediate frequency',
+    gloss:
+      'A receiver that mixes the signal straight to baseband, so a modest converter can sample it directly.',
+    moduleId: 'sdr-architectures',
   },
 };
 
