@@ -8,6 +8,18 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚢 Track F — Signal Chain & SDR (v1).** A lean companion track for where the IQ samples come from.
+  Two from-scratch, tested boundary effects — a quantizer (bit depth, optional dither, SQNR ≈
+  6.02·N + 1.76 dB) and a gain/clipping stage (the Goldilocks zone between buried-in-noise and
+  clipping-into-spurs) — plus a reusable interactive block diagram whose every lit block routes to the
+  module that simulates it (mixer → downconversion, ADC → quantization, filters → FIR, channelizer →
+  channelization), and an SDR-architectures view showing the ADC march toward the antenna across
+  superhet → zero-IF → direct sampling. Registered like any other track (human layer names, one
+  capstone), with twelve glossary terms and `docs/` pages.
+
+- **🚢 Fundamentals (v1).** All six modules were already built and stable, so the track's status flips
+  from `building` to `shipping` — both newer tracks now read as v1 (no "building" badge in the nav).
+
 - **Visual identity: a wave mark, wordmark, and favicons.** A concept-driven mark — concentric wave
   crests radiating from a source (the namesake, and the shape a wavefront actually makes), in the
   signal-green token with no new palette. One source-of-truth glyph (`public/wavefront-mark.svg`)
