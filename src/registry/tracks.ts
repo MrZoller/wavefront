@@ -32,7 +32,7 @@ export const TRACKS: TrackDef[] = [
     id: 'fundamentals',
     title: 'Fundamentals',
     description: 'Why does any of this work? Sampling, filtering, the FFT, and channelization.',
-    status: 'building',
+    status: 'shipping',
     layerNames: {
       0: 'Sampling & the Frequency Domain',
       1: 'Filtering & Multirate',
@@ -44,7 +44,7 @@ export const TRACKS: TrackDef[] = [
     title: 'Signal Chain & SDR',
     description:
       'Where do the IQ samples come from? The analog↔digital boundary, and how a real radio maps to the math.',
-    status: 'building',
+    status: 'shipping',
     layerNames: {
       0: 'The Analog/Digital Boundary',
       1: 'Architecture & Orientation',
