@@ -8,6 +8,9 @@ behind each module's progressive-disclosure drawer (brief §3.4, §14).
   or a track. **Start here to extend the project.**
 - **[dsp/](./dsp/)** — a short, math-honest page per core algorithm: the equation it implements
   and a link to the test that verifies it.
+- **[propagation/](./propagation/)** — the RF-physics counterpart for the Propagation & Bands track:
+  wavelength/bands, the radio horizon, and skywave/MUF. Kept separate from `dsp/` because propagation
+  is physics, not signal processing.
 - **[tracks/](./tracks/)** — one page per track summarizing its curriculum and the intuition
   each module delivers.
 - **images/** — auto-generated screenshots (`npm run screenshots`), embedded in the README and
