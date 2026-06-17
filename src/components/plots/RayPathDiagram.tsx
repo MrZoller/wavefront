@@ -34,7 +34,7 @@ export interface RayPathDiagramProps {
   /** Effective Earth radius for the drawn bulge (km). Larger = flatter. Defaults to real Earth. */
   earthRadiusKm?: number;
   antennas?: RayPathAntenna[];
-  /** Optional ionosphere layer, drawn as a band at this altitude (km). */
+  /** Optional ionosphere layer, drawn as a shell this many km **above the local surface**. */
   ionosphereKm?: number;
   ionosphereLabel?: string;
   /** Module overlay — draw the rays (line-of-sight, skywave hop) in absolute altitude coords. */
@@ -85,7 +85,9 @@ export function RayPathDiagram({
   const autoTop = Math.max(
     peakKm * 1.1,
     ...antennas.map((a) => (surfaceKm(a.groundKm) + a.heightKm) * 1.15),
-    ionosphereKm ? ionosphereKm * 1.2 : 0
+    // The ionosphere sits a constant height above the (bulging) surface, so its highest point is the
+    // peak plus that height — fit to that, not the bare height, or the layer clips at large spans.
+    ionosphereKm ? (peakKm + ionosphereKm) * 1.15 : 0
   );
   const topKm = maxAltitudeKm ?? (autoTop > 0 ? autoTop : 1);
 
@@ -112,8 +114,9 @@ export function RayPathDiagram({
       ctx.lineTo(x1, h);
       ctx.lineTo(x0, h);
       ctx.closePath();
-      // Concrete fills: canvas can't resolve CSS vars. surface #0d1418, raised border #1e2c33.
-      ctx.fillStyle = 'rgba(13, 20, 24, 0.95)';
+      // Concrete fill (canvas can't resolve CSS vars): a touch above the surface tone so the solid
+      // Earth reads as ground a ray must clear, not blend into the panel background.
+      ctx.fillStyle = 'rgba(22, 33, 39, 0.97)';
       ctx.fill();
       ctx.strokeStyle = colors.textFaint;
       ctx.lineWidth = 1.5;
@@ -127,28 +130,48 @@ export function RayPathDiagram({
       ctx.stroke();
 
       // ── Ionosphere layer (skywave scenes). ────────────────────────────────
+      // A shell at constant height *above the surface*, so it parallels the Earth's curve rather than
+      // cutting toward the bulge at the centre (which would put the labeled height only a sliver above
+      // the ground on a long span).
       if (ionosphereKm != null) {
-        const a = toPx(0, ionosphereKm);
-        const b = toPx(spanKm, ionosphereKm);
+        const layerAlt = (g: number) => surfaceKm(g) + ionosphereKm;
         ctx.save();
         ctx.strokeStyle = colors.cyan;
         ctx.globalAlpha = 0.7;
         ctx.lineWidth = 1.5;
         ctx.setLineDash([6, 4]);
         ctx.beginPath();
-        ctx.moveTo(a.px, a.py);
-        ctx.lineTo(b.px, b.py);
+        for (let i = 0; i <= steps; i++) {
+          const g = (i / steps) * spanKm;
+          const p = toPx(g, layerAlt(g));
+          if (i === 0) ctx.moveTo(p.px, p.py);
+          else ctx.lineTo(p.px, p.py);
+        }
         ctx.stroke();
         ctx.setLineDash([]);
-        // Faint shaded layer above the line.
+        // Faint shaded band just above the layer line.
         ctx.globalAlpha = 0.08;
         ctx.fillStyle = colors.cyan;
-        ctx.fillRect(a.px, a.py - 10, b.px - a.px, 10);
+        ctx.beginPath();
+        for (let i = 0; i <= steps; i++) {
+          const g = (i / steps) * spanKm;
+          const p = toPx(g, layerAlt(g));
+          if (i === 0) ctx.moveTo(p.px, p.py);
+          else ctx.lineTo(p.px, p.py);
+        }
+        for (let i = steps; i >= 0; i--) {
+          const g = (i / steps) * spanKm;
+          const p = toPx(g, layerAlt(g));
+          ctx.lineTo(p.px, p.py - 9);
+        }
+        ctx.closePath();
+        ctx.fill();
         ctx.restore();
         if (ionosphereLabel) {
+          const left = toPx(0, layerAlt(0));
           ctx.fillStyle = colors.textMuted;
           ctx.font = '11px ui-monospace, monospace';
-          ctx.fillText(ionosphereLabel, a.px + 6, a.py - 6);
+          ctx.fillText(ionosphereLabel, left.px + 6, left.py - 6);
         }
       }
 

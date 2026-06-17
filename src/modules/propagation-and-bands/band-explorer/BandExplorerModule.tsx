@@ -7,6 +7,7 @@ import {
   BANDS,
   type Band,
   bandFor,
+  EARTH_RADIUS_KM,
   formatDistanceKm,
   formatFrequency,
   formatWavelength,
@@ -153,9 +154,12 @@ function ReachIllustration({ band }: { band: Band }) {
   const { spanKm, maxAltitudeKm, ionosphereKm, draw, ariaLabel } = useMemo(() => {
     if (band.mode === 'skywave') {
       const span = 3000;
+      // The ionosphere shell rides VIRTUAL_HEIGHT_KM above the bulging surface (peak at the centre),
+      // so the frame and the apex both reference that peak — not a bare absolute height.
+      const peakKm = (span / 2) ** 2 / (2 * EARTH_RADIUS_KM);
       return {
         spanKm: span,
-        maxAltitudeKm: VIRTUAL_HEIGHT_KM * 1.25,
+        maxAltitudeKm: peakKm + VIRTUAL_HEIGHT_KM * 1.25,
         ionosphereKm: VIRTUAL_HEIGHT_KM,
         ariaLabel: 'A skywave signal bouncing off the ionosphere on one long hop',
         draw: (ctx: CanvasRenderingContext2D, s: RayPathScene) => {
@@ -164,7 +168,7 @@ function ReachIllustration({ band }: { band: Band }) {
           emitter(ctx, s, txG);
           ray(ctx, s, [
             [txG, s.surfaceKm(txG)],
-            [span * 0.5, VIRTUAL_HEIGHT_KM],
+            [span * 0.5, s.surfaceKm(span * 0.5) + VIRTUAL_HEIGHT_KM],
             [rxG, s.surfaceKm(rxG)],
           ]);
           groundDot(ctx, s, rxG);
@@ -176,7 +180,7 @@ function ReachIllustration({ band }: { band: Band }) {
       const hKm = 0.08; // an ~80 m mast
       const txG = span * 0.1;
       // Horizon tangent distance for this mast height: d = √(2·R·h).
-      const dKm = Math.sqrt(2 * 6371 * hKm);
+      const dKm = Math.sqrt(2 * EARTH_RADIUS_KM * hKm);
       return {
         spanKm: span,
         maxAltitudeKm: 0.5,

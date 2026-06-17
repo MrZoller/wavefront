@@ -6,6 +6,7 @@ import { colors } from '@/design/tokens';
 import {
   CRITICAL_FREQ_DAY_MHZ,
   CRITICAL_FREQ_NIGHT_MHZ,
+  EARTH_RADIUS_KM,
   incidenceAngleDeg,
   mufMHz,
   reflectsSkywave,
@@ -14,7 +15,10 @@ import {
 
 const SPAN_KM = 3600; // fixed frame; the hop is centred inside it
 const CENTER = SPAN_KM / 2;
-const MAX_ALT_KM = VIRTUAL_HEIGHT_KM * 1.45;
+// The drawn Earth bulges to this height at the centre; the ionosphere shell rides above it, so the
+// frame must clear the peak + the layer height (with headroom for the escape ray).
+const PEAK_KM = (CENTER * CENTER) / (2 * EARTH_RADIUS_KM);
+const MAX_ALT_KM = PEAK_KM + VIRTUAL_HEIGHT_KM * 1.45;
 
 /**
  * HF Skywave & the Ionosphere — a conceptual stub (brief §8). A single HF hop climbs to a reflecting
@@ -39,7 +43,8 @@ export function SkywaveModule() {
 
   const draw = (ctx: CanvasRenderingContext2D, s: RayPathScene) => {
     const tx = s.toPx(gTx, s.surfaceKm(gTx));
-    const apex = s.toPx(CENTER, VIRTUAL_HEIGHT_KM);
+    // The reflection point sits on the ionospheric shell — VIRTUAL_HEIGHT_KM above the local surface.
+    const apex = s.toPx(CENTER, s.surfaceKm(CENTER) + VIRTUAL_HEIGHT_KM);
 
     ctx.lineWidth = 2;
     ctx.strokeStyle = rayColor;
