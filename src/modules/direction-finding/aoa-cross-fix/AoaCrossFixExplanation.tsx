@@ -37,9 +37,10 @@ export function AoaCrossFixExplanation() {
           <p>
             The crossing only lands on the emitter if the wave travelled in a straight line — true
             at VHF and up. Flip the toggle to <em>HF skywave</em> and each bearing arrives by an
-            ionospheric bounce instead, deflected a few degrees, so the naive fix walks off the true
-            emitter. It&rsquo;s the one place propagation genuinely changes a direction-finding
-            answer — explored in the Propagation &amp; Bands track.
+            ionospheric bounce instead, deflected a few degrees off the true great-circle bearing,
+            so the naive fix walks off the true emitter. It&rsquo;s the one place propagation
+            genuinely changes a direction-finding answer — explored in the Propagation &amp; Bands
+            track.
           </p>
         </section>
 
