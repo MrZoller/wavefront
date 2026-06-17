@@ -65,3 +65,4 @@ import './signal-chain-sdr/sdr-architectures';
 // Track E — Propagation & Bands
 // Layer 0 — Bands & Reach
 import './propagation-and-bands/band-explorer';
+import './propagation-and-bands/radio-horizon';
