@@ -149,13 +149,15 @@ function BandStrip({ freq, band }: { freq: number; band: Band }) {
   );
 }
 
-/** A schematic of the band's dominant propagation path — ground wave, skywave, or line-of-sight. */
+/** A schematic of the band's dominant propagation path — ground wave, skywave, or line-of-sight.
+ *  The horizontal span scales with the band's rough reach, so it tracks the readout as you move
+ *  between bands that share a mode (LF↔MF, VHF↔UHF↔SHF); skywave stays one representative hop. */
 function ReachIllustration({ band }: { band: Band }) {
   const { spanKm, maxAltitudeKm, ionosphereKm, draw, ariaLabel } = useMemo(() => {
     if (band.mode === 'skywave') {
+      // Reach here is multi-hop (global), so the sketch shows one representative hop, not the full
+      // reach — a 12 000 km span would be a meaningless bulge.
       const span = 3000;
-      // The ionosphere shell rides VIRTUAL_HEIGHT_KM above the bulging surface (peak at the centre),
-      // so the frame and the apex both reference that peak — not a bare absolute height.
       const peakKm = (span / 2) ** 2 / (2 * EARTH_RADIUS_KM);
       return {
         spanKm: span,
@@ -176,19 +178,20 @@ function ReachIllustration({ band }: { band: Band }) {
       };
     }
     if (band.mode === 'line-of-sight') {
-      const span = 120;
-      const hKm = 0.08; // an ~80 m mast
+      // Frame the band's reach, and pick the mast height whose horizon is exactly that reach
+      // (d = √(2·R·h) ⇒ h = reach²/2R), so the grazing ray lands at the stated distance.
+      const span = band.reachKm * 1.3;
       const txG = span * 0.1;
-      // Horizon tangent distance for this mast height: d = √(2·R·h).
-      const dKm = Math.sqrt(2 * EARTH_RADIUS_KM * hKm);
+      const hKm = (band.reachKm * band.reachKm) / (2 * EARTH_RADIUS_KM);
+      const peakKm = (span / 2) ** 2 / (2 * EARTH_RADIUS_KM);
       return {
         spanKm: span,
-        maxAltitudeKm: 0.5,
+        maxAltitudeKm: (peakKm + hKm) * 1.4,
         ionosphereKm: undefined,
         ariaLabel: 'A line-of-sight ray from an antenna grazing the horizon',
         draw: (ctx: CanvasRenderingContext2D, s: RayPathScene) => {
           emitter(ctx, s, txG, hKm);
-          const reach = Math.min(txG + dKm, span);
+          const reach = Math.min(txG + band.reachKm, span);
           ray(ctx, s, [
             [txG, s.surfaceKm(txG) + hKm],
             [reach, s.surfaceKm(reach)],
@@ -196,11 +199,13 @@ function ReachIllustration({ band }: { band: Band }) {
         },
       };
     }
-    // ground-wave: a wave hugging the curve of the Earth.
-    const span = 1600;
+    // ground-wave: a wave hugging the curve of the Earth out to roughly the band's reach.
+    const span = band.reachKm * 1.15;
+    const peakKm = (span / 2) ** 2 / (2 * EARTH_RADIUS_KM);
+    const maxAltitudeKm = peakKm * 1.5 || 1;
     return {
       spanKm: span,
-      maxAltitudeKm: 70,
+      maxAltitudeKm,
       ionosphereKm: undefined,
       ariaLabel: 'A ground wave following the curve of the Earth',
       draw: (ctx: CanvasRenderingContext2D, s: RayPathScene) => {
@@ -208,14 +213,15 @@ function ReachIllustration({ band }: { band: Band }) {
         emitter(ctx, s, txG);
         const pts: [number, number][] = [];
         const end = span * 0.95;
+        const hug = maxAltitudeKm * 0.04; // hold a hair above the surface so the wave reads
         for (let i = 0; i <= 40; i++) {
           const g = txG + (i / 40) * (end - txG);
-          pts.push([g, s.surfaceKm(g) + 1.5]); // hug just above the surface
+          pts.push([g, s.surfaceKm(g) + hug]);
         }
         ray(ctx, s, pts, true);
       },
     };
-  }, [band.mode]);
+  }, [band]);
 
   return (
     <RayPathDiagram

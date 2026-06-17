@@ -60,8 +60,13 @@ export function SkywaveModule() {
       ground(ctx, s, gRx, colors.signal, 'Rx');
     } else {
       ctx.stroke();
-      // Punch through: continue past the layer to the top of the frame and escape.
-      const escape = s.toPx(CENTER + hopKm / 2, MAX_ALT_KM);
+      // Punch through: a penetrating ray doesn't bend, so continue the incident Tx→apex line at the
+      // same slope up to the top of the frame (extending it, not re-aiming at the receiver).
+      const txAlt = s.surfaceKm(gTx);
+      const apexAlt = s.surfaceKm(CENTER) + VIRTUAL_HEIGHT_KM;
+      const frac = (MAX_ALT_KM - apexAlt) / (apexAlt - txAlt);
+      const escapeG = CENTER + frac * (CENTER - gTx);
+      const escape = s.toPx(escapeG, MAX_ALT_KM);
       ctx.save();
       ctx.setLineDash([5, 4]);
       ctx.strokeStyle = colors.alert;
