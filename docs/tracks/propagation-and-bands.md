@@ -39,6 +39,8 @@ flip it from line-of-sight to HF skywave and the naive straight-ray fix drifts o
 with the gap drawn live. The deflection comes from the [`propagation/`](../propagation/skywave.md)
 module, not a duplicated map.
 
+![Propagation-aware geolocation — the naive fix drifts off the true emitter on skywave](../images/aoa-skywave-drift.png)
+
 ## New from-scratch physics (in `propagation/`, not `dsp/`)
 
 - [Wavelength & bands](../propagation/wavelength-and-bands.md) — `λ = c/f` and the LF…SHF ladder.
