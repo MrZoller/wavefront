@@ -66,3 +66,4 @@ import './signal-chain-sdr/sdr-architectures';
 // Layer 0 — Bands & Reach
 import './propagation-and-bands/band-explorer';
 import './propagation-and-bands/radio-horizon';
+import './propagation-and-bands/hf-skywave';
