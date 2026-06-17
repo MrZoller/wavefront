@@ -32,9 +32,20 @@ export function AoaCrossFixExplanation() {
           </p>
         </section>
 
+        <section>
+          <h3 className="mb-1 font-medium text-text">When the straight line is a lie</h3>
+          <p>
+            The crossing only lands on the emitter if the wave travelled in a straight line — true
+            at VHF and up. Flip the toggle to <em>HF skywave</em> and each bearing arrives by an
+            ionospheric bounce instead, deflected a few degrees, so the naive fix walks off the true
+            emitter. It&rsquo;s the one place propagation genuinely changes a direction-finding
+            answer — explored in the Propagation &amp; Bands track.
+          </p>
+        </section>
+
         <section className="rounded-md border border-border bg-surface-raised p-3 text-xs text-text-faint">
-          This assumes a straight line-of-bearing (true at VHF and up). HF skywave bends it — see
-          the Propagation &amp; Bands track. All scenarios here are synthetic.
+          The skywave deflection here is a fixed, illustrative few degrees, not a bearing-error
+          prediction. All scenarios are synthetic.
         </section>
       </div>
     </GlossedText>
