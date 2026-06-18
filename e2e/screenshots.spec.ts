@@ -322,3 +322,35 @@ test('propagation-aware geolocation (skywave drift)', async ({ page }) => {
   await page.getByRole('button', { name: 'HF skywave', exact: true }).click();
   await page.screenshot({ path: path.join(IMG_DIR, 'aoa-skywave-drift.png') });
 });
+
+test('channel coding module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Channel Coding (FEC)' }).first().click();
+  await expect(page.getByRole('img', { name: /bit error rate versus Eb\/N0/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'channel-coding.png') });
+});
+
+test('channel estimation module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Channel Estimation' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /estimated channel frequency response/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'channel-estimation.png') });
+});
+
+test('equalization module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Equalization' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /constellation re-clustered after equalization/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'equalization.png') });
+});
+
+test('synchronization stub', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Synchronization' }).first().click();
+  await expect(page.getByRole('img', { name: /tracking-loop block diagram/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'synchronization.png') });
+});

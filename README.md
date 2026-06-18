@@ -64,6 +64,7 @@ Then open the printed local URL.
 | **Fundamentals**                    | Why does any of this work? Sampling, filtering, FFT, channelization. | 🚢 v1  |
 | **Signal Chain & SDR**              | Where do the IQ samples come from? The analog↔digital boundary.      | 🚢 v1  |
 | **Propagation & Bands**             | The RF physics around the signal (bands, line-of-sight, skywave).    | 🚢 v1  |
+| **Coding & Equalization**           | How do you make the link survive a real channel?                     | 🚢 v1  |
 
 See [`docs/tracks/`](./docs/tracks/) for the per-track curriculum.
 

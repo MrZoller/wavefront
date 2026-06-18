@@ -60,8 +60,10 @@ export const TRACKS: TrackDef[] = [
   {
     id: 'coding-and-equalization',
     title: 'Coding & Equalization',
-    description: 'Channel coding, adaptive equalizers, and synchronization loops. (Planned.)',
-    status: 'planned',
+    description:
+      'Make the link survive a real channel: correct flipped bits with coding, then measure and undo what the channel did to the waveform.',
+    status: 'shipping',
+    layerNames: { 0: 'Error Control', 1: 'Undoing the Channel' },
   },
 ];
 

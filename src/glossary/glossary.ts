@@ -122,6 +122,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'upconversion',
     docsPage: 'carrier',
   },
+  'channel-estimation': {
+    id: 'channel-estimation',
+    term: 'channel estimation',
+    gloss: "Measuring the channel's response from known pilot symbols, so it can be undone.",
+    moduleId: 'channel-estimation',
+    docsPage: 'equalization',
+  },
   chirp: {
     id: 'chirp',
     term: 'chirp',
@@ -136,6 +143,21 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'When a signal overruns the converter’s range and its peaks flatten against the rails, adding harmonic distortion.',
     moduleId: 'gain-agc',
     docsPage: 'gain',
+  },
+  'code-rate': {
+    id: 'code-rate',
+    term: 'code rate',
+    gloss:
+      'The fraction of transmitted bits that carry data (k/n) — the rest are redundancy that costs bandwidth.',
+    moduleId: 'channel-coding',
+  },
+  'coding-gain': {
+    id: 'coding-gain',
+    term: 'coding gain',
+    gloss:
+      'How much less Eb/N0 a coded link needs to hit the same error rate — the coded BER curve shifted left.',
+    moduleId: 'channel-coding',
+    docsPage: 'coding',
   },
   'constant-envelope': {
     id: 'constant-envelope',
@@ -227,6 +249,21 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Smearing a signal across a wide band with a code, to hide it and resist jamming.',
     moduleId: 'spread-spectrum',
   },
+  equalizer: {
+    id: 'equalizer',
+    term: 'equalizer',
+    gloss:
+      "A filter that undoes the channel's distortion — reopening the eye and re-clustering the constellation.",
+    moduleId: 'equalization',
+    docsPage: 'equalization',
+  },
+  evm: {
+    id: 'evm',
+    term: 'EVM',
+    expansion: 'Error Vector Magnitude',
+    gloss: 'How far received symbols land from their ideal points, as a fraction (or percentage).',
+    moduleId: 'equalization',
+  },
   'dynamic-range': {
     id: 'dynamic-range',
     term: 'dynamic range',
@@ -241,6 +278,15 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Locating a moving transmitter from the differing Doppler shifts seen at each receiver.',
     moduleId: 'fdoa',
     docsPage: 'geolocation',
+  },
+  fec: {
+    id: 'fec',
+    term: 'FEC',
+    expansion: 'Forward Error Correction',
+    gloss:
+      'Adding structured redundancy so the receiver can correct flipped bits, not just detect them.',
+    moduleId: 'channel-coding',
+    docsPage: 'coding',
   },
   fft: {
     id: 'fft',
@@ -302,6 +348,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'A radio wave that clings to the surface and follows the curve of the Earth, dominating the low bands.',
     moduleId: 'band-explorer',
   },
+  hamming: {
+    id: 'hamming',
+    term: 'Hamming code',
+    gloss:
+      'A block code whose parity bits, read back, form a pattern (the syndrome) that names which single bit flipped.',
+    moduleId: 'channel-coding',
+    docsPage: 'coding',
+  },
   headroom: {
     id: 'headroom',
     term: 'headroom',
@@ -361,6 +415,15 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'The first amplifier after the antenna, built to lift a weak signal while adding as little noise of its own as possible.',
   },
+  lms: {
+    id: 'lms',
+    term: 'LMS',
+    expansion: 'Least Mean Squares',
+    gloss:
+      'An adaptive filter that learns the channel inverse by nudging its tap weights downhill on its own error — gradient descent, one step per sample.',
+    moduleId: 'equalization',
+    docsPage: 'equalization',
+  },
   'matched-filter': {
     id: 'matched-filter',
     term: 'matched filter',
@@ -375,6 +438,15 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Medium Frequency',
     gloss: 'The 0.3–3 MHz band of AM broadcast — ground wave by day, skywave after dark.',
     moduleId: 'band-explorer',
+  },
+  mmse: {
+    id: 'mmse',
+    term: 'MMSE',
+    expansion: 'Minimum Mean-Squared Error',
+    gloss:
+      "An equalizer that balances inverting the channel against amplifying noise — it backs off in the channel's deep notches.",
+    moduleId: 'equalization',
+    docsPage: 'equalization',
   },
   msk: {
     id: 'msk',
@@ -419,6 +491,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'ofdm',
     docsPage: 'modulation',
   },
+  parity: {
+    id: 'parity',
+    term: 'parity',
+    gloss:
+      'A bit set so a chosen group has an even number of 1s — the building block of error-detecting and -correcting codes.',
+    moduleId: 'channel-coding',
+  },
   passband: {
     id: 'passband',
     term: 'passband',
@@ -439,6 +518,12 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'A rotating 2D arrow that captures a sine wave’s amplitude and phase.',
     moduleId: 'rotating-phasor',
     docsPage: 'complex-and-phasors',
+  },
+  pilot: {
+    id: 'pilot',
+    term: 'pilot',
+    gloss: 'A known symbol the transmitter inserts so the receiver can measure the channel.',
+    moduleId: 'channel-estimation',
   },
   pm: {
     id: 'pm',
@@ -542,6 +627,20 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'A receiver that mixes the signal down to a fixed intermediate frequency, where it can be filtered sharply before digitizing.',
     moduleId: 'sdr-architectures',
   },
+  syndrome: {
+    id: 'syndrome',
+    term: 'syndrome',
+    gloss:
+      "The parity-check result that points at a flipped bit's position — zero means no error detected.",
+    moduleId: 'channel-coding',
+    docsPage: 'coding',
+  },
+  'tap-weights': {
+    id: 'tap-weights',
+    term: 'tap weights',
+    gloss: 'The adjustable coefficients of an FIR filter — what an adaptive equalizer tunes.',
+    moduleId: 'equalization',
+  },
   tdoa: {
     id: 'tdoa',
     term: 'TDOA',
@@ -584,6 +683,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     term: 'window',
     gloss: 'A taper applied to a signal’s edges before an FFT to cut down spectral leakage.',
     moduleId: 'windowing-leakage',
+  },
+  'zero-forcing': {
+    id: 'zero-forcing',
+    term: 'zero-forcing',
+    gloss:
+      'An equalizer that inverts the channel exactly (W = 1/H) — clean, but it amplifies noise wherever the channel has a deep null.',
+    moduleId: 'equalization',
+    docsPage: 'equalization',
   },
   'zero-if': {
     id: 'zero-if',
