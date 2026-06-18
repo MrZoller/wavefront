@@ -3,7 +3,7 @@ import { GlossedText } from '@/components/GlossedText';
 import { RayPathDiagram, type RayPathScene } from '@/components/plots/RayPathDiagram';
 import { Slider } from '@/components/Slider';
 import { colors } from '@/design/tokens';
-import { formatDistanceKm, horizonKm, radioHorizonKm } from '@/propagation';
+import { EARTH_RADIUS_KM, formatDistanceKm, horizonKm, radioHorizonKm } from '@/propagation';
 
 const SPAN_KM = 180; // fixed frame so a growing reach is visible as the antennas slide apart
 const CENTER = SPAN_KM / 2;
@@ -57,7 +57,7 @@ export function RadioHorizonModule() {
     <div className="flex flex-col gap-5">
       <RayPathDiagram
         spanKm={SPAN_KM}
-        maxAltitudeKm={(CENTER * CENTER) / (2 * 6371) + 0.1}
+        maxAltitudeKm={(CENTER * CENTER) / (2 * EARTH_RADIUS_KM) + 0.1}
         antennas={[
           { groundKm: gTx, heightKm: txKm, color: colors.cyan, label: 'Tx' },
           { groundKm: gRx, heightKm: rxKm, color: colors.cyan, label: 'Rx' },
