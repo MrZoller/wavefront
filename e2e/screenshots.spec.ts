@@ -347,3 +347,10 @@ test('equalization module', async ({ page }) => {
   ).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'equalization.png') });
 });
+
+test('synchronization stub', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Synchronization' }).first().click();
+  await expect(page.getByRole('img', { name: /tracking-loop block diagram/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'synchronization.png') });
+});

@@ -13,9 +13,10 @@ afterEach(cleanup);
  * "Conceptual". This render test guards that the mapping is actually applied at the badge.
  */
 describe('Sidebar status badges never leak the raw internal token', () => {
-  it('renders the conceptual (internally "stub") module as "Conceptual", not "STUB"', () => {
+  it('renders conceptual (internally "stub") modules as "Conceptual", not "STUB"', () => {
     render(<Sidebar />);
-    expect(screen.getByText('Conceptual')).toBeInTheDocument();
+    // One badge per stub-status module (e.g. HF Skywave, Synchronization) — all mapped, none raw.
+    expect(screen.getAllByText('Conceptual').length).toBeGreaterThan(0);
     expect(screen.queryByText('stub')).toBeNull();
     expect(screen.queryByText('STUB')).toBeNull();
   });

@@ -74,3 +74,4 @@ import './coding-and-equalization/channel-coding';
 // Layer 1 — Undoing the Channel
 import './coding-and-equalization/channel-estimation';
 import './coding-and-equalization/equalization';
+import './coding-and-equalization/synchronization';
