@@ -227,6 +227,20 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Smearing a signal across a wide band with a code, to hide it and resist jamming.',
     moduleId: 'spread-spectrum',
   },
+  equalizer: {
+    id: 'equalizer',
+    term: 'equalizer',
+    gloss:
+      "A filter that undoes the channel's distortion — reopening the eye and re-clustering the constellation.",
+    moduleId: 'equalization',
+  },
+  evm: {
+    id: 'evm',
+    term: 'EVM',
+    expansion: 'Error Vector Magnitude',
+    gloss: 'How far received symbols land from their ideal points, as a fraction (or percentage).',
+    moduleId: 'equalization',
+  },
   'dynamic-range': {
     id: 'dynamic-range',
     term: 'dynamic range',
@@ -361,6 +375,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'The first amplifier after the antenna, built to lift a weak signal while adding as little noise of its own as possible.',
   },
+  lms: {
+    id: 'lms',
+    term: 'LMS',
+    expansion: 'Least Mean Squares',
+    gloss:
+      'An adaptive filter that learns the channel inverse by nudging its tap weights downhill on its own error — gradient descent, one step per sample.',
+    moduleId: 'equalization',
+  },
   'matched-filter': {
     id: 'matched-filter',
     term: 'matched filter',
@@ -375,6 +397,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Medium Frequency',
     gloss: 'The 0.3–3 MHz band of AM broadcast — ground wave by day, skywave after dark.',
     moduleId: 'band-explorer',
+  },
+  mmse: {
+    id: 'mmse',
+    term: 'MMSE',
+    expansion: 'Minimum Mean-Squared Error',
+    gloss:
+      "An equalizer that balances inverting the channel against amplifying noise — it backs off in the channel's deep notches.",
+    moduleId: 'equalization',
   },
   msk: {
     id: 'msk',
@@ -542,6 +572,12 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'A receiver that mixes the signal down to a fixed intermediate frequency, where it can be filtered sharply before digitizing.',
     moduleId: 'sdr-architectures',
   },
+  'tap-weights': {
+    id: 'tap-weights',
+    term: 'tap weights',
+    gloss: 'The adjustable coefficients of an FIR filter — what an adaptive equalizer tunes.',
+    moduleId: 'equalization',
+  },
   tdoa: {
     id: 'tdoa',
     term: 'TDOA',
@@ -584,6 +620,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     term: 'window',
     gloss: 'A taper applied to a signal’s edges before an FFT to cut down spectral leakage.',
     moduleId: 'windowing-leakage',
+  },
+  'zero-forcing': {
+    id: 'zero-forcing',
+    term: 'zero-forcing',
+    gloss:
+      'An equalizer that inverts the channel exactly (W = 1/H) — clean, but it amplifies noise wherever the channel has a deep null.',
+    moduleId: 'equalization',
   },
   'zero-if': {
     id: 'zero-if',

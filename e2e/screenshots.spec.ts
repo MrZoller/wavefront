@@ -322,3 +322,12 @@ test('propagation-aware geolocation (skywave drift)', async ({ page }) => {
   await page.getByRole('button', { name: 'HF skywave', exact: true }).click();
   await page.screenshot({ path: path.join(IMG_DIR, 'aoa-skywave-drift.png') });
 });
+
+test('equalization module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Equalization' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /constellation re-clustered after equalization/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'equalization.png') });
+});
