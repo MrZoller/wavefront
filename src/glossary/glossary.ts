@@ -137,6 +137,20 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'gain-agc',
     docsPage: 'gain',
   },
+  'code-rate': {
+    id: 'code-rate',
+    term: 'code rate',
+    gloss:
+      'The fraction of transmitted bits that carry data (k/n) — the rest are redundancy that costs bandwidth.',
+    moduleId: 'channel-coding',
+  },
+  'coding-gain': {
+    id: 'coding-gain',
+    term: 'coding gain',
+    gloss:
+      'How much less Eb/N0 a coded link needs to hit the same error rate — the coded BER curve shifted left.',
+    moduleId: 'channel-coding',
+  },
   'constant-envelope': {
     id: 'constant-envelope',
     term: 'constant-envelope',
@@ -256,6 +270,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'fdoa',
     docsPage: 'geolocation',
   },
+  fec: {
+    id: 'fec',
+    term: 'FEC',
+    expansion: 'Forward Error Correction',
+    gloss:
+      'Adding structured redundancy so the receiver can correct flipped bits, not just detect them.',
+    moduleId: 'channel-coding',
+  },
   fft: {
     id: 'fft',
     term: 'FFT',
@@ -315,6 +337,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'A radio wave that clings to the surface and follows the curve of the Earth, dominating the low bands.',
     moduleId: 'band-explorer',
+  },
+  hamming: {
+    id: 'hamming',
+    term: 'Hamming code',
+    gloss:
+      'A block code whose parity bits, read back, form a pattern (the syndrome) that names which single bit flipped.',
+    moduleId: 'channel-coding',
   },
   headroom: {
     id: 'headroom',
@@ -449,6 +478,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'ofdm',
     docsPage: 'modulation',
   },
+  parity: {
+    id: 'parity',
+    term: 'parity',
+    gloss:
+      'A bit set so a chosen group has an even number of 1s — the building block of error-detecting and -correcting codes.',
+    moduleId: 'channel-coding',
+  },
   passband: {
     id: 'passband',
     term: 'passband',
@@ -571,6 +607,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'A receiver that mixes the signal down to a fixed intermediate frequency, where it can be filtered sharply before digitizing.',
     moduleId: 'sdr-architectures',
+  },
+  syndrome: {
+    id: 'syndrome',
+    term: 'syndrome',
+    gloss:
+      "The parity-check result that points at a flipped bit's position — zero means no error detected.",
+    moduleId: 'channel-coding',
   },
   'tap-weights': {
     id: 'tap-weights',

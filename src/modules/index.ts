@@ -69,5 +69,7 @@ import './propagation-and-bands/radio-horizon';
 import './propagation-and-bands/hf-skywave';
 
 // Track G — Coding & Equalization
+// Layer 0 — Error Control
+import './coding-and-equalization/channel-coding';
 // Layer 1 — Undoing the Channel
 import './coding-and-equalization/equalization';

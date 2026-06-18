@@ -32,6 +32,8 @@ const ALIASES: Record<string, string[]> = {
   'direct-sampling': ['direct-sampling'],
   doppler: ['Doppler', 'Doppler-shifted'],
   equalizer: ['equalization', 'equalizing'],
+  fec: ['forward error correction'],
+  hamming: ['Hamming(7,4)', 'Hamming'],
   'great-circle': ['great circle'],
   'ground-wave': ['ground-wave'],
   ionosphere: ['ionospheric'],
