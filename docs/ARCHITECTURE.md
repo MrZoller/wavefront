@@ -47,6 +47,11 @@ The app derives **all** navigation from these — ordering, the layer subheaders
 and the capstone marker, in both the sidebar and the landing cards. There is no hand-maintained
 route map and no ordering/markers hand-kept in the views.
 
+`status` is **authoring vocabulary**: it never renders raw. `moduleStatusBadge()` maps it to a
+user-facing badge (`stub` → "Conceptual", `stable` → no badge) — the same authoring→presentation
+mapping as `layerNames`, and the same no-internal-vocabulary rule that keeps `Layer N` / `Track X`
+out of user copy (see CONTRIBUTING).
+
 ### Capstone = marquee, not "last"
 
 `isCapstone` marks a track's **marquee** — the one chip per track that a newcomer is drawn to, the

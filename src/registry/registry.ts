@@ -42,6 +42,25 @@ export function getModule(id: string): ModuleDef | undefined {
   return MODULES.find((m) => m.id === id);
 }
 
+/**
+ * User-facing badge labels for a module's internal `status`. The raw token is **authoring
+ * vocabulary** and is never rendered: `stub` means "deliberately lighter / conceptual lesson" to the
+ * team, but a "STUB" badge reads as "unfinished / placeholder" to a user and undersells a finished,
+ * interactive module — so it surfaces as **"Conceptual"**. `stable` carries no badge. This is the
+ * same authoring→presentation mapping as layer names, and the same no-internal-vocabulary rule that
+ * keeps `Layer N` / `Track X` out of rendered copy (see CONTRIBUTING).
+ */
+const MODULE_STATUS_LABELS: Record<NonNullable<ModuleDef['status']>, string | null> = {
+  stable: null,
+  advanced: 'Advanced',
+  stub: 'Conceptual',
+};
+
+/** The user-facing badge label for a module's status, or `null` when no badge should render. */
+export function moduleStatusBadge(status: ModuleDef['status']): string | null {
+  return status ? MODULE_STATUS_LABELS[status] : null;
+}
+
 /** A track's layer (stage), with its human name and the ordered modules that belong to it. */
 export interface TrackLayer {
   layer: number;

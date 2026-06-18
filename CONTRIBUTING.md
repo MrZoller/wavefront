@@ -117,9 +117,20 @@ For a cross-reference, instead:
 - simply **restate the concept** ("that's the cross-correlation peak") when a full reference isn't
   needed.
 
+**This extends to badges and status labels, not just prose.** A module's registry `status` (`stub`,
+`advanced`, …) is authoring vocabulary too — `stub` means "deliberately lighter / conceptual lesson"
+to us, but a raw **"STUB"** badge reads as "unfinished / placeholder" and undersells a finished,
+interactive module. So **map internal status tokens to user-facing labels at render time** and never
+render the raw token: `moduleStatusBadge()` in the registry does this (`stub` → **"Conceptual"**,
+`stable` → no badge), the same authoring→presentation mapping as layer names. (`PLANNED` / `BUILDING`
+on a not-yet-built _track_ are fine — they honestly mean "not available yet"; the rule is about
+labeling a finished module with a word that implies it isn't.)
+
 This is the same internal-vocabulary-leak class as the glossary and accent-semantics rules, so it's
 guarded the same way: `src/test/no-internal-vocab.test.ts` strips comments and fails if any
-user-facing string matches `Layer \d` / `Track [A-F]`, so a leak can't silently reappear.
+user-facing string matches `Layer \d` / `Track [A-F]`, and `src/components/layout/Sidebar.test.tsx`
+asserts the rendered status badge shows the mapped label (not the raw token) — so a leak can't
+silently reappear.
 
 ## Labeling plot axes
 

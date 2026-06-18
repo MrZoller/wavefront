@@ -14,6 +14,9 @@ import { describe, expect, it } from 'vitest';
  * there — module docstrings (`brief §7, Track D Layer 0`) and the registry's `// Track A` headers
  * are authoring surfaces. What's left is code + JSX text, where `Layer <n>` / `Track <A–F>` only
  * occur in strings the user actually reads.
+ *
+ * Badges are the same rule applied to status tokens (`stub` → "Conceptual", not a raw "STUB"); those
+ * are mapped through `moduleStatusBadge()` and guarded by `src/components/layout/Sidebar.test.tsx`.
  */
 const ROOT = join(import.meta.dirname, '..');
 const USER_FACING_DIRS = ['modules', 'components', 'registry', 'glossary'].map((d) =>
