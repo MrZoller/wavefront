@@ -14,6 +14,13 @@ test('track overview (landing)', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'overview.png') });
 });
 
+test('glossary index', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Glossary', exact: true }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Glossary' })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'glossary.png') });
+});
+
 test('wordmark (README header)', async ({ page }) => {
   // Capture the real landing wordmark lockup (mark + word) so the README header tracks the app
   // rather than a hand-made image. A little padding around the heading gives it room to breathe.

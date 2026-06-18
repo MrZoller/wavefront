@@ -10,6 +10,8 @@ import { useAppStore } from '@/store/appStore';
 export function Sidebar() {
   const activeModuleId = useAppStore((s) => s.activeModuleId);
   const setActiveModule = useAppStore((s) => s.setActiveModule);
+  const glossaryOpen = useAppStore((s) => s.glossaryOpen);
+  const openGlossary = useAppStore((s) => s.openGlossary);
 
   return (
     <nav
@@ -109,6 +111,22 @@ export function Sidebar() {
           </section>
         );
       })}
+
+      {/* Reference companion — a deliberate destination, set apart from the track climb. */}
+      <div className="mt-auto border-t border-border pt-3">
+        <button
+          onClick={openGlossary}
+          aria-current={glossaryOpen ? 'page' : undefined}
+          className={[
+            'flex w-full items-center rounded-md px-2 py-1.5 text-left text-sm transition-colors',
+            glossaryOpen
+              ? 'bg-surface-raised text-signal'
+              : 'text-text-muted hover:bg-surface-raised hover:text-text',
+          ].join(' ')}
+        >
+          Glossary
+        </button>
+      </div>
     </nav>
   );
 }
