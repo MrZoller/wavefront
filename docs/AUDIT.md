@@ -33,19 +33,20 @@ plot**, and **test/coverage gaps** (computed readouts and a Monte-Carlo BER curv
 against the closed form). Severity ladder used:
 `correctness-bug` > `test-gap` > `guardrail` > `convention` > `polish`.
 
-| Severity | Count | Fixed in this pass | Report-only |
-| --- | --- | --- | --- |
-| correctness-bug | 4 | 4 | 0 |
-| test-gap | 4 | 2 | 2 |
-| guardrail | 0 | — | — |
-| convention | 4 | 1 | 3 |
-| polish | 7 | 1 | 6 |
+| Severity        | Count | Fixed in this pass | Report-only |
+| --------------- | ----- | ------------------ | ----------- |
+| correctness-bug | 4     | 4                  | 0           |
+| test-gap        | 4     | 2                  | 2           |
+| guardrail       | 0     | —                  | —           |
+| convention      | 4     | 1                  | 3           |
+| polish          | 7     | 1                  | 6           |
 
 ---
 
 ## correctness-bug
 
 ### CB-1 — "BER waterfall" shows a non-existent error floor (send-a-message capstone) — FIXED
+
 - **Location:** `src/modules/playing-a-radio-signal/send-a-message/SendMessageModule.tsx:48,134-146`
   with `src/components/plots/XYPlot.tsx:47-53`.
 - **As it stood:** the headline plot is a Monte-Carlo estimate, `berVsSnr(scheme, EBN0_AXIS, 4000, 11)`
@@ -63,12 +64,13 @@ against the closed form). Severity ladder used:
   still shown by the constellation + the live BER readout. Screenshot regenerated.
 
 ### CB-2 — "excess bandwidth" mislabels the occupied bandwidth (pulse-shaping) — FIXED
+
 - **Location:** `src/modules/playing-a-radio-signal/pulse-shaping/PulseShapingExplanation.tsx:30`
   (rendered copy); echoed in the code comment `PulseShapingModule.tsx:97`.
 - **As it stood:** "The roll-off β sets the **excess bandwidth**, (1+β)/2 of the symbol rate per side."
-- **Why it's wrong (independent reference — Proakis, *Digital Communications*; Sklar):** for symbol
+- **Why it's wrong (independent reference — Proakis, _Digital Communications_; Sklar):** for symbol
   rate `Rs = 1/T` the raised-cosine spectrum nulls at `(1+β)/(2T)`, so `(1+β)/2 · Rs` per side is the
-  **occupied (absolute) bandwidth**, not the *excess*. The **excess bandwidth** is the part beyond the
+  **occupied (absolute) bandwidth**, not the _excess_. The **excess bandwidth** is the part beyond the
   Nyquist minimum `Rs/2`, i.e. the fraction `β` (β=0.35 → "35 % excess"). Calling `(1+β)/2` the
   "excess bandwidth" over-counts by the entire Nyquist-minimum band and implies β=0 ⇒ zero bandwidth
   (false: β=0 still fills the full Nyquist band). The module's own readout already (correctly) labels
@@ -77,6 +79,7 @@ against the closed form). Severity ladder used:
   correct meaning. Teaching intent (β trades bandwidth for ringing) unchanged.
 
 ### CB-3 — DFT basis called "orthonormal" (dft-basis) — FIXED
+
 - **Location:** `src/modules/fundamentals/dft-basis/DftBasisExplanation.tsx:20`.
 - **As it stood:** "The sinusoids form an **orthonormal** basis, so the DFT just re-expresses the same
   vector in new coordinates — like rotating axes."
@@ -89,11 +92,12 @@ against the closed form). Severity ladder used:
   exactly" intuition is correct for any invertible basis and is preserved.
 
 ### CB-4 — "Nyquist rate" used to mean fs/2 in source docstrings (aliasing) — FIXED
+
 - **Location:** `src/dsp/sampling.ts:3` and `src/modules/fundamentals/aliasing/AliasingModule.tsx:13`
   (both are JSDoc/module comments — **not** rendered to users).
 - **As it stood:** "a tone above the **Nyquist rate** (½ the sample rate)…"
 - **Why it's wrong (independent reference):** the **Nyquist frequency** is `fs/2`; the **Nyquist rate**
-  is the *minimum sampling rate* `2·f_max` — a rate, not a frequency. The same module's rendered copy
+  is the _minimum sampling rate_ `2·f_max` — a rate, not a frequency. The same module's rendered copy
   already uses the correct terms ("Nyquist limit", "Nyquist frequency"), and the glossary entry for
   "Nyquist rate" is correct, so only these two comments mis-define the term.
 - **Severity note:** lower than CB-1..3 because it is not user-facing; included because this is a
@@ -105,10 +109,11 @@ against the closed form). Severity ladder used:
 ## test-gap
 
 ### TG-1 — Simulated BER is never checked against the analytic Q-curve — FIXED
+
 - **Location:** `src/dsp/comms.test.ts:94-102`, `src/dsp/channel.test.ts:62-68`.
 - **As it stood:** the only BER tests assert monotonicity and an order-of-magnitude threshold
   (`ber(12) < 0.001`). Nothing checks that the from-scratch `awgn` + `noiseSigma` + `symbolsToBits`
-  pipeline actually *tracks* the closed form across the SNR range — exactly the check the brief calls
+  pipeline actually _tracks_ the closed form across the SNR range — exactly the check the brief calls
   out ("compare simulated BER against the analytic expressions … curves should track theory across the
   range, not just look right"). `coding.ts`'s `uncodedBer` is the analytic curve itself, tested only
   against `qfunc` (tautological).
@@ -119,6 +124,7 @@ against the closed form). Severity ladder used:
   16-QAM. This both fills the gap and provides the correctness anchor reused by CB-1's plot.
 
 ### TG-2 — `window.ts` generalized-cosine coefficients only partially pinned — FIXED
+
 - **Location:** `src/dsp/window.ts` (Hann/Hamming/Blackman/rectangular); existing coverage in
   `spectrum.test.ts:12-24` checks Hann endpoints, rectangular all-ones, and that Blackman peaks at
   center — but never the **Hamming** coefficients, the `0.08` Blackman endpoints, symmetry, or the
@@ -128,12 +134,13 @@ against the closed form). Severity ladder used:
 - **Fix:** added `window.test.ts` pinning each window's endpoints, center, symmetry, and coherent gain.
 
 ### TG-3 — On-screen module readouts have no component-level tests — REPORT-ONLY
+
 - **Locations (representative):** interferometer pixel→bearing `atan2` mapping
   (`InterferometerModule.tsx:33-39`); skywave drift `‖fix−emitter‖` (`AoaCrossFixModule.tsx`);
   `formatHz` + `fMax` normalization (`FdoaModule.tsx:185-188,33`); inline `tapError`
   (`ChannelEstimationModule.tsx:56-61`); EVM `%` formatting + slice coloring
   (`EqualizationModule.tsx`); quantization/gain/aliasing readouts; classifier feature-bar scaling.
-- **Status:** the *underlying* `dsp/` functions each have a numerical test; the gap is purely the
+- **Status:** the _underlying_ `dsp/` functions each have a numerical test; the gap is purely the
   in-component **composition** (a sign slip or wrong constant in a module would pass the core suite).
   Only one module smoke test exists app-wide (`coding-and-equalization/modules.smoke.test.tsx`).
 - **Recommendation (report-only — touches many components):** extract the non-trivial inline helpers
@@ -142,9 +149,10 @@ against the closed form). Severity ladder used:
   for human triage to avoid a large mechanical churn in this correctness pass.
 
 ### TG-4 — Low-N BER readouts presented as numbers — REPORT-ONLY
+
 - **Location:** `MatchedFilterModule.tsx:38-39` (BER over **40** symbols, quantized to 1/40 = 0.025);
   `NoisyChannelModule.tsx:43` (600 symbols).
-- **Status:** the *constructions* are correct (verified: with unit-energy RRC, the matched-filter
+- **Status:** the _constructions_ are correct (verified: with unit-energy RRC, the matched-filter
   decision BER tracks `Q(√(2·Eb/N0))`), but the displayed numbers are statistically meaningless at
   these counts and unchecked. Not a bug; a readout-honesty nit.
 - **Recommendation:** de-emphasize the numeric BER in the matched-filter eye-diagram demo, or raise N.
@@ -154,6 +162,7 @@ against the closed form). Severity ladder used:
 ## convention
 
 ### CV-1 — Signal-green hard-coded instead of read from the design token (8 canvas sites) — REPORT-ONLY
+
 - **Rule:** CONTRIBUTING.md — "Read colors from `src/design/tokens.ts`, never hard-code hex."
   `rgb(62, 240, 160)` **is** `colors.signal` (`#3ef0a0`, `tokens.ts:29`), duplicated as a literal.
 - **Locations:** `SpectrumPlot.tsx:57`, `PolarPlot.tsx:89`, `SpectrogramPlot.tsx:24`,
@@ -161,13 +170,14 @@ against the closed form). Severity ladder used:
   `AoaCrossFixModule.tsx:95` (+ the literal hex in the comment `:94`).
 - **Why (mitigating):** all are `<canvas>` 2D-context / gradient stops where CSS `var(--color-signal)`
   can't resolve, and there is no `withAlpha()`/`signalRgb` bridge helper — so authors had no sanctioned
-  in-token path. The *semantics* are correct (green = live everywhere); this is maintainability drift,
+  in-token path. The _semantics_ are correct (green = live everywhere); this is maintainability drift,
   not a wrong color.
 - **Recommendation (report-only):** add `withAlpha(colors.signal, α)` + a pre-parsed `colors.signalRgb`
   tuple next to the tokens, then replace the 8 literals. A clean follow-up; deferred from this pass
   because it touches rendering across 8 files for zero behavioral change.
 
 ### CV-2 — Hand-rolled canvases skip the shared axis-label contract — REPORT-ONLY
+
 - **Location:** the channelizer wide-spectrum canvas (`ChannelizerModule.tsx:77-138`, one-sided `[0,1)`,
   no visible x-label — only `aria-label`) and the dft-basis magnitude bars
   (`DftBasisModule.tsx:65-73`, bin index, no x-label). The shared `SpectrumPlot`/`XYPlot` instances in
@@ -179,17 +189,19 @@ against the closed form). Severity ladder used:
   one-sided). Math underneath is correct (channel centers `k/nCh` verified).
 
 ### CV-3 — Chirp "Sweep bandwidth" control is actually the half-width — REPORT-ONLY
+
 - **Location:** `src/modules/modulations-and-waveforms/chirp/ChirpModule.tsx:48` (label) vs the waveform
-  `chirp(N, −bw, +bw)`, whose *total* swept bandwidth is `2·bw`. The `±bw cyc/sample` display mitigates
+  `chirp(N, −bw, +bw)`, whose _total_ swept bandwidth is `2·bw`. The `±bw cyc/sample` display mitigates
   it, and the in-file comment even says "half-width."
 - **Recommendation:** rename to "Sweep half-width" or show `±bw (2·bw total)`.
 
 ### CV-4 — Quantization readout labels SQNR as "Dynamic range" — REPORT-ONLY
+
 - **Location:** `src/modules/signal-chain-sdr/quantization/QuantizationModule.tsx:159` —
   `label="Dynamic range (ideal)"` shows `idealSqnrDb = 6.02N + 1.76`.
 - **Why it's a judgment call:** full-scale-sine **SQNR** (`6.02N+1.76`) and **dynamic range**
   (often `6.02N`, full-scale-to-LSB) are distinct, ≈1.76 dB apart. The value shown is exactly the SQNR
-  formula and is correct; the *label* conflates the two (common in teaching material). The Explanation
+  formula and is correct; the _label_ conflates the two (common in teaching material). The Explanation
   frames DR correctly in prose.
 - **Recommendation:** relabel "SQNR (ideal)" to match the underlying function, or keep with a note.
 
@@ -205,7 +217,7 @@ against the closed form). Severity ladder used:
   (`repetitionBer(10,3) > uncodedBer(10)`; `codingGainDb(repetition) ≤ 0`), not a break-even. Defensible
   hedging; could tighten to "a slight loss at this BER."
 - **PO-3 — spread-spectrum "lifting the signal N dB above interference."**
-  `SpreadSpectrumModule.tsx:85`. Processing gain `10·log₁₀(L)` is an SIR *improvement*, not an absolute
+  `SpreadSpectrumModule.tsx:85`. Processing gain `10·log₁₀(L)` is an SIR _improvement_, not an absolute
   level above interference (they coincide only at the demo's implicit 0 dB input SIR). Mental model is
   right; phrasing imprecise.
 - **PO-4 — carrier-offset "every symbol decodes wrong."** `CarrierOffsetModule.tsx:120`. A static
@@ -213,7 +225,7 @@ against the closed form). Severity ladder used:
   (≥45° for QPSK). Suggest "symbols start crossing decision boundaries and decode wrong."
 - **PO-5 — noisy-channel "16-QAM needs more energy to hold the same per-bit margin."**
   `NoisyChannelExplanation.tsx:21`. At fixed Eb/N0 bit energy is already equalized; 16-QAM needs higher
-  *Eb/N0* (denser points, smaller min distance). Suggest "needs a higher Eb/N0 to reach the same error
+  _Eb/N0_ (denser points, smaller min distance). Suggest "needs a higher Eb/N0 to reach the same error
   rate."
 - **PO-6 — "Occupied bandwidth" readout is one-sided.** `PulseShapingModule.tsx:122`. Shows
   `(1+β)/2 · Rs` (per-side/baseband); "occupied bandwidth" usually denotes the two-sided RF figure
