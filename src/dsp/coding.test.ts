@@ -113,6 +113,16 @@ describe('analytic BER curves', () => {
     expect(hamming74Ber(12)).toBeLessThan(hamming74Ber(8));
   });
 
+  it('Hamming(7,4) BER counts decoded data-bit errors: leading term ≈ 9·p², not 6·p²', () => {
+    // A double channel error miscorrects to a weight-3 codeword; over the 21 two-error patterns that
+    // is 36 data-bit errors across k=4, so the information BER goes as 9·p² at high SNR — measuring
+    // decoded data bits (over 4), not flipped channel bits (over 7).
+    const ebN0 = 12;
+    const p = qfunc(Math.sqrt(2 * (4 / 7) * 10 ** (ebN0 / 10)));
+    expect(hamming74Ber(ebN0)).toBeGreaterThan(8.5 * p * p);
+    expect(hamming74Ber(ebN0)).toBeLessThan(9.5 * p * p);
+  });
+
   it('repetition barely helps on AWGN per information-bit energy (honest weak baseline)', () => {
     // Splitting energy across 3 copies makes hard-decision repetition worse than uncoded here.
     expect(repetitionBer(10, 3)).toBeGreaterThan(uncodedBer(10));

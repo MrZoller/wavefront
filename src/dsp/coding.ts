@@ -157,15 +157,29 @@ export function repetitionBer(ebN0dB: number, n: number): number {
 }
 
 /**
- * Decoded BER for Hamming(7,4) with hard-decision (bounded-distance) decoding — the standard
- * textbook approximation `Pb ≈ (1/n)·Σ_{j≥t+1} j·C(n,j)·p^j·(1−p)^{n−j}` with n=7, t=1. The j≥2
- * (∝ p²) leading term is what makes the curve fall *steeper* than uncoded → coding gain at high SNR.
+ * Decoded *information*-bit BER for Hamming(7,4) with hard-decision syndrome decoding, computed
+ * **exactly** by running all 2⁷ channel-error patterns through the real {@link hamming74DecodeBlock}
+ * and counting errors in the 4 *decoded data* bits (the code is linear, so the all-zero codeword is
+ * representative). A single error is corrected; a double error miscorrects to a weight-3 codeword, so
+ * the leading term is ~9·p² per data bit — the 21 two-error patterns produce 36 data-bit errors over
+ * k = 4 (not the channel-bit count over n = 7). The ∝ p² fall is what beats uncoded at high SNR.
  */
 export function hamming74Ber(ebN0dB: number): number {
   const p = crossover(ebN0dB, 4 / 7);
-  let pe = 0;
-  for (let j = 2; j <= 7; j++) pe += (j * binom(7, j) * p ** j * (1 - p) ** (7 - j)) / 7;
-  return pe;
+  let errBits = 0;
+  for (let pattern = 0; pattern < 128; pattern++) {
+    const block: number[] = [];
+    let w = 0;
+    for (let i = 0; i < 7; i++) {
+      const bit = (pattern >> i) & 1;
+      block.push(bit);
+      w += bit;
+    }
+    const prob = p ** w * (1 - p) ** (7 - w);
+    const data = hamming74DecodeBlock(block); // transmitted data is all-zero, so any 1 is an error
+    errBits += prob * (data[0] + data[1] + data[2] + data[3]);
+  }
+  return errBits / 4;
 }
 
 // ----------------------------------------------------------------------------------------------

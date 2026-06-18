@@ -39,8 +39,14 @@ is honest — a rate-`R` code spends `Ec = R·Eb` per transmitted bit:
 qfunc(x) = ½·erfc(x/√2)
 uncoded BPSK:   Pb = Q(√(2·Eb/N0))
 repetition(n):  p = Q(√(2·(1/n)·Eb/N0)),  Pb = Σ_{k>n/2} C(n,k) p^k (1−p)^{n−k}
-Hamming(7,4):   p = Q(√(2·(4/7)·Eb/N0)),  Pb ≈ (1/7) Σ_{j≥2} j·C(7,j) p^j (1−p)^{7−j}
+Hamming(7,4):   p = Q(√(2·(4/7)·Eb/N0)),  Pb = exact over all 2⁷ error patterns through the decoder
 ```
+
+The Hamming BER is computed **exactly**: every one of the 2⁷ channel-error patterns is decoded by the
+real `hamming74DecodeBlock`, and the errors in the 4 **decoded data** bits are counted (the code is
+linear, so the all-zero codeword is representative). A double error miscorrects to a weight-3
+codeword, so the leading **information**-bit term is `9·p²` (the 21 two-error patterns produce 36
+data-bit errors over k=4) — not the channel-bit count `6·p²` over n=7.
 
 `codingGainDb` reports how much less Eb/N0 a code needs to hit a reference BER — the coded curve's
 left-shift. Hamming's leading `p²` term makes it fall steeper than uncoded, so it wins at useful SNR;
