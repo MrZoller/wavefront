@@ -1,7 +1,28 @@
+import { GlossedText } from '@/components/GlossedText';
 import { Wordmark } from '@/components/Wordmark';
 import { APP_DESCRIPTION } from '@/config';
 import { TRACKS, getTrackLayers } from '@/registry';
 import { useAppStore } from '@/store/appStore';
+
+// A recommended first-time path — surfaced from the registry's human module names, not a forced
+// course. Each step is the entry module for a stage of the climb; the prose says *why* that order.
+const START_STEPS: { id: string; title: string; why: string }[] = [
+  {
+    id: 'rotating-phasor',
+    title: 'The Rotating Phasor / IQ',
+    why: 'Start here — a signal is a rotating vector in the complex plane, and every later idea reuses that picture.',
+  },
+  {
+    id: 'sampling-aliasing',
+    title: 'Sampling & Aliasing',
+    why: 'Then the ground under everything digital: how a continuous wave becomes numbers, and when sampling too slowly makes it lie.',
+  },
+  {
+    id: 'send-a-message',
+    title: 'Send a Message',
+    why: 'Now put it together end to end: text → bits → symbols → a noisy channel → back to text.',
+  },
+];
 
 /** The landing view: the track/module map (brief §9, §14). Shown when no module is open. */
 export function TrackOverview() {
@@ -13,6 +34,8 @@ export function TrackOverview() {
         <Wordmark />
       </h1>
       <p className="mt-3 max-w-2xl text-text-muted">{APP_DESCRIPTION}</p>
+
+      <StartHere />
 
       <div className="mt-10 flex flex-col gap-4">
         {TRACKS.map((track) => {
@@ -92,5 +115,54 @@ export function TrackOverview() {
         </p>
       </footer>
     </div>
+  );
+}
+
+/** "New here? Start here" — a recommended entry point and route, phrased as a suggestion. */
+function StartHere() {
+  const setActiveModule = useAppStore((s) => s.setActiveModule);
+  const openGlossary = useAppStore((s) => s.openGlossary);
+
+  return (
+    <section className="mt-8 rounded-lg border border-signal-dim/40 bg-surface p-5">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-text-muted">
+        New here? Start here
+      </h2>
+      <GlossedText>
+        <p className="mt-1.5 text-sm text-text-muted">
+          A recommended path, not a course you have to finish — once you have your footing, jump
+          anywhere.
+        </p>
+        <ol className="mt-3 flex flex-col gap-2.5">
+          {START_STEPS.map((s, i) => (
+            <li key={s.id} className="flex gap-2.5">
+              <span className="mt-0.5 shrink-0 text-xs tabular-nums text-text-faint">{i + 1}</span>
+              <span className="text-sm text-text-muted">
+                <button
+                  type="button"
+                  onClick={() => setActiveModule(s.id)}
+                  className="font-medium text-signal underline decoration-signal-dim/60 underline-offset-2 transition-colors hover:decoration-signal"
+                >
+                  {s.title}
+                </button>{' '}
+                — {s.why}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-3 text-sm text-text-muted">
+          From there, follow whichever track below pulls you — each module opens with a one-line
+          intuition. Hit a word you don&rsquo;t know?{' '}
+          <button
+            type="button"
+            onClick={openGlossary}
+            className="text-signal underline decoration-signal-dim/60 underline-offset-2 transition-colors hover:decoration-signal"
+          >
+            Browse the glossary
+          </button>
+          .
+        </p>
+      </GlossedText>
+    </section>
   );
 }
