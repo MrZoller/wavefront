@@ -22,7 +22,7 @@ const FLAVORS: Record<
   carrier: {
     label: 'Carrier recovery',
     detector: 'Phase detector',
-    detectorSub: 'measure phase error',
+    detectorSub: 'measure error',
     corrector: 'NCO',
     correctorSub: 'de-rotate',
     error: 'phase error',
@@ -34,7 +34,7 @@ const FLAVORS: Record<
   timing: {
     label: 'Timing recovery',
     detector: 'Timing detector',
-    detectorSub: 'measure timing error',
+    detectorSub: 'measure error',
     corrector: 'Interpolator',
     correctorSub: 're-sample',
     error: 'timing error',
