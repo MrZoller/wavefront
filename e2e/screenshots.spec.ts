@@ -330,6 +330,15 @@ test('channel coding module', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'channel-coding.png') });
 });
 
+test('channel estimation module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Channel Estimation' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /estimated channel frequency response/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'channel-estimation.png') });
+});
+
 test('equalization module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Equalization' }).first().click();

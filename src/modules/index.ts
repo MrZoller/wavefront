@@ -72,4 +72,5 @@ import './propagation-and-bands/hf-skywave';
 // Layer 0 — Error Control
 import './coding-and-equalization/channel-coding';
 // Layer 1 — Undoing the Channel
+import './coding-and-equalization/channel-estimation';
 import './coding-and-equalization/equalization';

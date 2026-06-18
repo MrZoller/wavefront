@@ -26,6 +26,7 @@ const ALIASES: Record<string, string[]> = {
   aoa: ['angle-of-arrival', 'angle of arrival'],
   awgn: ['additive white Gaussian noise'],
   ber: ['bit error rate'],
+  'channel-estimation': ['channel estimate', 'channel estimator', 'estimated channel'],
   'constant-envelope': ['constant envelope'],
   ddc: ['digital downconverter', 'digital down-conversion', 'digital downconversion'],
   decimation: ['decimate', 'decimating'],

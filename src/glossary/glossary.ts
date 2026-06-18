@@ -122,6 +122,12 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'upconversion',
     docsPage: 'carrier',
   },
+  'channel-estimation': {
+    id: 'channel-estimation',
+    term: 'channel estimation',
+    gloss: "Measuring the channel's response from known pilot symbols, so it can be undone.",
+    moduleId: 'channel-estimation',
+  },
   chirp: {
     id: 'chirp',
     term: 'chirp',
@@ -505,6 +511,12 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'A rotating 2D arrow that captures a sine wave’s amplitude and phase.',
     moduleId: 'rotating-phasor',
     docsPage: 'complex-and-phasors',
+  },
+  pilot: {
+    id: 'pilot',
+    term: 'pilot',
+    gloss: 'A known symbol the transmitter inserts so the receiver can measure the channel.',
+    moduleId: 'channel-estimation',
   },
   pm: {
     id: 'pm',
