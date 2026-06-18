@@ -10,6 +10,7 @@
 
 import { type Complex, magnitudeSquared, sub } from './complex';
 import { mulberry32 } from './random';
+import { qfunc } from './coding';
 
 /** A digital modulation scheme: an energy-normalized set of `2^bitsPerSymbol` I/Q points. */
 export interface Constellation {
@@ -132,6 +133,24 @@ export function awgn(symbols: Complex[], sigma: number, seed = 1): Complex[] {
     const r = sigma * Math.sqrt(-2 * Math.log(u1));
     return { re: s.re + r * Math.cos(2 * Math.PI * u2), im: s.im + r * Math.sin(2 * Math.PI * u2) };
   });
+}
+
+/**
+ * Closed-form bit-error rate for a constellation over AWGN at the given Eb/N0 (dB) — the analytic
+ * curve the from-scratch `awgn` + `symbolsToBits` Monte-Carlo simulation is expected to track.
+ *
+ * BPSK and Gray-coded QPSK are exact: `Pb = Q(√(2·Eb/N0))`. Square Gray QAM uses the standard
+ * approximation `Pb ≈ (4/k)(1 − 1/√M)·Q(√(3k/(M−1)·Eb/N0))` (k = bits/symbol, M = 2^k), which is
+ * tight at the SNRs of interest and reduces exactly to `Q(√(2·Eb/N0))` for QPSK.
+ */
+export function analyticBer(c: Constellation, ebN0dB: number): number {
+  const gamma = 10 ** (ebN0dB / 10);
+  const k = c.bitsPerSymbol;
+  // BPSK (k=1) and Gray QPSK (k=2) share the per-bit BER Q(√(2·Eb/N0)); BPSK is not square QAM,
+  // so it must be handled here rather than by the M-QAM formula.
+  if (k <= 2) return qfunc(Math.sqrt(2 * gamma));
+  const M = 2 ** k;
+  return (4 / k) * (1 - 1 / Math.sqrt(M)) * qfunc(Math.sqrt(((3 * k) / (M - 1)) * gamma));
 }
 
 /** Fraction of differing bits between two equal-length bit arrays (BER). */

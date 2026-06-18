@@ -6,6 +6,7 @@ import {
   QPSK,
   QAM16,
   type Constellation,
+  analyticBer,
   bitsToSymbols,
   symbolsToBits,
   nearestSymbol,
@@ -15,6 +16,7 @@ import {
   textToBits,
   bitsToText,
 } from './comms';
+import { qfunc } from './coding';
 
 const SCHEMES = [BPSK, QPSK, QAM16];
 
@@ -104,6 +106,44 @@ describe('end-to-end BER', () => {
   it('bitErrorRate counts differing bits', () => {
     expect(bitErrorRate([0, 1, 0, 1], [0, 1, 1, 1])).toBeCloseTo(0.25, 12);
     expect(bitErrorRate([], [])).toBe(0);
+  });
+});
+
+describe('simulated BER tracks the analytic curve (the real correctness anchor)', () => {
+  // Monte-Carlo BER straight from the from-scratch awgn + nearest-symbol slicer.
+  const simulatedBer = (c: Constellation, ebN0dB: number, nSymbols: number, seed: number) => {
+    const rng = mulberry32(seed);
+    const bits = Array.from({ length: nSymbols * c.bitsPerSymbol }, () => (rng() < 0.5 ? 0 : 1));
+    const tx = bitsToSymbols(bits, c);
+    const rx = awgn(tx, noiseSigma(ebN0dB, c.bitsPerSymbol), seed + 1);
+    return bitErrorRate(bits, symbolsToBits(rx, c));
+  };
+
+  it('analyticBer is exactly Q(√(2·Eb/N0)) for BPSK and QPSK (Gray)', () => {
+    for (const dB of [0, 4, 8]) {
+      const expected = qfunc(Math.sqrt(2 * 10 ** (dB / 10)));
+      expect(analyticBer(BPSK, dB)).toBeCloseTo(expected, 12);
+      expect(analyticBer(QPSK, dB)).toBeCloseTo(expected, 12);
+    }
+  });
+
+  it('BPSK/QPSK simulation tracks the closed form within 15% across the range', () => {
+    // A wrong noiseSigma (e.g. a missing 1/2 or 1/k) or broken Gray mapping would miss by far more.
+    for (const c of [BPSK, QPSK]) {
+      for (const dB of [0, 3, 6]) {
+        const sim = simulatedBer(c, dB, 100_000, 20 + dB);
+        const theory = analyticBer(c, dB);
+        expect(Math.abs(sim - theory) / theory).toBeLessThan(0.15);
+      }
+    }
+  });
+
+  it('16-QAM simulation tracks the Gray approximation within 20%', () => {
+    for (const dB of [6, 10]) {
+      const sim = simulatedBer(QAM16, dB, 100_000, 50 + dB);
+      const theory = analyticBer(QAM16, dB);
+      expect(Math.abs(sim - theory) / theory).toBeLessThan(0.2);
+    }
   });
 });
 
