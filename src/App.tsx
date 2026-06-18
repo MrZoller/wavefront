@@ -1,10 +1,12 @@
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TrackOverview } from '@/components/layout/TrackOverview';
 import { ModuleView } from '@/components/layout/ModuleView';
+import { GlossaryPage } from '@/components/layout/GlossaryPage';
 import { useAppStore } from '@/store/appStore';
 
 export default function App() {
   const activeModuleId = useAppStore((s) => s.activeModuleId);
+  const glossaryOpen = useAppStore((s) => s.glossaryOpen);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-bg text-text">
@@ -13,12 +15,11 @@ export default function App() {
         {activeModuleId ? (
           <ModuleView moduleId={activeModuleId} />
         ) : (
-          // The overview owns its own vertical scroll so cards stay reachable on short
-          // viewports and as the registry grows (ModuleView manages its own scrolling).
-          // It's the page's <main> landmark — parity with ModuleView, and it disambiguates the
-          // landing wordmark from the sidebar's (both are <h1>Wavefront</h1>).
+          // The landing and Glossary own their own vertical scroll (parity with ModuleView) and are
+          // the page's <main> landmark — which also disambiguates the landing wordmark from the
+          // sidebar's (both are <h1>Wavefront</h1>).
           <main className="h-full overflow-y-auto">
-            <TrackOverview />
+            {glossaryOpen ? <GlossaryPage /> : <TrackOverview />}
           </main>
         )}
       </div>
