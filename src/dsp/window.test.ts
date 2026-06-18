@@ -39,6 +39,17 @@ describe('window functions', () => {
     [0, 0.5, 1, 0.5, 0].forEach((v, i) => expect(w[i]).toBeCloseTo(v, 12));
   });
 
+  it('coherent gain (mean tap) approaches the window a0 coefficient', () => {
+    // Σw/N → a0 as N grows (the cosine terms average out over a period):
+    //   rectangular 1, Hann 0.5, Hamming 0.54, Blackman 0.42.
+    const N = 257;
+    const mean = (w: number[]) => w.reduce((s, v) => s + v, 0) / w.length;
+    expect(mean(windowFn('rectangular', N))).toBeCloseTo(1, 9);
+    expect(mean(windowFn('hann', N))).toBeCloseTo(0.5, 2);
+    expect(mean(windowFn('hamming', N))).toBeCloseTo(0.54, 2);
+    expect(mean(windowFn('blackman', N))).toBeCloseTo(0.42, 2);
+  });
+
   it('degenerate lengths return all ones (no divide-by-zero)', () => {
     expect(windowFn('hann', 1)).toEqual([1]);
     expect(windowFn('hann', 0)).toEqual([]);

@@ -47,15 +47,14 @@ export function SendMessageModule() {
 
   // BER-vs-Eb/N0 waterfall for the chosen scheme — the analytic curve (Q(√(2·Eb/N0)) for BPSK/QPSK,
   // the Gray approximation for 16-QAM). The simulation is shown live by the constellation + readout;
-  // the reference curve must keep plunging (no Monte-Carlo error floor). Drawn only above BER_FLOOR
-  // so it dives off the bottom of the chart instead of running along it.
-  const curve = useMemo(
-    () =>
-      EBN0_AXIS.map((ebN0) => ({ ebN0, ber: analyticBer(scheme, ebN0) })).filter(
-        (p) => p.ber >= BER_FLOOR
-      ),
-    [scheme]
-  );
+  // the reference curve must keep plunging (no Monte-Carlo error floor). Keep the descent plus the
+  // first sub-floor point — XYPlot clamps it to the axis floor — so the curve visibly dives to the
+  // bottom and connects to a high-SNR marker, rather than stopping short above the floor.
+  const curve = useMemo(() => {
+    const full = EBN0_AXIS.map((ebN0) => ({ ebN0, ber: analyticBer(scheme, ebN0) }));
+    const firstBelow = full.findIndex((p) => p.ber < BER_FLOOR);
+    return firstBelow === -1 ? full : full.slice(0, firstBelow + 1);
+  }, [scheme]);
   const opBer = analyticBer(scheme, ebN0dB);
 
   return (

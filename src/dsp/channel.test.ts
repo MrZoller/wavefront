@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { type Complex, magnitude } from './complex';
-import { CONSTELLATIONS } from './comms';
+import { CONSTELLATIONS, analyticBer } from './comms';
 import { multipath, channelResponseDb, applyCfo, berVsSnr } from './channel';
 
 const sig = (n: number): Complex[] => Array.from({ length: n }, (_, i) => ({ re: i + 1, im: 0 }));
@@ -64,5 +64,16 @@ describe('BER vs SNR', () => {
     const pts = berVsSnr(CONSTELLATIONS.QPSK, [0, 4, 8, 12], 3000, 5);
     expect(pts[0].ber).toBeGreaterThan(pts[3].ber);
     expect(pts[3].ber).toBeLessThan(0.001);
+  });
+
+  it('the exported sweep tracks the analytic Q-curve across the resolvable range', () => {
+    // Drive the real berVsSnr (its seeding/looping/noise mapping) against the closed form, not a
+    // reimplementation — so a regression in the sweep itself, not just the primitives, is caught.
+    for (const scheme of [CONSTELLATIONS.BPSK, CONSTELLATIONS.QPSK]) {
+      for (const { ebN0, ber } of berVsSnr(scheme, [0, 3, 6], 100_000, 5)) {
+        const theory = analyticBer(scheme, ebN0);
+        expect(Math.abs(ber - theory) / theory).toBeLessThan(0.15);
+      }
+    }
   });
 });
