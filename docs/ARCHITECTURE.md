@@ -45,7 +45,10 @@ Defined in `src/registry/types.ts`:
 
 The app derives **all** navigation from these — ordering, the layer subheaders, the step numbers,
 and the capstone marker, in both the sidebar and the landing cards. There is no hand-maintained
-route map and no ordering/markers hand-kept in the views.
+route map and no ordering/markers hand-kept in the views. The landing's **"Start here"** panel is the
+same idea for first-time orientation: a short recommended path that references modules by their
+registry **human names** (linked), so it can't drift into internal layer/track vocabulary. It's
+static guidance (no progress state) — only the entry-module list + the "why" framing is authored.
 
 `status` is **authoring vocabulary**: it never renders raw. `moduleStatusBadge()` maps it to a
 user-facing badge (`stub` → "Conceptual", `stable` → no badge) — the same authoring→presentation
@@ -146,6 +149,12 @@ Keep it a **flat map** — no categories, search, or nested entries. The cutoff 
 entry (the conceptual-load test, and the `Hz`-vs-`dB` contrast) lives in
 [CONTRIBUTING.md](../CONTRIBUTING.md#inline-glossary-term); apply that line rather than re-litigating
 it per term.
+
+The in-app **Glossary index page** (`src/components/layout/GlossaryPage.tsx`, reached from the nav)
+is a browse/lookup companion to the inline popovers, rendered entirely from `allTerms()` + the
+registry — add a term to the map and it appears there automatically, with its "Learn more" link.
+There is no second list to maintain. (It's a learner reference; contributor docs — this file,
+`docs/dsp/`, the README — stay out of the app.)
 
 ## Data flow
 
