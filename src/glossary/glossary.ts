@@ -127,6 +127,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     term: 'channel estimation',
     gloss: "Measuring the channel's response from known pilot symbols, so it can be undone.",
     moduleId: 'channel-estimation',
+    docsPage: 'equalization',
   },
   chirp: {
     id: 'chirp',
@@ -156,6 +157,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'How much less Eb/N0 a coded link needs to hit the same error rate — the coded BER curve shifted left.',
     moduleId: 'channel-coding',
+    docsPage: 'coding',
   },
   'constant-envelope': {
     id: 'constant-envelope',
@@ -253,6 +255,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       "A filter that undoes the channel's distortion — reopening the eye and re-clustering the constellation.",
     moduleId: 'equalization',
+    docsPage: 'equalization',
   },
   evm: {
     id: 'evm',
@@ -283,6 +286,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'Adding structured redundancy so the receiver can correct flipped bits, not just detect them.',
     moduleId: 'channel-coding',
+    docsPage: 'coding',
   },
   fft: {
     id: 'fft',
@@ -350,6 +354,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'A block code whose parity bits, read back, form a pattern (the syndrome) that names which single bit flipped.',
     moduleId: 'channel-coding',
+    docsPage: 'coding',
   },
   headroom: {
     id: 'headroom',
@@ -417,6 +422,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'An adaptive filter that learns the channel inverse by nudging its tap weights downhill on its own error — gradient descent, one step per sample.',
     moduleId: 'equalization',
+    docsPage: 'equalization',
   },
   'matched-filter': {
     id: 'matched-filter',
@@ -440,6 +446,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       "An equalizer that balances inverting the channel against amplifying noise — it backs off in the channel's deep notches.",
     moduleId: 'equalization',
+    docsPage: 'equalization',
   },
   msk: {
     id: 'msk',
@@ -626,6 +633,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       "The parity-check result that points at a flipped bit's position — zero means no error detected.",
     moduleId: 'channel-coding',
+    docsPage: 'coding',
   },
   'tap-weights': {
     id: 'tap-weights',
@@ -682,6 +690,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'An equalizer that inverts the channel exactly (W = 1/H) — clean, but it amplifies noise wherever the channel has a deep null.',
     moduleId: 'equalization',
+    docsPage: 'equalization',
   },
   'zero-if': {
     id: 'zero-if',

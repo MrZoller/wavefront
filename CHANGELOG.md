@@ -8,6 +8,23 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚢 Track G — Coding & Equalization (v1).** The "make the link survive a real channel" track:
+  after a signal has been sent, distorted, and noised, recover it by adding redundancy and by undoing
+  what the channel did. Two from-scratch, fully tested `dsp/` primitives back it — channel coding
+  (repetition + Hamming(7,4) with syndrome decoding, and closed-form coding-gain BER curves) and the
+  estimate-and-equalize family (pilot least-squares channel estimation, frequency-domain
+  zero-forcing/MMSE equalizers, an EVM metric, and an adaptive LMS equalizer). Four modules across two
+  stages — "Error Control" and "Undoing the Channel": **Channel Coding (FEC)** (pick a code, drag
+  Eb/N0, watch the coded curve shift left for a code-rate cost, with an interactive encode → flip →
+  decode worked example), **Channel Estimation** (known pilots; the estimated response converges to
+  truth as pilots/SNR grow), the **Equalization** capstone (a multipath-smeared constellation that
+  snaps back and an eye that reopens when the channel is inverted, plus a "go deeper" adaptive LMS
+  view with tap weights converging live and the error falling), and a conceptual **Synchronization**
+  stub (carrier/timing recovery as tracking loops). It reuses the constellation, eye, and BER/x–y
+  views wholesale, adds one small tap-weight stem plot, and teed up the ML throughline — LMS is
+  gradient descent, the linear ancestor of a learned equalizer. Registered like any other track (human
+  layer names, one capstone), with fifteen glossary terms and `docs/` pages.
+
 - **🚢 Track E — Propagation & Bands (v1).** The last of the originally-envisioned tracks, and a
   deliberately lean _context companion_: the RF physics around the signal, not a DSP peer. Its math
   lives in a new from-scratch, tested `src/propagation/` module kept out of the `dsp/` core (the one
