@@ -1,6 +1,6 @@
 /**
  * Sampling & aliasing (brief §7, Track D Layer 0). Sampling wraps the spectrum: any frequency above
- * the Nyquist rate (`fs/2`) masquerades as a lower one — the wagon-wheel effect.
+ * the Nyquist frequency (`fs/2`) masquerades as a lower one — the wagon-wheel effect.
  */
 
 /** The apparent (aliased) frequency a tone at `freq` shows up as when sampled at `sampleRate`,

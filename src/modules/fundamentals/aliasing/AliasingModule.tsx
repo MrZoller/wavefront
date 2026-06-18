@@ -10,7 +10,7 @@ const OS = 40; // oversampling for the "continuous" curve
 
 /**
  * Sampling & aliasing (brief §7, Track D Layer 0). Sampling only sees a signal at the tick marks, so
- * a tone above the Nyquist rate (½ the sample rate) is indistinguishable from a slower one — the
+ * a tone above the Nyquist frequency (½ the sample rate) is indistinguishable from a slower one — the
  * wagon-wheel effect. Sweep the frequency past 0.5 and watch a fast tone masquerade as a slow one.
  */
 export function AliasingModule() {

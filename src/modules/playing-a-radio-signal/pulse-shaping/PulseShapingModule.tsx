@@ -94,7 +94,8 @@ export function PulseShapingModule() {
     [beta]
   );
 
-  // −3 dB-ish excess bandwidth indicator: RC occupies (1+β)/2 of the symbol-rate bandwidth each side.
+  // Occupied (per-side) bandwidth indicator: RC occupies (1+β)/2 of the symbol rate each side
+  // (the spectrum nulls at (1+β)·Rs/2). The fraction beyond the Nyquist minimum is the excess, β.
   const bandwidth = (1 + beta) / 2;
 
   return (

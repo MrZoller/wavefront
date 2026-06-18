@@ -27,7 +27,7 @@ export function PulseShapingExplanation() {
         <section>
           <h3 className="mb-1 font-medium text-text">β: bandwidth vs. ringing</h3>
           <p>
-            The roll-off β sets the excess bandwidth, (1+β)/2 of the symbol rate per side. Small β
+            The roll-off β sets the occupied bandwidth, (1+β)/2 of the symbol rate per side. Small β
             is spectrally tight but rings for many symbols (and is touchy about timing); large β is
             gentle and forgiving but wider. Real links pick a compromise (0.2–0.35 is common).
           </p>
