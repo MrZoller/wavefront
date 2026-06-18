@@ -61,3 +61,9 @@ import './signal-chain-sdr/gain-agc';
 // Layer 1 — Architecture & orientation
 import './signal-chain-sdr/signal-chain';
 import './signal-chain-sdr/sdr-architectures';
+
+// Track E — Propagation & Bands
+// Layer 0 — Bands & Reach
+import './propagation-and-bands/band-explorer';
+import './propagation-and-bands/radio-horizon';
+import './propagation-and-bands/hf-skywave';

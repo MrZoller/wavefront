@@ -8,6 +8,23 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **🚢 Track E — Propagation & Bands (v1).** The last of the originally-envisioned tracks, and a
+  deliberately lean _context companion_: the RF physics around the signal, not a DSP peer. Its math
+  lives in a new from-scratch, tested `src/propagation/` module kept out of the `dsp/` core (the one
+  track whose math is physics, not signal processing) — wavelength `λ = c/f`, the LF…SHF band ladder
+  with each band's dominant mode and rough reach, the geometric radio horizon `d ≈ 3.57·(√h₁ + √h₂)`
+  km, and a conceptual skywave/MUF rule. Three modules under one "Bands & Reach" stage: the **Band
+  Explorer** capstone (drag frequency across the bands and watch wavelength, mode, and reach change —
+  why AM crosses states at night, FM stays local, shortwave goes global), **Radio Horizon /
+  Line-of-Sight** (drag two antenna heights on a curved-earth picture whose grazing geometry matches
+  the formula), and a conceptual **HF Skywave & the Ionosphere** stub (reflect vs. punch-through, set
+  by day/night and frequency). A new shared `RayPathDiagram` earth-curvature renderer backs the last
+  two. The highest-value piece is the cross-link: the **AoA cross-fixing** scene gains a
+  line-of-sight ↔ HF-skywave toggle on the shared world map, and on skywave the naive straight-ray
+  fix visibly walks off the true emitter — the one place propagation changes a DSP answer. Registered
+  like any other track (human layer name, one capstone), with fourteen glossary terms and `docs/`
+  pages.
+
 - **🚢 Track F — Signal Chain & SDR (v1).** A lean companion track for where the IQ samples come from.
   Two from-scratch, tested boundary effects — a quantizer (bit depth, optional dither, SQNR ≈
   6.02·N + 1.76 dB) and a gain/clipping stage (the Goldilocks zone between buried-in-noise and

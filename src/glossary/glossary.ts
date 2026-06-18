@@ -289,12 +289,40 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'A false second mainlobe that appears when array antennas are spaced too far apart.',
     moduleId: 'beamforming',
   },
+  'great-circle': {
+    id: 'great-circle',
+    term: 'great-circle',
+    gloss:
+      'The shortest path between two points on a sphere — the route a radio bearing follows over the curve of the Earth.',
+  },
+  'ground-wave': {
+    id: 'ground-wave',
+    term: 'ground wave',
+    gloss:
+      'A radio wave that clings to the surface and follows the curve of the Earth, dominating the low bands.',
+    moduleId: 'band-explorer',
+  },
   headroom: {
     id: 'headroom',
     term: 'headroom',
     gloss:
       'The margin left before a signal hits the rails and clips — what a gain stage tries to preserve.',
     moduleId: 'gain-agc',
+  },
+  hf: {
+    id: 'hf',
+    term: 'HF',
+    expansion: 'High Frequency',
+    gloss:
+      'The 3–30 MHz band, where a skywave bounce off the ionosphere can carry a signal around the world.',
+    moduleId: 'band-explorer',
+  },
+  ionosphere: {
+    id: 'ionosphere',
+    term: 'ionosphere',
+    gloss:
+      'The electrically charged upper atmosphere that can reflect HF radio waves back toward the ground.',
+    moduleId: 'hf-skywave',
   },
   iq: {
     id: 'iq',
@@ -311,6 +339,21 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'When poorly shaped symbols smear in time and bleed into their neighbors.',
     moduleId: 'pulse-shaping',
   },
+  lf: {
+    id: 'lf',
+    term: 'LF',
+    expansion: 'Low Frequency',
+    gloss: 'The 30–300 kHz band, where long ground waves hug the Earth for hundreds of km.',
+    moduleId: 'band-explorer',
+  },
+  'line-of-sight': {
+    id: 'line-of-sight',
+    term: 'line-of-sight',
+    expansion: 'LOS',
+    gloss:
+      'Propagation in a straight line that stops at the horizon, with nothing bending the wave back — the rule from VHF up.',
+    moduleId: 'radio-horizon',
+  },
   lna: {
     id: 'lna',
     term: 'LNA',
@@ -326,6 +369,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'matched-filter',
     docsPage: 'pulse',
   },
+  mf: {
+    id: 'mf',
+    term: 'MF',
+    expansion: 'Medium Frequency',
+    gloss: 'The 0.3–3 MHz band of AM broadcast — ground wave by day, skywave after dark.',
+    moduleId: 'band-explorer',
+  },
   msk: {
     id: 'msk',
     term: 'MSK',
@@ -333,6 +383,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'A smooth, continuous-phase form of frequency-shift keying that wastes little bandwidth.',
     moduleId: 'modulation-zoo',
+  },
+  muf: {
+    id: 'muf',
+    term: 'MUF',
+    expansion: 'Maximum Usable Frequency',
+    gloss:
+      'The highest frequency the ionosphere will still reflect on a given path — above it, the wave escapes to space.',
+    moduleId: 'hf-skywave',
   },
   multipath: {
     id: 'multipath',
@@ -417,11 +475,33 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Two bits per symbol, sent as one of four carrier phases.',
     moduleId: 'symbol-mapping',
   },
+  'radio-horizon': {
+    id: 'radio-horizon',
+    term: 'radio horizon',
+    gloss:
+      "The farthest a line-of-sight signal reaches before the Earth's curve blocks it — set mostly by antenna height.",
+    moduleId: 'radio-horizon',
+  },
   radioml: {
     id: 'radioml',
     term: 'RadioML',
     gloss:
       'A public benchmark dataset of recorded modulated signals, widely used to train and compare modulation-recognition models.',
+  },
+  shf: {
+    id: 'shf',
+    term: 'SHF',
+    expansion: 'Super High Frequency',
+    gloss:
+      'The 3–30 GHz microwave band — tight line-of-sight beams for radar, satellite, and point-to-point links.',
+    moduleId: 'band-explorer',
+  },
+  skywave: {
+    id: 'skywave',
+    term: 'skywave',
+    gloss:
+      'A radio wave that reflects off the ionosphere to land far over the horizon — the HF long-distance trick.',
+    moduleId: 'hf-skywave',
   },
   snr: {
     id: 'snr',
@@ -471,12 +551,33 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'tdoa-multilateration',
     docsPage: 'geolocation',
   },
+  uhf: {
+    id: 'uhf',
+    term: 'UHF',
+    expansion: 'Ultra High Frequency',
+    gloss: 'The 0.3–3 GHz band, short-range line-of-sight — cellular, Wi-Fi, and GPS.',
+    moduleId: 'band-explorer',
+  },
   ula: {
     id: 'ula',
     term: 'ULA',
     expansion: 'Uniform Linear Array',
     gloss: 'A straight row of equally spaced antennas — the simplest array geometry.',
     moduleId: 'interferometer',
+  },
+  vhf: {
+    id: 'vhf',
+    term: 'VHF',
+    expansion: 'Very High Frequency',
+    gloss: 'The 30–300 MHz band, line-of-sight and local — where FM radio and broadcast TV live.',
+    moduleId: 'band-explorer',
+  },
+  wavelength: {
+    id: 'wavelength',
+    term: 'wavelength',
+    gloss:
+      'The physical length of one cycle of a wave — the speed of light divided by its frequency (λ = c/f).',
+    moduleId: 'band-explorer',
   },
   window: {
     id: 'window',

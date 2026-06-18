@@ -4,6 +4,9 @@ import { Slider } from '@/components/Slider';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
 import { colors } from '@/design/tokens';
 import { aoaFix, errorEllipse, type Bearing } from '@/dsp/geolocation';
+import { skywaveApparentBearingRad } from '@/propagation';
+
+type Propagation = 'los' | 'skywave';
 
 const WORLD = { minX: -50, maxX: 50, minY: -50, maxY: 50 };
 
@@ -25,15 +28,24 @@ export function AoaCrossFixModule() {
   ]);
   const [emitter, setEmitter] = useState<XY>({ x: 5, y: 25 });
   const [sigmaDeg, setSigmaDeg] = useState(2);
+  const [mode, setMode] = useState<Propagation>('los');
 
-  const bearings: Bearing[] = sites.map((s) => ({
-    x: s.x,
-    y: s.y,
-    bearing: Math.atan2(emitter.y - s.y, emitter.x - s.x),
-  }));
+  // The bearings a site *measures*. On line-of-sight they point straight at the emitter. On HF
+  // skywave the wave arrives after an ionospheric bounce, so each apparent bearing is deflected — the
+  // single physics knob that makes a fix built on the straight-line assumption walk off the emitter.
+  const bearings: Bearing[] = sites.map((s) => {
+    const trueBearing = Math.atan2(emitter.y - s.y, emitter.x - s.x);
+    return {
+      x: s.x,
+      y: s.y,
+      bearing: mode === 'skywave' ? skywaveApparentBearingRad(trueBearing) : trueBearing,
+    };
+  });
   const sigma = (sigmaDeg * Math.PI) / 180;
   const { fix, cov } = aoaFix(bearings, sigma);
   const ellipse = cov ? errorEllipse(cov, 2) : null; // 2σ region
+  // How far the naive fix has walked from the true emitter (skywave only).
+  const drift = fix ? Math.hypot(fix.x - emitter.x, fix.y - emitter.y) : null;
 
   const points: MapPoint[] = [
     ...sites.map((s, i) => ({
@@ -49,7 +61,7 @@ export function AoaCrossFixModule() {
       x: emitter.x,
       y: emitter.y,
       color: colors.alert,
-      label: 'emitter',
+      label: mode === 'skywave' ? 'true emitter' : 'emitter',
       kind: 'emitter' as const,
     },
   ];
@@ -99,6 +111,23 @@ export function AoaCrossFixModule() {
       ctx.beginPath();
       ctx.arc(c.px, c.py, 3.5, 0, 2 * Math.PI);
       ctx.fill();
+
+      // On skywave, draw the gap between the naive fix and the true emitter — the drift.
+      if (mode === 'skywave' && drift != null) {
+        const e = t.toPx(emitter.x, emitter.y);
+        ctx.save();
+        ctx.strokeStyle = colors.alert;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(c.px, c.py);
+        ctx.lineTo(e.px, e.py);
+        ctx.stroke();
+        ctx.restore();
+        ctx.fillStyle = colors.alert;
+        ctx.font = '11px ui-monospace, monospace';
+        ctx.fillText(`drift ${drift.toFixed(1)} km`, (c.px + e.px) / 2 + 6, (c.py + e.py) / 2 - 4);
+      }
     }
   };
 
@@ -109,13 +138,13 @@ export function AoaCrossFixModule() {
         points={points}
         onPointMove={onPointMove}
         draw={draw}
-        deps={[bearings, fix, ellipse]}
+        deps={[bearings, fix, ellipse, mode, drift]}
         ariaLabel="Two or three DF sites with lines of bearing crossing at the emitter"
       />
 
       <div className="flex flex-wrap gap-4">
         <Readout
-          label="Fix"
+          label={mode === 'skywave' ? 'Naive fix' : 'Fix'}
           value={fix ? `(${fix.x.toFixed(1)}, ${fix.y.toFixed(1)})` : 'no crossing'}
           accent
         />
@@ -123,9 +152,49 @@ export function AoaCrossFixModule() {
           label="Error region (2σ)"
           value={ellipse ? `${ellipse.major.toFixed(1)} × ${ellipse.minor.toFixed(1)} km` : '—'}
         />
+        <div
+          className={[
+            'readout flex flex-col rounded-md border px-3 py-2 text-xs',
+            mode === 'skywave' ? 'border-alert-dim text-alert' : 'border-border',
+          ].join(' ')}
+        >
+          <span className="text-text-faint">Fix error vs true emitter</span>
+          <span className={mode === 'skywave' ? '' : 'text-text'}>
+            {mode === 'skywave' && drift != null ? `${drift.toFixed(1)} km off` : 'on the emitter'}
+          </span>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
+        <div className="flex flex-col gap-1.5">
+          <span className="readout text-xs text-text-faint">line of bearing</span>
+          <div className="flex gap-2">
+            {(
+              [
+                ['los', 'Line-of-sight'],
+                ['skywave', 'HF skywave'],
+              ] as const
+            ).map(([value, label]) => {
+              const selected = mode === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setMode(value)}
+                  className={[
+                    'readout cursor-pointer rounded-md border px-2.5 py-1 text-xs transition-colors',
+                    selected
+                      ? 'border-signal-dim bg-surface-raised text-signal'
+                      : 'border-border bg-surface text-text-muted hover:border-signal-dim hover:text-text',
+                  ].join(' ')}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
         <div className="flex flex-1 flex-col gap-1.5" style={{ minWidth: 220 }}>
           <Slider
             label="Angular error σθ"
@@ -140,8 +209,8 @@ export function AoaCrossFixModule() {
           />
           <span className="readout text-xs text-text-faint">
             <GlossedText>
-              drag DF sites / emitter · push the emitter far or flatten the crossing to watch the
-              error region stretch
+              drag DF sites / emitter · flip to skywave and watch the straight-ray fix walk off the
+              true emitter
             </GlossedText>
           </span>
         </div>

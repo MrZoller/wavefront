@@ -6,5 +6,6 @@ export {
   getModulesForTrack,
   getModule,
   getTrackLayers,
+  moduleStatusBadge,
 } from './registry';
 export { TRACKS, TRACK_BY_ID } from './tracks';

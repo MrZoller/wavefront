@@ -287,3 +287,38 @@ test('SDR architectures module', async ({ page }) => {
   await expect(page.getByRole('group', { name: /Superheterodyne architecture/i })).toBeVisible();
   await page.screenshot({ path: path.join(IMG_DIR, 'sdr-architectures.png') });
 });
+
+test('band explorer module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Band Explorer' }).first().click();
+  await expect(page.getByRole('img', { name: /radio-band ladder/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'band-explorer.png') });
+});
+
+test('radio horizon module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Radio Horizon' }).first().click();
+  await expect(page.getByRole('img', { name: /curved Earth with two antennas/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'radio-horizon.png') });
+});
+
+test('HF skywave module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'HF Skywave' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /HF ray reflecting off the ionosphere/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'hf-skywave.png') });
+});
+
+test('propagation-aware geolocation (skywave drift)', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'AoA Cross-Fixing' }).first().click();
+  await expect(
+    page.getByRole('application', { name: /DF sites with lines of bearing/i })
+  ).toBeVisible();
+  // Flip the line-of-bearing toggle to skywave so the naive fix walks off the true emitter.
+  // `exact` avoids matching the sidebar's "HF Skywave & the Ionosphere" nav item.
+  await page.getByRole('button', { name: 'HF skywave', exact: true }).click();
+  await page.screenshot({ path: path.join(IMG_DIR, 'aoa-skywave-drift.png') });
+});

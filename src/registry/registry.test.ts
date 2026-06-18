@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { TRACKS, TRACK_BY_ID } from './tracks';
-import { getModules, getModulesForTrack, getTrackLayers } from './registry';
+import { getModules, getModulesForTrack, getTrackLayers, moduleStatusBadge } from './registry';
 // Importing the barrel registers every module so the structural checks below see the real data.
 import '@/modules';
 
@@ -29,6 +29,24 @@ describe('track registry', () => {
         expect(m.track).toBe(track.id);
       }
     }
+  });
+});
+
+/**
+ * Status is authoring vocabulary; the rendered badge must be a user-facing label. `stub` in
+ * particular reads as "unfinished" if shown raw, so it maps to "Conceptual". This pins the mapping;
+ * the Sidebar render test guards that the raw token never reaches a badge.
+ */
+describe('module status → user-facing badge label', () => {
+  it('maps internal status tokens to display labels and never passes the raw token through', () => {
+    expect(moduleStatusBadge('stub')).toBe('Conceptual');
+    expect(moduleStatusBadge('advanced')).toBe('Advanced');
+    expect(moduleStatusBadge('stub')).not.toBe('stub');
+  });
+
+  it('shows no badge for the default (stable) or unset status', () => {
+    expect(moduleStatusBadge('stable')).toBeNull();
+    expect(moduleStatusBadge(undefined)).toBeNull();
   });
 });
 

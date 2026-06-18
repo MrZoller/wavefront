@@ -1,6 +1,6 @@
 import { Wordmark } from '@/components/Wordmark';
 import { APP_TAGLINE } from '@/config';
-import { TRACKS, getTrackLayers } from '@/registry';
+import { TRACKS, getTrackLayers, moduleStatusBadge } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
 /**
@@ -66,6 +66,9 @@ export function Sidebar() {
                     <ul className="flex flex-col gap-0.5">
                       {layer.modules.map((m, i) => {
                         const isActive = m.id === activeModuleId;
+                        // Internal status tokens (e.g. `stub`) are mapped to user-facing labels — a
+                        // raw "STUB" reads as "unfinished" (CONTRIBUTING → no internal vocabulary).
+                        const statusBadge = moduleStatusBadge(m.status);
                         return (
                           <li key={m.id}>
                             <button
@@ -88,10 +91,9 @@ export function Sidebar() {
                                   Capstone
                                 </span>
                               ) : (
-                                m.status &&
-                                m.status !== 'stable' && (
+                                statusBadge && (
                                   <span className="shrink-0 text-[10px] uppercase text-text-faint">
-                                    {m.status}
+                                    {statusBadge}
                                   </span>
                                 )
                               )}
