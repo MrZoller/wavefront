@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { crossCorrelate, autoCorrelate, peakLag } from './correlation';
+import {
+  crossCorrelate,
+  autoCorrelate,
+  peakLag,
+  crossCorrelateComplex,
+  peakLagComplex,
+} from './correlation';
 import { bipolarSequence } from './random';
+import { type Complex, magnitude } from './complex';
 
 describe('cross-correlation', () => {
   it('autocorrelation peaks at lag 0 with value = signal energy', () => {
@@ -47,5 +54,52 @@ describe('cross-correlation', () => {
     const c = crossCorrelate([1, 2], [3, 4]);
     expect(c.lags).toEqual([-1, 0, 1]);
     expect(c.values).toEqual([6, 11, 4]);
+  });
+});
+
+const re = (x: number[]): Complex[] => x.map((v) => ({ re: v, im: 0 }));
+
+describe('complex cross-correlation (matched filter)', () => {
+  it('matches a hand-computed conjugated correlation', () => {
+    // ref=[1, j], sig=[1, j]; c[ℓ]=Σ conj(ref[n])·sig[n+ℓ]
+    // ℓ=-1: conj(j)·1 = −j ; ℓ=0: conj(1)·1 + conj(j)·j = 1 + 1 = 2 ; ℓ=1: conj(1)·j = j
+    const ref: Complex[] = [
+      { re: 1, im: 0 },
+      { re: 0, im: 1 },
+    ];
+    const c = crossCorrelateComplex(ref, ref);
+    expect(c.lags).toEqual([-1, 0, 1]);
+    expect(c.values[0]).toEqual({ re: 0, im: -1 });
+    expect(c.values[1]).toEqual({ re: 2, im: 0 }); // peak = Σ|ref|² (real, positive)
+    expect(c.values[2]).toEqual({ re: 0, im: 1 });
+    expect(peakLagComplex(c)).toBe(0);
+  });
+
+  it('reduces to the real cross-correlation for real inputs', () => {
+    const ref = [1, 2, -1];
+    const sig = [3, 4, 0, -2];
+    const real = crossCorrelate(ref, sig);
+    const cplx = crossCorrelateComplex(re(ref), re(sig));
+    expect(cplx.lags).toEqual(real.lags);
+    cplx.values.forEach((v, i) => {
+      expect(v.re).toBeCloseTo(real.values[i], 12);
+      expect(v.im).toBeCloseTo(0, 12);
+    });
+  });
+
+  it('peaks (in magnitude) at the lag where a complex signal is delayed', () => {
+    const ref: Complex[] = Array.from({ length: 8 }, (_, k) => ({
+      re: Math.cos(0.7 * k),
+      im: Math.sin(0.7 * k),
+    }));
+    const delay = 3;
+    const sig: Complex[] = new Array(ref.length + delay).fill(0).map(() => ({ re: 0, im: 0 }));
+    for (let i = 0; i < ref.length; i++) sig[i + delay] = ref[i];
+    const c = crossCorrelateComplex(ref, sig);
+    expect(peakLagComplex(c)).toBe(delay);
+    // The peak magnitude equals the reference energy Σ|ref|².
+    const energy = ref.reduce((s, v) => s + magnitude(v) ** 2, 0);
+    const peakIdx = c.lags.indexOf(delay);
+    expect(magnitude(c.values[peakIdx])).toBeCloseTo(energy, 10);
   });
 });
