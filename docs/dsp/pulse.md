@@ -15,8 +15,9 @@ sampling instants.
 `raisedCosine(beta, span, sps)` samples the RC pulse at `sps` samples/symbol. Its defining property:
 it is **1 at its own center and exactly 0 at every other integer symbol offset**. So sampling the sum
 of many RC pulses recovers each symbol with zero inter-symbol interference, even though the pulses
-overlap continuously in between. `beta` ∈ [0,1] is the roll-off — excess bandwidth is `(1+beta)/2` of
-the symbol rate per side (small β = tight spectrum, long ringing tails; large β = gentle and wide).
+overlap continuously in between. `beta` ∈ [0,1] is the roll-off — the occupied bandwidth is
+`(1+beta)/2` of the symbol rate per side (the part beyond the Nyquist minimum, the _excess_, is the
+fraction β; small β = tight spectrum, long ringing tails; large β = gentle and wide).
 
 ## Root raised cosine & the matched filter
 

@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { WorldMap, type MapPoint } from '@/components/plots/WorldMap';
-import { colors } from '@/design/tokens';
+import { colors, signalRgb } from '@/design/tokens';
 import { gdop, type Point } from '@/dsp/geolocation';
 
 const WORLD = { minX: -50, maxX: 50, minY: -50, maxY: 50 };
 
 // Heat stops: low GDOP (good) → high GDOP (bad).
 const STOPS: Array<[number, [number, number, number]]> = [
-  [1, [62, 240, 160]], // signal green
+  [1, signalRgb], // signal green
   [3, [66, 212, 244]], // cyan
   [5, [244, 197, 66]], // amber
   [8, [255, 107, 94]], // alert red

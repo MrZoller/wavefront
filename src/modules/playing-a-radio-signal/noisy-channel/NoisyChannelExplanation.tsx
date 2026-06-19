@@ -18,8 +18,8 @@ export function NoisyChannelExplanation() {
           <p>
             Signal quality is energy per bit over noise density, <em>Eb/N0</em> (in dB). Measuring
             per <em>bit</em> (not per symbol) lets BPSK, QPSK, and 16-QAM be compared honestly — a
-            16-QAM symbol carries 4× the bits, so it needs more energy to hold the same per-bit
-            margin.
+            16-QAM symbol carries 4× the bits, so its points sit closer together and it needs a
+            higher Eb/N0 to reach the same error rate.
           </p>
           <p className="readout my-2 text-text">σ = √(N₀/2), N₀ = Eb / (Eb/N0), Eb = 1/k</p>
         </section>

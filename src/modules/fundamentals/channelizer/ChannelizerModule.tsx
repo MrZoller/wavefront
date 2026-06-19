@@ -4,7 +4,7 @@ import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
-import { colors } from '@/design/tokens';
+import { colors, withAlpha } from '@/design/tokens';
 import { type Complex } from '@/dsp/complex';
 import { fft } from '@/dsp/fft';
 import { firResponseDb } from '@/dsp/filter';
@@ -85,7 +85,7 @@ export function ChannelizerModule() {
       const wrap = (f: number) => ((f % 1) + 1) % 1;
 
       // Selected channel band highlight, wrapping around the [0,1) edge (channel 0 straddles DC).
-      ctx.fillStyle = 'rgba(62, 240, 160, 0.10)';
+      ctx.fillStyle = withAlpha(colors.signal, 0.1);
       const a = wrap(center - halfW);
       const b = wrap(center + halfW);
       if (a <= b) ctx.fillRect(xOf(a), 0, (b - a) * w, h);
@@ -174,13 +174,18 @@ export function ChannelizerModule() {
         </button>
       </div>
 
-      <canvas
-        ref={canvasRef}
-        style={{ width: '100%', height: 220 }}
-        className="rounded-md border border-border bg-surface"
-        role="img"
-        aria-label="Wide spectrum tiled into channels, with the selected channel's filter shape overlaid"
-      />
+      <figure>
+        <canvas
+          ref={canvasRef}
+          style={{ width: '100%', height: 220 }}
+          className="rounded-md border border-border bg-surface"
+          role="img"
+          aria-label="Wide spectrum tiled into channels, with the selected channel's filter shape overlaid"
+        />
+        <figcaption className="readout mt-1 text-center text-xs text-text-faint">
+          Normalized frequency — one-sided, 0 … 1 (cycles/sample)
+        </figcaption>
+      </figure>
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="readout text-xs text-text-muted">Channel</span>

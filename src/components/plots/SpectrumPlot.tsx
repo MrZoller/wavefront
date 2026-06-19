@@ -1,4 +1,4 @@
-import { colors } from '@/design/tokens';
+import { colors, withAlpha } from '@/design/tokens';
 import { type AxisLabel, axisAriaLabel } from './axisLabel';
 import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
@@ -54,7 +54,7 @@ export function SpectrumPlot({
       for (let i = 0; i < n; i++) ctx.lineTo(xOf(i), yOf(data[i]));
       ctx.lineTo(w, h);
       ctx.closePath();
-      ctx.fillStyle = 'rgba(62, 240, 160, 0.12)';
+      ctx.fillStyle = withAlpha(colors.signal, 0.12);
       ctx.fill();
 
       ctx.strokeStyle = color;

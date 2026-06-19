@@ -1,4 +1,4 @@
-import { colors } from '@/design/tokens';
+import { colors, withAlpha } from '@/design/tokens';
 import { useCanvas } from './useCanvas';
 
 export interface PolarMarker {
@@ -85,8 +85,7 @@ export function PolarPlot({
         ctx.lineTo(p.x, p.y);
       }
       ctx.closePath();
-      // Canvas fillStyle can't resolve CSS var() — concrete rgba (signal green at 22%).
-      ctx.fillStyle = 'rgba(62, 240, 160, 0.22)';
+      ctx.fillStyle = withAlpha(colors.signal, 0.22);
       ctx.strokeStyle = colors.signal;
       ctx.lineWidth = 1.75;
       ctx.fill();

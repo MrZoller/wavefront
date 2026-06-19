@@ -39,6 +39,27 @@ export const colors = {
   trace: ['#3ef0a0', '#42d4f4', '#f4c542', '#c98bff', '#ff8f6b', '#6b8cff'] as const,
 } as const;
 
+/** Parse a `#rrggbb` token into an `[r, g, b]` tuple. */
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace('#', '');
+  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+}
+
+/**
+ * Build an `rgba(...)` string from a token hex + alpha. This is the sanctioned way for `<canvas>`
+ * 2D contexts and gradient stops to use a token color — CSS `var(--color-*)` doesn't resolve there,
+ * so without this the hex would have to be copied into the component as a literal. Keeps the value
+ * in {@link colors} as the single source of truth.
+ */
+export function withAlpha(hex: string, alpha: number): string {
+  const [r, g, b] = hexToRgb(hex);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/** Pre-parsed `[r, g, b]` channels of the signal accent — for canvas colormap / gradient stops that
+ *  interpolate raw channels rather than taking a CSS color string. */
+export const signalRgb = hexToRgb(colors.signal);
+
 export const space = {
   xs: 4,
   sm: 8,

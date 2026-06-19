@@ -17,7 +17,7 @@ export function DftBasisExplanation() {
         <section>
           <h3 className="mb-1 font-medium text-text">Change of basis</h3>
           <p>
-            The sinusoids form an orthonormal basis, so the DFT just re-expresses the same vector in
+            The sinusoids form an orthogonal basis, so the DFT just re-expresses the same vector in
             new coordinates — like rotating axes. No information is created or lost (the inverse DFT
             rebuilds the signal exactly); you're only choosing to describe it by{' '}
             <em>frequency content</em>

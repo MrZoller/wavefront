@@ -7,6 +7,7 @@ import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
 import {
   CONSTELLATIONS,
+  analyticBer,
   awgn,
   bitErrorRate,
   bitsToSymbols,
@@ -17,10 +18,10 @@ import {
   textToBits,
   type Constellation,
 } from '@/dsp/comms';
-import { berVsSnr } from '@/dsp/channel';
 
 const SCHEMES = Object.values(CONSTELLATIONS);
 const EBN0_AXIS = Array.from({ length: 21 }, (_, i) => -2 + i); // −2 … 18 dB
+const BER_FLOOR = 1e-6; // y-axis bottom; the curve dives off the chart here rather than faking a floor
 
 /**
  * Send a Message (brief §5, Track B — the capstone). The whole chain end to end: type text, watch it
@@ -44,9 +45,17 @@ export function SendMessageModule() {
     return { received: bitsToText(decoded), scatter, ber: bitErrorRate(bits, decoded) };
   }, [text, scheme, ebN0dB]);
 
-  // BER-vs-Eb/N0 waterfall for the chosen scheme, with the live operating point marked.
-  const curve = useMemo(() => berVsSnr(scheme, EBN0_AXIS, 4000, 11), [scheme]);
-  const opBer = curve.find((p) => p.ebN0 === ebN0dB)?.ber ?? 0;
+  // BER-vs-Eb/N0 waterfall for the chosen scheme — the analytic curve (Q(√(2·Eb/N0)) for BPSK/QPSK,
+  // the Gray approximation for 16-QAM). The simulation is shown live by the constellation + readout;
+  // the reference curve must keep plunging (no Monte-Carlo error floor). Keep the descent plus the
+  // first sub-floor point — XYPlot clamps it to the axis floor — so the curve visibly dives to the
+  // bottom and connects to a high-SNR marker, rather than stopping short above the floor.
+  const curve = useMemo(() => {
+    const full = EBN0_AXIS.map((ebN0) => ({ ebN0, ber: analyticBer(scheme, ebN0) }));
+    const firstBelow = full.findIndex((p) => p.ber < BER_FLOOR);
+    return firstBelow === -1 ? full : full.slice(0, firstBelow + 1);
+  }, [scheme]);
+  const opBer = analyticBer(scheme, ebN0dB);
 
   return (
     <div className="flex flex-col gap-6">
@@ -129,20 +138,20 @@ export function SendMessageModule() {
 
       <div>
         <PlotTitle>
-          BER vs Eb/N0 ({scheme.name}) — the waterfall, with your current setting marked
+          BER vs Eb/N0 ({scheme.name}) — the theoretical waterfall, with your current setting marked
         </PlotTitle>
         <XYPlot
           series={[
             { x: curve.map((p) => p.ebN0), y: curve.map((p) => p.ber), color: colors.signal },
           ]}
           xDomain={[-2, 18]}
-          yDomain={[1e-4, 0.5]}
+          yDomain={[BER_FLOOR, 0.5]}
           logY
-          marker={{ x: ebN0dB, y: Math.max(opBer, 1e-4) }}
+          marker={{ x: ebN0dB, y: Math.max(opBer, BER_FLOOR) }}
           height={170}
           yLabel={{ quantity: 'Bit error rate (log)' }}
           xLabel={{ quantity: 'Eb/N0', unit: 'dB' }}
-          ariaLabel={`Bit error rate versus Eb/N0 curve for ${scheme.name}`}
+          ariaLabel={`Theoretical bit error rate versus Eb/N0 curve for ${scheme.name}`}
         />
       </div>
 
