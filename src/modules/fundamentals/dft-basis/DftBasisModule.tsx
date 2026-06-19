@@ -70,6 +70,9 @@ export function DftBasisModule() {
           role="img"
           aria-label="DFT magnitude spectrum bars, lit at the chosen basis frequencies"
         />
+        <div className="readout mt-1 text-center text-xs text-text-faint">
+          Bin index k (0 … N/2)
+        </div>
       </div>
 
       <div>

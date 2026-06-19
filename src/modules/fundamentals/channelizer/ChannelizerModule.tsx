@@ -174,13 +174,18 @@ export function ChannelizerModule() {
         </button>
       </div>
 
-      <canvas
-        ref={canvasRef}
-        style={{ width: '100%', height: 220 }}
-        className="rounded-md border border-border bg-surface"
-        role="img"
-        aria-label="Wide spectrum tiled into channels, with the selected channel's filter shape overlaid"
-      />
+      <figure>
+        <canvas
+          ref={canvasRef}
+          style={{ width: '100%', height: 220 }}
+          className="rounded-md border border-border bg-surface"
+          role="img"
+          aria-label="Wide spectrum tiled into channels, with the selected channel's filter shape overlaid"
+        />
+        <figcaption className="readout mt-1 text-center text-xs text-text-faint">
+          Normalized frequency — one-sided, 0 … 1 (cycles/sample)
+        </figcaption>
+      </figure>
 
       <div className="flex flex-wrap items-center gap-2">
         <span className="readout text-xs text-text-muted">Channel</span>
