@@ -36,12 +36,16 @@ import './playing-a-radio-signal/matched-filter';
 import './playing-a-radio-signal/send-a-message';
 
 // Track C — Modulations & Waveforms
+// Layer 0 — Modulation schemes
 import './modulations-and-waveforms/analog';
 import './modulations-and-waveforms/modulation-zoo';
 import './modulations-and-waveforms/ofdm';
 import './modulations-and-waveforms/spread-spectrum';
 import './modulations-and-waveforms/chirp';
+// Layer 1 — Classification
 import './modulations-and-waveforms/classifier';
+// Layer 2 — Synthesis
+import './modulations-and-waveforms/range-doppler';
 
 // Track D — Fundamentals
 // Layer 0 — Sampling & the frequency domain

@@ -26,7 +26,7 @@ export const TRACKS: TrackDef[] = [
     title: 'Modulations & Waveforms',
     description: 'Every modulation scheme has a fingerprint — see them side by side.',
     status: 'shipping',
-    layerNames: { 0: 'Modulation Schemes', 1: 'Classification' },
+    layerNames: { 0: 'Modulation Schemes', 1: 'Classification', 2: 'Synthesis' },
   },
   {
     id: 'fundamentals',
