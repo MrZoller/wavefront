@@ -80,7 +80,8 @@ report-only.)
   (false: β=0 still fills the full Nyquist band). The module's own readout already (correctly) labels
   this quantity "Occupied bandwidth," so the Explanation contradicted the module.
 - **Fix:** rename to "occupied bandwidth" in the copy and the comment, matching the readout and the
-  correct meaning. Teaching intent (β trades bandwidth for ringing) unchanged.
+  correct meaning. Teaching intent (β trades bandwidth for ringing) unchanged. The same wording in the
+  long-form reference `docs/dsp/pulse.md` was corrected too (caught in follow-up review).
 
 ### CB-3 — DFT basis called "orthonormal" (dft-basis) — FIXED
 
@@ -201,8 +202,9 @@ report-only.)
 - **Location:** `src/modules/modulations-and-waveforms/chirp/ChirpModule.tsx:48` (label) vs the waveform
   `chirp(N, −bw, +bw)`, whose _total_ swept bandwidth is `2·bw`. The `±bw cyc/sample` display mitigates
   it, and the in-file comment even says "half-width."
-- **Fix:** relabeled the slider "Sweep half-width" to match the waveform `chirp(N, −bw, +bw)` (the
-  `±bw cyc/sample` display already showed the half-width). Screenshot regenerated.
+- **Fix:** relabeled the slider "Sweep half-width" (and its `ariaLabel`) to match the waveform
+  `chirp(N, −bw, +bw)` (the `±bw cyc/sample` display already showed the half-width). Screenshot
+  regenerated.
 
 ### CV-4 — Quantization readout labels SQNR as "Dynamic range" — FIXED
 

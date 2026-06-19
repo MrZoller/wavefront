@@ -54,7 +54,7 @@ export function ChirpModule() {
           display={`±${bw.toFixed(2)} cyc/sample`}
           onChange={setBw}
           style={{ minWidth: 240 }}
-          ariaLabel="Chirp sweep bandwidth"
+          ariaLabel="Chirp sweep half-width"
         />
       </div>
 
