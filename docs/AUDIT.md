@@ -33,13 +33,17 @@ plot**, and **test/coverage gaps** (computed readouts and a Monte-Carlo BER curv
 against the closed form). Severity ladder used:
 `correctness-bug` > `test-gap` > `guardrail` > `convention` > `polish`.
 
-| Severity        | Count | Fixed in this pass | Report-only |
-| --------------- | ----- | ------------------ | ----------- |
-| correctness-bug | 4     | 4                  | 0           |
-| test-gap        | 4     | 2                  | 2           |
-| guardrail       | 0     | —                  | —           |
-| convention      | 4     | 1                  | 3           |
-| polish          | 7     | 1                  | 6           |
+| Severity        | Count | Fixed | Report-only |
+| --------------- | ----- | ----- | ----------- |
+| correctness-bug | 4     | 4     | 0           |
+| test-gap        | 4     | 2     | 2           |
+| guardrail       | 0     | —     | —           |
+| convention      | 4     | 4     | 0           |
+| polish          | 7     | 2     | 5           |
+
+(A follow-up pass resolved all four `convention` items and `PO-5`; see the per-finding
+"FIXED" notes below. The deliberately-excluded items — `TG-3`, `TG-4`, `PO-2/3/4/6/7` — remain
+report-only.)
 
 ---
 
@@ -161,7 +165,7 @@ against the closed form). Severity ladder used:
 
 ## convention
 
-### CV-1 — Signal-green hard-coded instead of read from the design token (8 canvas sites) — REPORT-ONLY
+### CV-1 — Signal-green hard-coded instead of read from the design token (8 canvas sites) — FIXED
 
 - **Rule:** CONTRIBUTING.md — "Read colors from `src/design/tokens.ts`, never hard-code hex."
   `rgb(62, 240, 160)` **is** `colors.signal` (`#3ef0a0`, `tokens.ts:29`), duplicated as a literal.
@@ -172,11 +176,13 @@ against the closed form). Severity ladder used:
   can't resolve, and there is no `withAlpha()`/`signalRgb` bridge helper — so authors had no sanctioned
   in-token path. The _semantics_ are correct (green = live everywhere); this is maintainability drift,
   not a wrong color.
-- **Recommendation (report-only):** add `withAlpha(colors.signal, α)` + a pre-parsed `colors.signalRgb`
-  tuple next to the tokens, then replace the 8 literals. A clean follow-up; deferred from this pass
-  because it touches rendering across 8 files for zero behavioral change.
+- **Fix:** added `withAlpha(color, alpha)` and a pre-parsed `signalRgb` tuple to `tokens.ts` as the
+  sanctioned in-token path for canvas/gradient code, and replaced all 8 literals (and the literal hex
+  in the `AoaCrossFixModule` comment). Rendered colors are pixel-identical. A new guard test
+  (`src/test/no-hardcoded-signal-color.test.ts`) fails if the signal hex/rgb literal reappears outside
+  `tokens.ts` / `index.css`.
 
-### CV-2 — Hand-rolled canvases skip the shared axis-label contract — REPORT-ONLY
+### CV-2 — Hand-rolled canvases skip the shared axis-label contract — FIXED
 
 - **Location:** the channelizer wide-spectrum canvas (`ChannelizerModule.tsx:77-138`, one-sided `[0,1)`,
   no visible x-label — only `aria-label`) and the dft-basis magnitude bars
@@ -185,17 +191,20 @@ against the closed form). Severity ladder used:
 - **Why it matters:** `axisLabel.ts` makes the point that "an unlabeled axis inverts the whole tool";
   the shared plots enforce it, these two raw canvases bypass it, and the channelizer additionally mixes
   a one-sided `0→1` axis with the extracted channel's centered `−0.5→+0.5` axis.
-- **Recommendation:** add visible x-captions to the two raw canvases (and note the wide view is
-  one-sided). Math underneath is correct (channel centers `k/nCh` verified).
+- **Fix:** added visible x-captions in the shared label style — the channelizer canvas now names its
+  one-sided `0…1` normalized-frequency axis (so it reads correctly against the centered extracted-channel
+  axis beside it), and dft-basis names the bin index. Labeling only; the math (channel centers `k/nCh`)
+  is unchanged. Screenshots regenerated.
 
-### CV-3 — Chirp "Sweep bandwidth" control is actually the half-width — REPORT-ONLY
+### CV-3 — Chirp "Sweep bandwidth" control is actually the half-width — FIXED
 
 - **Location:** `src/modules/modulations-and-waveforms/chirp/ChirpModule.tsx:48` (label) vs the waveform
   `chirp(N, −bw, +bw)`, whose _total_ swept bandwidth is `2·bw`. The `±bw cyc/sample` display mitigates
   it, and the in-file comment even says "half-width."
-- **Recommendation:** rename to "Sweep half-width" or show `±bw (2·bw total)`.
+- **Fix:** relabeled the slider "Sweep half-width" to match the waveform `chirp(N, −bw, +bw)` (the
+  `±bw cyc/sample` display already showed the half-width). Screenshot regenerated.
 
-### CV-4 — Quantization readout labels SQNR as "Dynamic range" — REPORT-ONLY
+### CV-4 — Quantization readout labels SQNR as "Dynamic range" — FIXED
 
 - **Location:** `src/modules/signal-chain-sdr/quantization/QuantizationModule.tsx:159` —
   `label="Dynamic range (ideal)"` shows `idealSqnrDb = 6.02N + 1.76`.
@@ -203,7 +212,8 @@ against the closed form). Severity ladder used:
   (often `6.02N`, full-scale-to-LSB) are distinct, ≈1.76 dB apart. The value shown is exactly the SQNR
   formula and is correct; the _label_ conflates the two (common in teaching material). The Explanation
   frames DR correctly in prose.
-- **Recommendation:** relabel "SQNR (ideal)" to match the underlying function, or keep with a note.
+- **Fix:** relabeled the readout "SQNR (ideal)" to match `idealSqnrDb` (and the "Measured SQNR"
+  readout beside it). The Explanation's dynamic-range prose is left as-is. Screenshot regenerated.
 
 ---
 
@@ -223,10 +233,11 @@ against the closed form). Severity ladder used:
 - **PO-4 — carrier-offset "every symbol decodes wrong."** `CarrierOffsetModule.tsx:120`. A static
   rotation past a boundary corrupts only symbols whose noise carries them across, until a full quadrant
   (≥45° for QPSK). Suggest "symbols start crossing decision boundaries and decode wrong."
-- **PO-5 — noisy-channel "16-QAM needs more energy to hold the same per-bit margin."**
-  `NoisyChannelExplanation.tsx:21`. At fixed Eb/N0 bit energy is already equalized; 16-QAM needs higher
-  _Eb/N0_ (denser points, smaller min distance). Suggest "needs a higher Eb/N0 to reach the same error
-  rate."
+- **PO-5 (FIXED) — noisy-channel "16-QAM needs more energy to hold the same per-bit margin."**
+  `NoisyChannelExplanation.tsx:21`. At fixed Eb/N0 bit energy is already equalized, so the old wording
+  was slightly wrong. Reworded: 16-QAM's denser points sit closer together, so it needs a higher Eb/N0
+  to reach the same error rate. (Included because, unlike PO-2/3/4/6/7, it was not just imprecise but
+  slightly incorrect.)
 - **PO-6 — "Occupied bandwidth" readout is one-sided.** `PulseShapingModule.tsx:122`. Shows
   `(1+β)/2 · Rs` (per-side/baseband); "occupied bandwidth" usually denotes the two-sided RF figure
   `(1+β)·Rs`. Consider "Baseband bandwidth (per side)."
@@ -289,7 +300,9 @@ against the closed form). Severity ladder used:
 - **Not separately audited:** build tooling, Playwright harness internals, `store/` plumbing (no DSP
   claims).
 
-## Fixes applied in this pass (small, scoped commits)
+## Fixes applied (small, scoped commits)
+
+**Correctness pass:**
 
 1. Copy terminology corrections — CB-2 (occupied bandwidth), CB-3 (orthogonal basis), CB-4 (Nyquist
    frequency).
@@ -298,5 +311,14 @@ against the closed form). Severity ladder used:
 4. `window.test.ts` pinning the window coefficients (TG-2).
 5. radio-horizon uses `EARTH_RADIUS_KM` (PO-1).
 
-Everything else above is left **report-only** for human triage (judgment calls, multi-file convention
-refactors, or component-test scaffolding that would balloon this correctness pass).
+**Follow-up pass (conventions + one copy fix):**
+
+6. Design-token canvas bridge (`withAlpha` / `signalRgb`) + replace 8 signal-green literals + guard
+   test (CV-1).
+7. x-axis captions on the two raw canvases (CV-2).
+8. Readout relabels — "SQNR (ideal)" and "Sweep half-width" (CV-3, CV-4).
+9. 16-QAM Eb/N0 copy correction (PO-5).
+
+Still **report-only** for human triage (deliberately out of scope): `TG-3` (component-test
+scaffolding), `TG-4` (low-N BER readout nits), and polish-tier copy `PO-2/3/4/6/7` (defensible as
+written — tightening risks pedantry that hurts non-EE accessibility).
