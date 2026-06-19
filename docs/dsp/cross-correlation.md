@@ -29,7 +29,13 @@ signal energy `Σ x²`.
 - The full lag range is `[−(n−1), m−1]`.
 - A hand-computed example: `crossCorrelate([1,2],[3,4]) → values [6, 11, 4]` at lags `[−1,0,1]`.
 
+`crossCorrelateComplex` generalizes this to complex (I/Q) signals by conjugating the reference
+(`c[ℓ] = Σ conj(ref[n])·sig[n+ℓ]`) — the **matched filter**, whose magnitude peaks at the aligning
+lag. It reduces to the real `crossCorrelate` for real inputs and is what powers radar pulse
+compression (see [`radar.md`](./radar.md)).
+
 ## Where it's used
 
 The **Cross-Correlation as a Lag Finder** module (Track A, Layer 0), and the basis for **TDOA
-multilateration** in Layer 2 (peak lag → time-difference-of-arrival → hyperbola).
+multilateration** in Layer 2 (peak lag → time-difference-of-arrival → hyperbola). The complex
+matched-filter variant drives **pulse compression** in the Pulse Compression & Range-Doppler module.

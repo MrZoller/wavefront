@@ -532,6 +532,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Encoding a message by varying the instantaneous phase of the carrier.',
     moduleId: 'analog-modulation',
   },
+  'pulse-compression': {
+    id: 'pulse-compression',
+    term: 'pulse compression',
+    gloss:
+      'Transmitting a long, low-power chirp and matched-filtering its echo into one sharp peak — the energy of a long pulse with the range resolution of a short one.',
+    moduleId: 'range-doppler',
+    docsPage: 'radar',
+  },
   'pulse-shaping': {
     id: 'pulse-shaping',
     term: 'pulse shaping',
@@ -572,6 +580,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     term: 'RadioML',
     gloss:
       'A public benchmark dataset of recorded modulated signals, widely used to train and compare modulation-recognition models.',
+  },
+  'range-doppler': {
+    id: 'range-doppler',
+    term: 'range-Doppler map',
+    gloss:
+      'A 2D radar surface — compressed range along one axis, velocity (from an FFT across pulses) along the other — with a bright blob at each target.',
+    moduleId: 'range-doppler',
+    docsPage: 'radar',
   },
   shf: {
     id: 'shf',
@@ -649,6 +665,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'Locating a transmitter from how much sooner its signal reaches one receiver than another.',
     moduleId: 'tdoa-multilateration',
     docsPage: 'geolocation',
+  },
+  'time-bandwidth': {
+    id: 'time-bandwidth',
+    term: 'time-bandwidth product',
+    gloss:
+      "A chirp's duration times its swept bandwidth — and roughly the pulse-compression gain, how much sharper the matched-filtered peak is than the raw pulse.",
+    moduleId: 'range-doppler',
+    docsPage: 'radar',
   },
   uhf: {
     id: 'uhf',

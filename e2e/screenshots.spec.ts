@@ -223,6 +223,13 @@ test('modulation classifier module', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'modulation-classifier.png') });
 });
 
+test('pulse compression & range-Doppler module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Pulse Compression & Range-Doppler' }).first().click();
+  await expect(page.getByRole('img', { name: /range-Doppler map/i })).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'range-doppler.png') });
+});
+
 test('sampling & aliasing module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Sampling & Aliasing' }).first().click();

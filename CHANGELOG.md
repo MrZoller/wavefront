@@ -8,6 +8,27 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Synthesis module: Pulse Compression & Range-Doppler.** A deliberately bounded capstone-style
+  scene added to **Modulations & Waveforms** (a new "Synthesis" stage; the Modulation Zoo stays the
+  track's marquee), making one point click: radar's core signal processing is primitives already
+  built, aimed outward. **Pulse compression** is the LFM chirp through the matched filter (a long,
+  low-power echo collapsed to a sharp range peak — literally the cross-correlation peak); **Doppler
+  processing** is an FFT across pulses; together they paint the **range-Doppler map**, the radar
+  cousin of the GDOP heatmap, with a bright blob at the target's (range, velocity). Drag target
+  range, velocity, chirp sweep, SNR, and pulse count, or add a second target, and watch the echo,
+  the compressed peak, and the blob recompute live. Two from-scratch, tested `dsp/` additions back
+  it — a round-trip echo model and the range-Doppler assembly (`src/dsp/radar.ts`: `echoPulses`,
+  `pulseCompress`, `rangeDopplerMap`, `dopplerBin`, `compressionRatio`, `timeBandwidthProduct`),
+  plus a complex matched-filter `crossCorrelateComplex` generalizing `src/dsp/correlation.ts`. The
+  tests pin the compressed peak at the true range, the range-Doppler peak at the true
+  (range, velocity), and the compression ratio ≈ the time-bandwidth product. It reuses the chirp,
+  matched-filter/correlation, FFT, noise, spectrogram/heatmap canvas, x–y, time-series, and slider
+  primitives wholesale — a strong test that they compose cleanly. Three glossary terms (pulse
+  compression, range-Doppler, time-bandwidth product) and `docs/dsp/radar.md`. Strictly
+  public/textbook-level; all units synthetic and illustrative (range in bins, Doppler in
+  cycles/pulse) — no real radar waveforms or system parameters, and explicitly **not** a radar
+  track (CFAR, the full ambiguity function, and SAR are named as out-of-scope directions, not built).
+
 - **🚢 Track G — Coding & Equalization (v1).** The "make the link survive a real channel" track:
   after a signal has been sent, distorted, and noised, recover it by adding redundancy and by undoing
   what the channel did. Two from-scratch, fully tested `dsp/` primitives back it — channel coding
