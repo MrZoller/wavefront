@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { Slider } from '@/components/Slider';
 import { WorldMap, type MapPoint, type MapTransform } from '@/components/plots/WorldMap';
-import { colors } from '@/design/tokens';
+import { colors, withAlpha } from '@/design/tokens';
 import { aoaFix, errorEllipse, type Bearing } from '@/dsp/geolocation';
 import { skywaveApparentBearingRad } from '@/propagation';
 
@@ -90,9 +90,7 @@ export function AoaCrossFixModule() {
     if (fix && ellipse) {
       const c = t.toPx(fix.x, fix.y);
       ctx.strokeStyle = colors.signal;
-      // Canvas fillStyle can't resolve CSS var()/custom properties — use a concrete rgba
-      // (signal green #3ef0a0 at 14% — see src/design/tokens.ts).
-      ctx.fillStyle = 'rgba(62, 240, 160, 0.14)';
+      ctx.fillStyle = withAlpha(colors.signal, 0.14);
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       // y-axis is flipped on screen, so negate the world rotation angle.

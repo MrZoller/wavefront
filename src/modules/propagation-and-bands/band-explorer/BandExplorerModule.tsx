@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { RayPathDiagram, type RayPathScene } from '@/components/plots/RayPathDiagram';
 import { Slider } from '@/components/Slider';
-import { colors } from '@/design/tokens';
+import { colors, withAlpha } from '@/design/tokens';
 import {
   BANDS,
   type Band,
@@ -122,7 +122,7 @@ function BandStrip({ freq, band }: { freq: number; band: Band }) {
               className="flex items-center justify-center border-r border-border/60 transition-colors last:border-r-0"
               style={{
                 width: `${widthPct}%`,
-                background: active ? 'rgba(62, 240, 160, 0.12)' : 'transparent',
+                background: active ? withAlpha(colors.signal, 0.12) : 'transparent',
               }}
             >
               <span
@@ -255,7 +255,7 @@ function ray(
     const b = s.toPx(pts[pts.length - 1][0], pts[pts.length - 1][1]);
     const grad = ctx.createLinearGradient(a.px, a.py, b.px, b.py);
     grad.addColorStop(0, colors.signal);
-    grad.addColorStop(1, 'rgba(62, 240, 160, 0)');
+    grad.addColorStop(1, withAlpha(colors.signal, 0));
     ctx.strokeStyle = grad;
   }
   ctx.beginPath();

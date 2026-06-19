@@ -1,3 +1,4 @@
+import { signalRgb } from '@/design/tokens';
 import { type AxisLabel, axisAriaLabel } from './axisLabel';
 import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
@@ -21,7 +22,7 @@ function heat(t: number): string {
   const stops: Array<[number, [number, number, number]]> = [
     [0, [7, 11, 14]],
     [0.45, [31, 106, 134]],
-    [0.7, [62, 240, 160]],
+    [0.7, signalRgb],
     [1, [244, 197, 66]],
   ];
   let lo = stops[0];
