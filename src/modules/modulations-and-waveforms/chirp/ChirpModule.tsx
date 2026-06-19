@@ -46,7 +46,7 @@ export function ChirpModule() {
 
       <div className="flex flex-wrap items-center gap-6">
         <Slider
-          label="Sweep bandwidth"
+          label="Sweep half-width"
           value={bw}
           min={0.05}
           max={0.45}

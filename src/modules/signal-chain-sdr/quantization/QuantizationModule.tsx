@@ -156,7 +156,7 @@ export function QuantizationModule() {
 
       <div className="flex flex-wrap gap-4">
         <Readout label="Levels" value={`${levels(bits).toLocaleString()} (${bits}-bit)`} />
-        <Readout label="Dynamic range (ideal)" value={`${idealDb.toFixed(1)} dB`} accent />
+        <Readout label="SQNR (ideal)" value={`${idealDb.toFixed(1)} dB`} accent />
         <Readout
           label="Measured SQNR"
           value={Number.isFinite(measuredSqnr) ? `${measuredSqnr.toFixed(1)} dB` : '∞'}
