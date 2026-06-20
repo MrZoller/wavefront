@@ -30,7 +30,9 @@ export function ControlRailSlotProvider({
   children: ReactNode;
 }) {
   const slots = useMemo(() => ({ top, bottom }), [top, bottom]);
-  return <ControlRailSlotContext.Provider value={slots}>{children}</ControlRailSlotContext.Provider>;
+  return (
+    <ControlRailSlotContext.Provider value={slots}>{children}</ControlRailSlotContext.Provider>
+  );
 }
 
 export interface ControlRailProps {
