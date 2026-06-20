@@ -1,22 +1,10 @@
-import { BlockDiagram, type DiagramEdge, type DiagramNode } from '@/components/BlockDiagram';
+import { BlockDiagram, type DiagramBlock } from '@/components/BlockDiagram';
 import { GlossedText } from '@/components/GlossedText';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 
-// One row of evenly-spaced blocks; the viewBox holds 8 so receive and transmit share a block size.
-const X0 = 12;
-const PITCH = 138;
-const BW = 120;
-const VIEW_W = X0 + 7 * PITCH + BW + X0;
-const VIEW_H = 80;
-const xAt = (i: number) => X0 + i * PITCH;
-const row = (defs: Omit<DiagramNode, 'x' | 'y' | 'w'>[]): DiagramNode[] =>
-  defs.map((d, i) => ({ ...d, x: xAt(i), y: 13, w: BW }));
-const chain = (nodes: DiagramNode[]): DiagramEdge[] =>
-  nodes.slice(1).map((n, i) => ({ from: nodes[i].id, to: n.id }));
-
 // Receive: antenna → low-noise amp → RF filter → mixer (tune) → AGC → ADC → channelizer → demod.
 // LNA has no software counterpart (amplifier internals are out of scope) — it stays a quiet block.
-const RX = row([
+const RX: DiagramBlock[] = [
   { id: 'ant-rx', label: 'Antenna', sub: 'receive side', moduleId: 'phase-difference' },
   { id: 'lna', label: 'LNA', sub: 'amplify' },
   { id: 'rf-filter', label: 'RF filter', sub: 'FIR filter', moduleId: 'fir-filter' },
@@ -25,17 +13,17 @@ const RX = row([
   { id: 'adc', label: 'ADC', sub: 'quantize', moduleId: 'quantization' },
   { id: 'chan', label: 'Channelizer', sub: 'split band', moduleId: 'channelizer' },
   { id: 'demod', label: 'Demod', sub: 'recover bits', moduleId: 'send-a-message' },
-]);
+];
 
 // Transmit mirror: modulator → DAC → up-converter → power amp → filter → antenna.
-const TX = row([
+const TX: DiagramBlock[] = [
   { id: 'mod', label: 'Modulator', sub: 'bits → symbols', moduleId: 'symbol-mapping' },
   { id: 'dac', label: 'DAC', sub: 'samples → wave', moduleId: 'quantization' },
   { id: 'upconv', label: 'Up-converter', sub: 'to RF', moduleId: 'upconversion' },
   { id: 'pa', label: 'PA', sub: 'power amp' },
   { id: 'tx-filter', label: 'Filter', sub: 'FIR filter', moduleId: 'fir-filter' },
   { id: 'ant-tx', label: 'Antenna', sub: 'transmit', moduleId: 'phase-difference' },
-]);
+];
 
 /**
  * Receiver signal chain (Track F capstone). The whole point of the track: every box in a real radio
@@ -53,10 +41,7 @@ export function SignalChainModule() {
           Receive chain <span className="text-text-faint">— antenna to bits</span>
         </PlotTitle>
         <BlockDiagram
-          nodes={RX}
-          edges={chain(RX)}
-          width={VIEW_W}
-          height={VIEW_H}
+          blocks={RX}
           ariaLabel="Receive signal chain: antenna, LNA, RF filter, mixer, AGC, ADC, channelizer, demodulator"
         />
       </div>
@@ -66,10 +51,7 @@ export function SignalChainModule() {
           Transmit chain <span className="text-text-faint">— bits to antenna (the mirror)</span>
         </PlotTitle>
         <BlockDiagram
-          nodes={TX}
-          edges={chain(TX)}
-          width={VIEW_W}
-          height={VIEW_H}
+          blocks={TX}
           ariaLabel="Transmit signal chain: modulator, DAC, up-converter, power amplifier, filter, antenna"
         />
       </div>

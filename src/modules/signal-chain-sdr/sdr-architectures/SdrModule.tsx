@@ -1,56 +1,45 @@
-import { BlockDiagram, type DiagramEdge, type DiagramNode } from '@/components/BlockDiagram';
+import { BlockDiagram, type DiagramBlock } from '@/components/BlockDiagram';
 import { GlossedText } from '@/components/GlossedText';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 
-const X0 = 12;
-const PITCH = 138;
-const BW = 120;
-const VIEW_W = X0 + 5 * PITCH + BW + X0; // a 6-block row; shorter chains left-align
-const VIEW_H = 80;
-const xAt = (i: number) => X0 + i * PITCH;
-const row = (defs: Omit<DiagramNode, 'x' | 'y' | 'w'>[]): DiagramNode[] =>
-  defs.map((d, i) => ({ ...d, x: xAt(i), y: 13, w: BW }));
-const chain = (nodes: DiagramNode[]): DiagramEdge[] =>
-  nodes.slice(1).map((n, i) => ({ from: nodes[i].id, to: n.id }));
-
 // The lit (linked) blocks are the digital ones — the software region. Across the three rows the ADC
 // marches toward the antenna: that *is* SDR. Analog blocks stay quiet stubs.
-const ARCHITECTURES = [
+const ARCHITECTURES: { id: string; name: string; examples: string; blocks: DiagramBlock[] }[] = [
   {
     id: 'superhet',
     name: 'Superheterodyne',
     examples: 'classic radios · Ettus USRP',
-    nodes: row([
+    blocks: [
       { id: 'ant', label: 'Antenna', sub: 'RF in' },
       { id: 'rf', label: 'RF filter', sub: 'select band' },
       { id: 'mix', label: 'Mixer', sub: 'down to IF' },
       { id: 'if', label: 'IF filter', sub: 'narrow' },
       { id: 'adc', label: 'ADC', sub: 'software ▶', moduleId: 'quantization' },
       { id: 'dsp', label: 'DSP', sub: 'in code', moduleId: 'channelizer' },
-    ]),
+    ],
   },
   {
     id: 'zero-if',
     name: 'Zero-IF (direct conversion)',
     examples: 'HackRF · LimeSDR · Airspy',
-    nodes: row([
+    blocks: [
       { id: 'ant', label: 'Antenna', sub: 'RF in' },
       { id: 'lna', label: 'LNA', sub: 'amplify' },
       { id: 'mix', label: 'Mixer', sub: 'to baseband' },
       { id: 'adc', label: 'ADC', sub: 'software ▶', moduleId: 'quantization' },
       { id: 'dsp', label: 'DSP', sub: 'in code', moduleId: 'channelizer' },
-    ]),
+    ],
   },
   {
     id: 'direct',
     name: 'Direct sampling',
     examples: 'RTL-SDR (direct) · Airspy HF+',
-    nodes: row([
+    blocks: [
       { id: 'ant', label: 'Antenna', sub: 'RF in' },
       { id: 'rf', label: 'RF filter', sub: 'select band' },
       { id: 'adc', label: 'ADC', sub: 'software ▶', moduleId: 'quantization' },
       { id: 'dsp', label: 'DSP', sub: 'in code', moduleId: 'channelizer' },
-    ]),
+    ],
   },
 ];
 
@@ -69,11 +58,8 @@ export function SdrModule() {
             {a.name} <span className="text-text-faint">— {a.examples}</span>
           </PlotTitle>
           <BlockDiagram
-            nodes={a.nodes}
-            edges={chain(a.nodes)}
-            width={VIEW_W}
-            height={VIEW_H}
-            ariaLabel={`${a.name} architecture: ${a.nodes.map((n) => n.label).join(', ')}`}
+            blocks={a.blocks}
+            ariaLabel={`${a.name} architecture: ${a.blocks.map((n) => n.label).join(', ')}`}
           />
         </div>
       ))}
