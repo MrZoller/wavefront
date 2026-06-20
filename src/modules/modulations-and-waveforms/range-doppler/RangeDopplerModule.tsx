@@ -123,7 +123,7 @@ export function RangeDopplerModule() {
         />
       </div>
 
-      {/* Live readouts (kept above the map so the marquee sits directly over the sticky controls). */}
+      {/* Live readouts (kept above the map so the marquee sits directly over the pinned controls). */}
       <div className="flex flex-wrap gap-4">
         <Readout label="Target range" value={`${rangeBin} bins`} accent />
         <Readout
@@ -139,8 +139,8 @@ export function RangeDopplerModule() {
         <Readout label="Time-bandwidth ≈ gain" value={`${tbp.toFixed(0)}×`} />
       </div>
 
-      {/* The marquee, placed directly above the sticky controls so dragging range/velocity moves the
-          blob without scrolling — the compressed pulses stacked and FFT'd across slow-time. */}
+      {/* The marquee, placed last so it sits directly above the pinned control rail — dragging
+          range/velocity moves the blob without scrolling. Compressed pulses stacked + FFT'd. */}
       <div>
         <PlotTitle>
           range-Doppler map{' '}
@@ -156,8 +156,8 @@ export function RangeDopplerModule() {
         />
       </div>
 
-      {/* Controls — pinned in a sticky rail so they stay co-visible with the map above while the
-          taller plots scroll (the drag-watch loop the whole app is built on). */}
+      {/* Controls — pinned in a rail (a footer outside the scroll region) so they stay co-visible
+          with the map above while the taller plots scroll (the drag-watch loop the app is built on). */}
       <ControlRail>
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap gap-6">
