@@ -274,6 +274,15 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
   const atEnd = step >= lms.frames.length - 1;
   const frame = lms.frames[Math.min(step, lms.frames.length - 1)];
 
+  // Restart the run from the first iteration. Used by Reset, and by Play when the view is parked on
+  // the converged frame (the reduced-motion default) — there, advancing is clamped at the end, so
+  // Play has to replay rather than no-op.
+  const restart = () => {
+    setStep(0);
+    accRef.current = 0;
+    setPlaying(true);
+  };
+
   return (
     <div className="flex flex-col gap-5 rounded-lg border border-border bg-surface p-4">
       <p className="text-sm text-text-muted">
@@ -319,17 +328,13 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Chip selected={playing && !atEnd} onClick={() => setPlaying((p) => !p)}>
+        <Chip
+          selected={playing && !atEnd}
+          onClick={() => (atEnd ? restart() : setPlaying((p) => !p))}
+        >
           {playing && !atEnd ? 'Pause' : 'Play'}
         </Chip>
-        <Chip
-          selected={false}
-          onClick={() => {
-            setStep(0);
-            setPlaying(true);
-            accRef.current = 0;
-          }}
-        >
+        <Chip selected={false} onClick={restart}>
           Reset
         </Chip>
         <span className="readout text-xs text-text-faint">
