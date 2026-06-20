@@ -4,6 +4,23 @@ import { APP_DESCRIPTION } from '@/config';
 import { TRACKS, getTrackLayers } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
+// Small cardinal-number words so the visible track count can read like the hero's prose ("Seven
+// tracks") while staying derived from the registry — a hardcoded "Seven" would silently go stale if
+// a track were ever added or removed. Falls back to the numeral past the range it covers.
+const COUNT_WORDS = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+];
+const countInWords = (n: number): string => COUNT_WORDS[n] ?? String(n);
+
 // A recommended first-time path — surfaced from the registry's human module names, not a forced
 // course. Each step is the entry module for a stage of the climb; the prose says *why* that order.
 const START_STEPS: { id: string; title: string; why: string }[] = [
@@ -37,7 +54,18 @@ export function TrackOverview() {
 
       <StartHere />
 
-      <div className="mt-10 flex flex-col gap-4">
+      {/*
+       * Anchor "track" as a visible concept. The hero promises "Seven tracks," so the units it names
+       * carry a quiet overline that labels and counts them right here — the prose's "seven" now points
+       * at something the reader can see and tally. The count derives from the registry (never
+       * hardcoded) so it can't drift, and it's a cardinal count, not a 1–7 numbering that would imply
+       * a required order (the Start Here path owns the recommended order). Structural label → neutral,
+       * never the live accent.
+       */}
+      <h2 className="mt-10 text-sm font-semibold uppercase tracking-wider text-text-muted">
+        {countInWords(TRACKS.length)} tracks
+      </h2>
+      <div className="mt-3 flex flex-col gap-4">
         {TRACKS.map((track) => {
           const layers = getTrackLayers(track.id);
           // Layer subheaders only earn their place once a track has more than one stage.
