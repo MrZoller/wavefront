@@ -35,8 +35,9 @@ export const TRACKS: TrackDef[] = [
     status: 'shipping',
     layerNames: {
       0: 'Sampling & the Frequency Domain',
-      1: 'Filtering & Multirate',
-      2: 'Channelization',
+      1: 'Systems',
+      2: 'Filtering & Multirate',
+      3: 'Channelization',
     },
   },
   {
