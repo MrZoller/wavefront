@@ -14,3 +14,17 @@ globalThis.ResizeObserver ??= ResizeObserverStub as unknown as typeof ResizeObse
 HTMLCanvasElement.prototype.getContext = function getContext() {
   return null;
 } as HTMLCanvasElement['getContext'];
+
+// jsdom doesn't implement matchMedia (read by the shared `usePrefersReducedMotion` hook). Stub it as
+// "no preference" with no-op listeners, so components that gate auto-motion render with their normal
+// full-motion defaults in tests. Tests that exercise the reduced-motion path override window.matchMedia.
+globalThis.matchMedia ??= ((query: string) => ({
+  matches: false,
+  media: query,
+  onchange: null,
+  addEventListener: () => {},
+  removeEventListener: () => {},
+  addListener: () => {},
+  removeListener: () => {},
+  dispatchEvent: () => false,
+})) as unknown as typeof window.matchMedia;

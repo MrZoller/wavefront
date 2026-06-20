@@ -8,6 +8,10 @@ import { TapStemPlot } from '@/components/plots/TapStemPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { AXIS } from '@/components/plots/axisLabel';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
+import {
+  usePrefersReducedMotion,
+  useReducedMotionPlayState,
+} from '@/components/plots/usePrefersReducedMotion';
 import { colors } from '@/design/tokens';
 import { type Complex } from '@/dsp/complex';
 import {
@@ -232,6 +236,7 @@ export function EqualizationModule() {
 
 /** The "go deeper" adaptive-equalizer view: an LMS run animated tap-by-tap, plus the ML throughline. */
 function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity: number }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const lms = useMemo(() => {
     const run = lmsEqualizer(rx, tx, LMS_TAPS, LMS_MU, { epochs: LMS_EPOCHS });
     // Smooth the noisy instantaneous error into a readable convergence curve.
@@ -252,8 +257,11 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
     return { frames, target, errorMax: Math.max(...frames.map((f) => f.error)) };
   }, [rx, tx, severity]);
 
-  const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  // Normally the run plays from the start on reveal. Under reduced motion, rest on the *converged*
+  // frame (taps learned onto the target rings, error fallen) — the informative end state — paused,
+  // so the still shows the payoff; Reset replays the convergence for anyone who wants the motion.
+  const [step, setStep] = useState(prefersReducedMotion ? lms.frames.length - 1 : 0);
+  const [playing, setPlaying] = useReducedMotionPlayState(prefersReducedMotion);
   const accRef = useRef(0);
 
   useAnimationFrame((_, dt) => {
@@ -265,6 +273,15 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
 
   const atEnd = step >= lms.frames.length - 1;
   const frame = lms.frames[Math.min(step, lms.frames.length - 1)];
+
+  // Restart the run from the first iteration. Used by Reset, and by Play when the view is parked on
+  // the converged frame (the reduced-motion default) — there, advancing is clamped at the end, so
+  // Play has to replay rather than no-op.
+  const restart = () => {
+    setStep(0);
+    accRef.current = 0;
+    setPlaying(true);
+  };
 
   return (
     <div className="flex flex-col gap-5 rounded-lg border border-border bg-surface p-4">
@@ -311,17 +328,13 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Chip selected={playing && !atEnd} onClick={() => setPlaying((p) => !p)}>
+        <Chip
+          selected={playing && !atEnd}
+          onClick={() => (atEnd ? restart() : setPlaying((p) => !p))}
+        >
           {playing && !atEnd ? 'Pause' : 'Play'}
         </Chip>
-        <Chip
-          selected={false}
-          onClick={() => {
-            setStep(0);
-            setPlaying(true);
-            accRef.current = 0;
-          }}
-        >
+        <Chip selected={false} onClick={restart}>
           Reset
         </Chip>
         <span className="readout text-xs text-text-faint">

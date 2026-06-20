@@ -175,3 +175,22 @@ html {
 main:not(:has(.wf-rail)) .wf-scroll-fade {
   display: none;
 }
+
+/*
+ * Respect the OS-level "reduce motion" accessibility preference. The JS-driven animations (the
+ * rotating phasor, the carrier-offset spin, the adaptive-equalizer run) default to paused on a static
+ * frame via the shared `usePrefersReducedMotion` hook; this rule covers the decorative CSS layer —
+ * hover/colour transitions, the slider-thumb halo, and any future keyframe animation — by collapsing
+ * them to effectively instant. The app still updates (values, fills, selected states) but nothing
+ * eases, pulses, or spins. A single global rule, so future styles inherit it without thinking.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
