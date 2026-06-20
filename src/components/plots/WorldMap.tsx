@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { colors } from '@/design/tokens';
+import { colors, withAlpha } from '@/design/tokens';
 
 export interface MapPoint {
   id: string;
@@ -8,8 +8,37 @@ export interface MapPoint {
   color: string;
   label?: string;
   draggable?: boolean;
-  /** Marker shape. */
-  kind?: 'site' | 'emitter';
+  /**
+   * Marker shape. `site` is a solid dot, `emitter` a star, and `velocity` an open ring handle —
+   * the open ring reads as its own grabbable control, distinct from the solid `site` dot it trails,
+   * so a velocity-vector tip is visibly draggable *separately* from the platform's position.
+   */
+  kind?: 'site' | 'emitter' | 'velocity';
+  /**
+   * Label placement nudge in screen px from the marker (default: up and to the right). Lets a scene
+   * push two crowded labels onto opposite sides of their markers so they don't collide. A negative
+   * `dx` right-aligns the label, so it grows away from the marker rather than back over it.
+   */
+  labelOffset?: { dx: number; dy: number };
+}
+
+/** Trace a rounded-rectangle path (the legibility backing behind a marker label). */
+function roundRectPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number
+): void {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
 }
 
 /** World→pixel transform passed to the overlay draw callback. */
@@ -149,6 +178,7 @@ export function WorldMap({
         ctx.setLineDash([]);
       }
       ctx.fillStyle = p.color;
+      ctx.strokeStyle = p.color;
       ctx.shadowColor = p.color;
       ctx.shadowBlur = 8;
       if (p.kind === 'emitter') {
@@ -160,6 +190,13 @@ export function WorldMap({
         }
         ctx.closePath();
         ctx.fill();
+      } else if (p.kind === 'velocity') {
+        // Open ring handle: the velocity-vector tip is grabbable on its own (drag it to re-aim the
+        // arrow), visibly distinct from the solid receiver dot it trails.
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, 2 * Math.PI);
+        ctx.stroke();
       } else {
         ctx.beginPath();
         ctx.arc(px, py, 6, 0, 2 * Math.PI);
@@ -167,9 +204,24 @@ export function WorldMap({
       }
       ctx.shadowBlur = 0;
       if (p.label) {
-        ctx.fillStyle = colors.textMuted;
+        const off = p.labelOffset ?? { dx: 10, dy: -8 };
+        const align: CanvasTextAlign = off.dx < 0 ? 'right' : 'left';
+        const lx = px + off.dx;
+        const ly = py + off.dy;
         ctx.font = '11px ui-monospace, monospace';
-        ctx.fillText(p.label, px + 10, py - 8);
+        ctx.textAlign = align;
+        ctx.textBaseline = 'alphabetic';
+        // Quiet legibility backing so the muted label reads over a heatmap field — either half of a
+        // diverging gradient, plus the bright contour line — without washing the field out.
+        const tw = ctx.measureText(p.label).width;
+        const padX = 3.5;
+        const rectX = (align === 'right' ? lx - tw : lx) - padX;
+        roundRectPath(ctx, rectX, ly - 9, tw + 2 * padX, 13, 3);
+        ctx.fillStyle = withAlpha(colors.bg, 0.72);
+        ctx.fill();
+        ctx.fillStyle = colors.textMuted;
+        ctx.fillText(p.label, lx, ly);
+        ctx.textAlign = 'left';
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -280,7 +332,7 @@ export function WorldMap({
       {/* Keyboard-accessible marker selection: Tab to a marker, arrow keys to move it. */}
       {onPointMove && draggablePoints.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
-          <span className="readout text-xs text-text-faint">move:</span>
+          <span className="readout text-xs text-text-faint">select:</span>
           {draggablePoints.map((p) => (
             <button
               key={p.id}
