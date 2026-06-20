@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { usePrefersReducedMotion } from './usePrefersReducedMotion';
+import { usePrefersReducedMotion, useReducedMotionPlayState } from './usePrefersReducedMotion';
 
 /** A controllable matchMedia whose `matches` can be flipped to fire a `change` event at listeners. */
 function mockMatchMedia(initial: boolean) {
@@ -89,5 +89,45 @@ describe('usePrefersReducedMotion', () => {
     window.matchMedia = undefined;
     const { result } = renderHook(() => usePrefersReducedMotion());
     expect(result.current).toBe(false);
+  });
+});
+
+describe('useReducedMotionPlayState', () => {
+  it('defaults to running, or paused when reduced motion is set', () => {
+    const motion = renderHook(({ r }) => useReducedMotionPlayState(r), {
+      initialProps: { r: false },
+    });
+    expect(motion.result.current[0]).toBe(true);
+
+    const reduced = renderHook(({ r }) => useReducedMotionPlayState(r), {
+      initialProps: { r: true },
+    });
+    expect(reduced.result.current[0]).toBe(false);
+  });
+
+  it('pauses when reduced motion turns on, and never force-resumes when it turns off', () => {
+    const { result, rerender } = renderHook(({ r }) => useReducedMotionPlayState(r), {
+      initialProps: { r: false },
+    });
+    expect(result.current[0]).toBe(true);
+
+    rerender({ r: true });
+    expect(result.current[0]).toBe(false); // paused live, no reload
+
+    rerender({ r: false });
+    expect(result.current[0]).toBe(false); // stays paused — a manual choice is preserved
+  });
+
+  it('keeps a manual resume across an unrelated rerender', () => {
+    const { result, rerender } = renderHook(({ r }) => useReducedMotionPlayState(r), {
+      initialProps: { r: true },
+    });
+    expect(result.current[0]).toBe(false);
+
+    act(() => result.current[1](true)); // user opts into motion
+    expect(result.current[0]).toBe(true);
+
+    rerender({ r: true }); // preference unchanged
+    expect(result.current[0]).toBe(true);
   });
 });

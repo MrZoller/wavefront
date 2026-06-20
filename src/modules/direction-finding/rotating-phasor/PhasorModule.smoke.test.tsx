@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PhasorModule } from './PhasorModule';
 
@@ -46,5 +46,32 @@ describe('PhasorModule honors prefers-reduced-motion', () => {
     // (θ = 45°, I = Q = cos/sin(π/4) ≈ 0.707).
     expect(screen.getByText('45°')).toBeInTheDocument();
     expect(screen.getAllByText('0.707')).toHaveLength(2);
+  });
+
+  it('pauses live when Reduce Motion is enabled after mount (no reload needed)', () => {
+    let matches = false;
+    const listeners = new Set<() => void>();
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      get matches() {
+        return query.includes('reduce') ? matches : false;
+      },
+      media: query,
+      onchange: null,
+      addEventListener: (_: string, cb: () => void) => listeners.add(cb),
+      removeEventListener: (_: string, cb: () => void) => listeners.delete(cb),
+      addListener: (cb: () => void) => listeners.add(cb),
+      removeListener: (cb: () => void) => listeners.delete(cb),
+      dispatchEvent: () => false,
+    })) as unknown as typeof window.matchMedia;
+
+    render(<PhasorModule />);
+    expect(screen.getByRole('button', { name: /pause/i })).toBeInTheDocument(); // rotating
+
+    // OS toggles Reduce Motion on → the phasor pauses itself (Resume shown), no reload.
+    act(() => {
+      matches = true;
+      listeners.forEach((cb) => cb());
+    });
+    expect(screen.getByRole('button', { name: /resume/i })).toBeInTheDocument();
   });
 });

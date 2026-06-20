@@ -5,7 +5,10 @@ import { PhasorPlot } from '@/components/plots/PhasorPlot';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
-import { usePrefersReducedMotion } from '@/components/plots/usePrefersReducedMotion';
+import {
+  usePrefersReducedMotion,
+  useReducedMotionPlayState,
+} from '@/components/plots/usePrefersReducedMotion';
 import { colors } from '@/design/tokens';
 import { useToneAudio } from '@/audio/useToneAudio';
 
@@ -47,8 +50,9 @@ export function PhasorModule() {
   const [frequency, setFrequency] = useState(1.0);
   const [playing, setPlaying] = useState(false);
   // Auto-rotate on arrival — the "this is alive" cue — unless the user prefers reduced motion, in
-  // which case start paused on a static frame and let them opt into motion via Resume.
-  const [running, setRunning] = useState(!prefersReducedMotion); // phasor rotation (pause/resume)
+  // which case start paused on a static frame (and pause live if it's enabled mid-session); Resume
+  // opts back into motion.
+  const [running, setRunning] = useReducedMotionPlayState(prefersReducedMotion); // phasor rotation
   const startAngle = prefersReducedMotion ? REST_ANGLE : 0;
   const [frame, setFrame] = useState<Frame>(() => ({
     angle: startAngle,

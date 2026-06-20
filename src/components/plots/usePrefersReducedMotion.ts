@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 const REDUCE_QUERY = '(prefers-reduced-motion: reduce)';
 
@@ -40,4 +40,26 @@ export function usePrefersReducedMotion(): boolean {
   }, []);
 
   return reduced;
+}
+
+/**
+ * Play-state for an auto-animating module that respects reduced motion. Like `useState<boolean>`, but
+ * it starts at `!reduced` (paused when the user prefers reduced motion) and, if the preference is
+ * switched on mid-session, flips to paused without a reload. It never force-resumes when the
+ * preference is switched off, so a manual Pause/Resume choice is always preserved.
+ *
+ * Pass the value from `usePrefersReducedMotion()`. This uses React's "adjust state during render"
+ * pattern (https://react.dev/learn/you-might-not-need-an-effect) to react to the change without an
+ * effect — the canonical home for the convention, so every auto-animating module behaves the same.
+ */
+export function useReducedMotionPlayState(
+  reduced: boolean
+): [boolean, Dispatch<SetStateAction<boolean>>] {
+  const [running, setRunning] = useState(!reduced);
+  const [wasReduced, setWasReduced] = useState(reduced);
+  if (reduced !== wasReduced) {
+    setWasReduced(reduced);
+    if (reduced) setRunning(false);
+  }
+  return [running, setRunning];
 }

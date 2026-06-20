@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { GlossedText } from '@/components/GlossedText';
 import { Slider } from '@/components/Slider';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
-import { usePrefersReducedMotion } from '@/components/plots/usePrefersReducedMotion';
+import {
+  usePrefersReducedMotion,
+  useReducedMotionPlayState,
+} from '@/components/plots/usePrefersReducedMotion';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { colors } from '@/design/tokens';
 import { CONSTELLATIONS, awgn, bitsToSymbols } from '@/dsp/comms';
@@ -32,11 +35,17 @@ export function CarrierOffsetModule() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [cfoHz, setCfoHz] = useState(0.25); // spin rate (revolutions/second, for display)
   const [phaseDeg, setPhaseDeg] = useState(0);
-  // The offset normally spins the constellation continuously; under reduced motion freeze time at a
-  // representative instant so the rotated cloud is shown as a still. Both sliders stay live (they
-  // recompute the static rotation), so the module is fully explorable without auto-motion.
+  // The offset normally spins the constellation continuously. Under reduced motion it starts frozen
+  // at a representative instant (a clearly-rotated still) and the spin becomes opt-in via the control
+  // below; both sliders stay live either way. Accumulating dt — rather than reading the loop's
+  // absolute elapsed — lets an opt-in resume continue smoothly from the frozen angle instead of
+  // snapping back to zero rotation.
+  const [running, setRunning] = useReducedMotionPlayState(prefersReducedMotion);
   const [elapsed, setElapsed] = useState(prefersReducedMotion ? REST_ELAPSED : 0);
-  useAnimationFrame((e) => setElapsed(e), !prefersReducedMotion);
+  // Spin in normal mode always; under reduced motion only when the user opts in (the control below).
+  // Gating on the preference too means turning Reduce Motion back off resumes the spin, rather than
+  // stranding the constellation frozen with its opt-in control no longer rendered.
+  useAnimationFrame((_e, dt) => setElapsed((t) => t + dt), !prefersReducedMotion || running);
 
   const rot = (phaseDeg * Math.PI) / 180 + 2 * Math.PI * cfoHz * elapsed;
 
@@ -122,6 +131,20 @@ export function CarrierOffsetModule() {
               spin to 0 and use phase alone to see the static rotation
             </GlossedText>
           </p>
+
+          {/*
+           * With Reduce Motion set the spin starts frozen on a static frame; this opt-in lets the
+           * user play it anyway. It only renders under the preference, so normal mode is unchanged.
+           */}
+          {prefersReducedMotion && (
+            <button
+              onClick={() => setRunning((r) => !r)}
+              aria-pressed={!running}
+              className="self-start rounded-md border border-border px-4 py-2 text-sm text-text-muted transition-colors hover:border-signal-dim hover:text-signal"
+            >
+              {running ? '⏸ Pause spin' : '▶ Play spin'}
+            </button>
+          )}
         </div>
       </div>
 

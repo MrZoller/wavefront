@@ -8,7 +8,10 @@ import { TapStemPlot } from '@/components/plots/TapStemPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { AXIS } from '@/components/plots/axisLabel';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
-import { usePrefersReducedMotion } from '@/components/plots/usePrefersReducedMotion';
+import {
+  usePrefersReducedMotion,
+  useReducedMotionPlayState,
+} from '@/components/plots/usePrefersReducedMotion';
 import { colors } from '@/design/tokens';
 import { type Complex } from '@/dsp/complex';
 import {
@@ -258,7 +261,7 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
   // frame (taps learned onto the target rings, error fallen) — the informative end state — paused,
   // so the still shows the payoff; Reset replays the convergence for anyone who wants the motion.
   const [step, setStep] = useState(prefersReducedMotion ? lms.frames.length - 1 : 0);
-  const [playing, setPlaying] = useState(!prefersReducedMotion);
+  const [playing, setPlaying] = useReducedMotionPlayState(prefersReducedMotion);
   const accRef = useRef(0);
 
   useAnimationFrame((_, dt) => {
