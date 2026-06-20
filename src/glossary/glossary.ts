@@ -40,6 +40,14 @@ export interface GlossaryEntry {
  * Seeded from the glosses already written across Tracks A–D (docs/dsp + inline doc comments).
  */
 export const GLOSSARY: Record<string, GlossaryEntry> = {
+  acquisition: {
+    id: 'acquisition',
+    term: 'acquisition',
+    gloss:
+      "The initial 2D search for a satellite's signal — which spreading-code delay (code phase) and Doppler line up — that must succeed before a receiver can track it.",
+    moduleId: 'gps-acquisition',
+    docsPage: 'gps-acquisition',
+  },
   adc: {
     id: 'adc',
     term: 'ADC',
@@ -143,6 +151,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'When a signal overruns the converter’s range and its peaks flatten against the rails, adding harmonic distortion.',
     moduleId: 'gain-agc',
     docsPage: 'gain',
+  },
+  'code-phase': {
+    id: 'code-phase',
+    term: 'code phase',
+    gloss:
+      "How far a satellite's repeating spreading code has slid by the time it arrives — its travel-time delay, which reads out as a range (a pseudorange).",
+    moduleId: 'gps-acquisition',
+    docsPage: 'gps-acquisition',
   },
   'code-rate': {
     id: 'code-rate',
@@ -485,6 +501,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'The highest frequency the ionosphere will still reflect on a given path — above it, the wave escapes to space.',
     moduleId: 'hf-skywave',
   },
+  multilateration: {
+    id: 'multilateration',
+    term: 'multilateration',
+    gloss:
+      'Pinning a position by intersecting range (or range-difference) measurements from several known points — how four satellite pseudoranges become a fix.',
+    moduleId: 'tdoa-multilateration',
+    docsPage: 'geolocation',
+  },
   multipath: {
     id: 'multipath',
     term: 'multipath',
@@ -552,6 +576,29 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Phase Modulation',
     gloss: 'Encoding a message by varying the instantaneous phase of the carrier.',
     moduleId: 'analog-modulation',
+  },
+  prn: {
+    id: 'prn',
+    term: 'PRN',
+    expansion: 'Pseudo-Random Noise',
+    gloss:
+      'A long, noise-like ±1 code each satellite endlessly repeats; correlating against the known code is what pulls its signal out of the noise.',
+    moduleId: 'spread-spectrum',
+  },
+  'processing-gain': {
+    id: 'processing-gain',
+    term: 'processing gain',
+    gloss:
+      'How far correlating against a known spreading code lifts a signal above the noise — about 10·log₁₀ of the number of chips integrated.',
+    moduleId: 'spread-spectrum',
+  },
+  pseudorange: {
+    id: 'pseudorange',
+    term: 'pseudorange',
+    gloss:
+      "A satellite's distance inferred from its signal's travel time, before the receiver clock error is solved out — which is what makes it 'pseudo'.",
+    moduleId: 'gps-acquisition',
+    docsPage: 'gps-acquisition',
   },
   'pulse-compression': {
     id: 'pulse-compression',

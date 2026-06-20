@@ -250,6 +250,31 @@ test('pulse compression & range-Doppler module', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'range-doppler.png') });
 });
 
+test('GPS acquisition module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'GPS Acquisition' }).first().click();
+  // The acquisition surface is an interactive (draggable) canvas, so it's an `application`, not an img.
+  const surface = page.getByRole('application', { name: /GPS acquisition surface/i });
+  await expect(surface).toBeVisible();
+  // Same pinned-rail synthesis layout as the radar scene: the plots scroll above a fixed control
+  // footer. Confirm the region overflows and shows the bottom-fade cue, then scroll to the bottom so
+  // the marquee surface and the code-phase/Doppler sliders are co-visible and the surface never
+  // renders under the rail. (CONTRIBUTING → "Keep controls co-visible with their target plot".)
+  const scroll = page.locator('.wf-scroll');
+  expect(await scroll.evaluate((el) => el.scrollHeight > el.clientHeight + 1)).toBe(true);
+  await expect(page.locator('.wf-scroll-fade')).toBeVisible();
+  await scroll.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+  const codePhase = page.getByRole('slider', { name: /True code phase/i });
+  await expect(surface).toBeInViewport();
+  await expect(codePhase).toBeInViewport();
+  await expect(page.getByRole('slider', { name: /Doppler/i })).toBeInViewport();
+  const surfaceBox = await surface.boundingBox();
+  const sliderBox = await codePhase.boundingBox();
+  if (!surfaceBox || !sliderBox) throw new Error('surface or slider not laid out');
+  expect(surfaceBox.y + surfaceBox.height).toBeLessThanOrEqual(sliderBox.y + 1);
+  await page.screenshot({ path: path.join(IMG_DIR, 'gps-acquisition.png') });
+});
+
 test('sampling & aliasing module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Sampling & Aliasing' }).first().click();

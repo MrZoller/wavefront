@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { type Complex, magnitude } from './complex';
-import { dft, fft, ifft, fftShift } from './fft';
+import { dft, fft, ifft, fftShift, fftShiftedBin } from './fft';
 
 const randomSignal = (n: number, seed = 1): Complex[] => {
   let a = seed >>> 0;
@@ -58,5 +58,21 @@ describe('FFT', () => {
 
   it('fftShift centers the zero-frequency bin', () => {
     expect(fftShift([0, 1, 2, 3])).toEqual([2, 3, 0, 1]);
+  });
+
+  it('fftShiftedBin maps a normalized frequency to its centered bin', () => {
+    const n = 16;
+    expect(fftShiftedBin(0, n)).toBe(n / 2); // DC sits in the middle after fftShift
+    expect(fftShiftedBin(1 / n, n)).toBe(n / 2 + 1); // +1 bin up
+    expect(fftShiftedBin(-1 / n, n)).toBe(n / 2 - 1); // −1 bin down
+    // Reading the centered spectrum back agrees with where fftShift actually moves a pure tone.
+    for (const k of [0, 1, 5, 9, 15]) {
+      const tone: Complex[] = Array.from({ length: n }, (_, i) => ({
+        re: Math.cos((2 * Math.PI * k * i) / n),
+        im: Math.sin((2 * Math.PI * k * i) / n),
+      }));
+      const shifted = fftShift(fft(tone)).map(magnitude);
+      expect(shifted.indexOf(Math.max(...shifted))).toBe(fftShiftedBin(k / n, n));
+    }
   });
 });

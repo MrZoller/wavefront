@@ -45,6 +45,7 @@ const ALIASES: Record<string, string[]> = {
   'matched-filter': ['matched filtering', 'matched-filter'],
   nyquist: ['Nyquist'],
   pfb: ['polyphase filter bank'],
+  prn: ['PRN code', 'PRN codes', 'spreading code', 'spreading codes'],
   'pulse-compression': ['pulse-compressed'],
   'pulse-shaping': ['pulse-shaping'],
   qam: ['16-QAM', '64-QAM', '256-QAM'],

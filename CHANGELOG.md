@@ -8,6 +8,36 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Synthesis module: GPS Acquisition.** A deliberately bounded synthesis scene added to
+  **Modulations & Waveforms** (alongside the radar scene in the "Synthesis" stage; the Modulation Zoo
+  stays the track's marquee), making one point click: GPS is three things already built — spread
+  spectrum, correlation, and multilateration — plus one genuinely new idea, **receiving a signal that
+  sits below the noise floor** and reading **range** off the correlation peak's position. Each satellite
+  repeats a known **PRN** spreading code; the received samples are that code delayed by a **code phase**
+  (its travel time → a **pseudorange**) and Doppler-shifted, buried at negative SNR and visually
+  indistinguishable from noise. Correlating against the known code applies the spread-spectrum
+  **processing gain** in reverse — the despreader, run to acquire — lifting a sharp peak out of the
+  noise; since neither the code phase nor the Doppler is known, **acquisition** searches both at once on
+  a **code-phase × Doppler** surface. Drag the true target (or the sliders), drop the SNR, or shorten
+  the integration and watch the peak track it — or sink into the noise. One from-scratch, tested `dsp/`
+  addition backs it (`src/dsp/gps.ts`: `prnReceived`, `codePhaseProfile`, `acquisitionSurface`,
+  `acquisitionPeak`), reusing the Spread Spectrum module's `pnCode`, the FFT (with the centered-bin
+  helper hoisted to `src/dsp/fft.ts` as `fftShiftedBin`), and the Gaussian-noise model wholesale; the
+  tests pin the surface peak at the true (code phase, Doppler) bin, the despread peak at the processing
+  gain 10·log₁₀(L), and a 15-dB-sub-noise signal acquired with integration and vanishing below a deep
+  enough SNR. The **2D acquisition heatmap is now one shared, reusable component**
+  (`src/components/plots/AcquisitionHeatmap.tsx`, axes parameterized: range/code-phase × Doppler) that
+  both the radar range-Doppler map and this scene render — the radar map refactored onto it — with a
+  draggable, keyboard-operable true-target handle (grab/grabbing cursor + halo) here. Six glossary terms
+  (acquisition, code phase, pseudorange, PRN, processing gain, multilateration) and
+  `docs/dsp/gps-acquisition.md`. Four acquired satellites fix a position by **multilateration** — the
+  GDOP Heatmap and TDOA Multilateration geometry, linked by name rather than rebuilt. Strictly the open
+  civilian (C/A-style) signal at undergraduate-textbook depth; all signals/parameters synthetic and
+  illustrative (a synthetic PRN code, code phase in chips, Doppler normalized), with no real PRN
+  assignments, frequencies, or ephemeris — and explicitly **not** a GNSS track (tracking loops, the
+  navigation-message decode, and ionospheric corrections are named as out-of-scope directions, not
+  built; restricted/encrypted signals and spoofing/jamming are out of scope).
+
 - **Synthesis module: The Ionosonde & the Ionogram.** A deliberately bounded synthesis scene added
   to **Propagation & Bands** (a new "Synthesis" stage; Band Explorer stays the track's marquee),
   making one point click: an ionosonde is echo-delay radar pointed straight up. Ping the sky and the
