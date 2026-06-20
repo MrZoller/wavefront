@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ControlRail } from '@/components/ControlRail';
 import { GlossedText } from '@/components/GlossedText';
 import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
@@ -115,30 +116,14 @@ export function RangeDopplerModule() {
           xDomain={[0, RANGE_BINS - 1]}
           yDomain={[0, profileMax * 1.1]}
           marker={{ x: detected, y: profile[detected], color: colors.signal }}
-          height={150}
+          height={130}
           xLabel={{ quantity: 'Range (bins)' }}
           yLabel={{ quantity: 'Matched-filter magnitude' }}
           ariaLabel="Pulse-compressed range profile, with the peak marking the detected range"
         />
       </div>
 
-      {/* The marquee: stack the compressed pulses and FFT across them → the range-Doppler map. */}
-      <div>
-        <PlotTitle>
-          range-Doppler map{' '}
-          <span className="text-text-faint">— FFT across pulses adds velocity</span>
-        </PlotTitle>
-        <SpectrogramPlot
-          data={mapDb}
-          floorDb={FLOOR_DB}
-          height={240}
-          xLabel={{ quantity: 'Range (bins)' }}
-          yLabel={{ quantity: 'Velocity (Doppler)' }}
-          ariaLabel="Range-Doppler map; a bright blob marks the target's range and velocity, stationary targets sitting on the centre row"
-        />
-      </div>
-
-      {/* Live readouts. */}
+      {/* Live readouts (kept above the map so the marquee sits directly over the sticky controls). */}
       <div className="flex flex-wrap gap-4">
         <Readout label="Target range" value={`${rangeBin} bins`} accent />
         <Readout
@@ -154,86 +139,106 @@ export function RangeDopplerModule() {
         <Readout label="Time-bandwidth ≈ gain" value={`${tbp.toFixed(0)}×`} />
       </div>
 
-      {/* Controls. */}
-      <div className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-4">
-        <div className="flex flex-wrap gap-6">
-          <Slider
-            label="Target range"
-            value={rangeBin}
-            min={4}
-            max={RANGE_BINS - 4}
-            step={1}
-            display={`${rangeBin} bins`}
-            onChange={setRangeBin}
-            ariaLabel="Target range in range bins"
-          />
-          <Slider
-            label="Radial velocity"
-            value={velocity}
-            min={-1}
-            max={1}
-            step={0.05}
-            decimals={2}
-            onChange={setVelocity}
-            ariaLabel="Target radial velocity (sets the Doppler shift)"
-          />
-        </div>
-        <div className="flex flex-wrap gap-6">
-          <Slider
-            label="Chirp sweep half-width"
-            value={bw}
-            min={0.05}
-            max={0.45}
-            step={0.05}
-            display={`±${bw.toFixed(2)} cyc/sample`}
-            onChange={setBw}
-            ariaLabel="Chirp sweep half-width (sets the time-bandwidth product)"
-          />
-          <Slider
-            label="SNR"
-            value={snrDb}
-            min={-5}
-            max={30}
-            step={1}
-            unit=" dB"
-            onChange={setSnrDb}
-            ariaLabel="Echo signal-to-noise ratio in decibels"
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-6">
-          <Slider
-            label="Pulses (slow-time FFT)"
-            value={pulseIdx}
-            min={0}
-            max={PULSE_OPTIONS.length - 1}
-            step={1}
-            display={`${nPulses} pulses`}
-            onChange={setPulseIdx}
-            ariaLabel="Number of pulses in the coherent train"
-          />
-          <button
-            type="button"
-            aria-pressed={secondTarget}
-            onClick={() => setSecondTarget((s) => !s)}
-            className={[
-              'readout cursor-pointer rounded-md border px-3 py-1.5 text-xs transition-colors',
-              secondTarget
-                ? 'border-signal-dim bg-surface-raised text-signal'
-                : 'border-border bg-surface text-text-muted hover:border-signal-dim hover:text-text',
-            ].join(' ')}
-          >
-            Second target
-          </button>
-        </div>
-        <span className="readout text-xs text-text-faint">
-          <GlossedText>
-            the echo is the chirp delayed by range and Doppler-shifted by velocity ·
-            matched-filtering compresses that long echo to the range peak · an FFT across pulses
-            resolves velocity, and the bright blob is the target — drag range and velocity and watch
-            it move
-          </GlossedText>
-        </span>
+      {/* The marquee, placed directly above the sticky controls so dragging range/velocity moves the
+          blob without scrolling — the compressed pulses stacked and FFT'd across slow-time. */}
+      <div>
+        <PlotTitle>
+          range-Doppler map{' '}
+          <span className="text-text-faint">— FFT across pulses adds velocity</span>
+        </PlotTitle>
+        <SpectrogramPlot
+          data={mapDb}
+          floorDb={FLOOR_DB}
+          height={240}
+          xLabel={{ quantity: 'Range (bins)' }}
+          yLabel={{ quantity: 'Velocity (Doppler)' }}
+          ariaLabel="Range-Doppler map; a bright blob marks the target's range and velocity, stationary targets sitting on the centre row"
+        />
       </div>
+
+      {/* Controls — pinned in a sticky rail so they stay co-visible with the map above while the
+          taller plots scroll (the drag-watch loop the whole app is built on). */}
+      <ControlRail>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap gap-6">
+            <Slider
+              label="Target range"
+              value={rangeBin}
+              min={4}
+              max={RANGE_BINS - 4}
+              step={1}
+              display={`${rangeBin} bins`}
+              onChange={setRangeBin}
+              ariaLabel="Target range in range bins"
+            />
+            <Slider
+              label="Radial velocity"
+              value={velocity}
+              min={-1}
+              max={1}
+              step={0.05}
+              decimals={2}
+              onChange={setVelocity}
+              ariaLabel="Target radial velocity (sets the Doppler shift)"
+            />
+          </div>
+          <div className="flex flex-wrap gap-6">
+            <Slider
+              label="Chirp sweep half-width"
+              value={bw}
+              min={0.05}
+              max={0.45}
+              step={0.05}
+              display={`±${bw.toFixed(2)} cyc/sample`}
+              onChange={setBw}
+              ariaLabel="Chirp sweep half-width (sets the time-bandwidth product)"
+            />
+            <Slider
+              label="SNR"
+              value={snrDb}
+              min={-5}
+              max={30}
+              step={1}
+              unit=" dB"
+              onChange={setSnrDb}
+              ariaLabel="Echo signal-to-noise ratio in decibels"
+            />
+          </div>
+          <div className="flex flex-wrap items-center gap-6">
+            <Slider
+              label="Pulses (slow-time FFT)"
+              value={pulseIdx}
+              min={0}
+              max={PULSE_OPTIONS.length - 1}
+              step={1}
+              display={`${nPulses} pulses`}
+              onChange={setPulseIdx}
+              ariaLabel="Number of pulses in the coherent train"
+            />
+            <button
+              type="button"
+              aria-pressed={secondTarget}
+              onClick={() => setSecondTarget((s) => !s)}
+              className={[
+                'readout cursor-pointer rounded-md border px-3 py-1.5 text-xs transition-colors',
+                secondTarget
+                  ? 'border-signal-dim bg-surface-raised text-signal'
+                  : 'border-border bg-surface text-text-muted hover:border-signal-dim hover:text-text',
+              ].join(' ')}
+            >
+              Second target
+            </button>
+          </div>
+          <span className="readout text-xs text-text-faint">
+            <GlossedText>
+              the echo is the chirp delayed by range and Doppler-shifted by velocity ·
+              matched-filtering compresses that long echo to the range peak · an FFT across pulses
+              resolves velocity, and the bright blob is the target — drag range and velocity and
+              watch it move
+            </GlossedText>
+          </span>
+        </div>
+      </ControlRail>
     </div>
   );
 }

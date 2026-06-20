@@ -226,7 +226,22 @@ test('modulation classifier module', async ({ page }) => {
 test('pulse compression & range-Doppler module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Pulse Compression & Range-Doppler' }).first().click();
-  await expect(page.getByRole('img', { name: /range-Doppler map/i })).toBeVisible();
+  const map = page.getByRole('img', { name: /range-Doppler map/i });
+  await expect(map).toBeVisible();
+  // The drag-watch loop: scroll the column to the bottom, where the sticky control rail rests just
+  // below the marquee map. The range/velocity sliders and the map must be co-visible AND not
+  // overlap — dragging must move the blob without scrolling. (CONTRIBUTING → "Keep controls
+  // co-visible with their target plot".)
+  await page.getByRole('main').evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+  const rangeSlider = page.getByRole('slider', { name: /Target range/i });
+  await expect(map).toBeInViewport();
+  await expect(rangeSlider).toBeInViewport();
+  await expect(page.getByRole('slider', { name: /Radial velocity/i })).toBeInViewport();
+  // The map sits fully above the control rail (no occlusion).
+  const mapBox = await map.boundingBox();
+  const sliderBox = await rangeSlider.boundingBox();
+  if (!mapBox || !sliderBox) throw new Error('map or slider not laid out');
+  expect(mapBox.y + mapBox.height).toBeLessThanOrEqual(sliderBox.y + 1);
   await page.screenshot({ path: path.join(IMG_DIR, 'range-doppler.png') });
 });
 
