@@ -48,11 +48,8 @@ describe('upsample / convolve', () => {
     expect(upsample([1, -1], 3)).toEqual([1, 0, 0, -1, 0, 0]);
   });
 
-  it('convolve matches a hand calc', () => {
-    // [1,2,3] ⊛ [1,1] = [1,3,5,3]
-    expect(convolve([1, 2, 3], [1, 1])).toEqual([1, 3, 5, 3]);
-  });
-
+  // The convolution primitive itself (identity, length, commutativity, hand calcs, matched-filter
+  // agreement) is verified in convolution.test.ts; here we only check it composes with pulse shaping.
   it('a single upsampled impulse reproduces the pulse shape', () => {
     const sps = 4;
     const h = raisedCosine(0.5, 4, sps);
