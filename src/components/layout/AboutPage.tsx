@@ -42,9 +42,10 @@ export function AboutPage() {
               stays at public, textbook-level theory, the kind you&rsquo;d find on Wikipedia or in
               an undergraduate course. It carries no real system parameters, frequencies of
               interest, hop sequences, or call signs, and nothing proprietary, controlled, or
-              otherwise sensitive. Where a real signal is named at all it&rsquo;s a civilian, openly
-              documented one &mdash; the GPS C/A code, say, never a restricted one &mdash; and any
-              concrete numbers are illustrative, and labeled that way.
+              otherwise sensitive. Where a real signal is named, it&rsquo;s a civilian, openly
+              documented one &mdash; like the public GPS signal every phone already uses &mdash;
+              never a restricted or sensitive one. Any concrete numbers are illustrative, and
+              labeled as such.
             </p>
           </section>
 
