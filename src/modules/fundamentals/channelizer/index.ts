@@ -7,7 +7,7 @@ registerModule({
   title: 'Channelizer (PFB)',
   track: 'fundamentals',
   layer: 3,
-  order: 6,
+  order: 7,
   isCapstone: true,
   oneLineIntuition:
     'Tile a wide band into channels and pull one out — the FFT is a leaky filter bank; a polyphase prototype makes it sharp.',

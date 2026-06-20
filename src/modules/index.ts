@@ -53,6 +53,7 @@ import './modulations-and-waveforms/gps-acquisition';
 import './fundamentals/aliasing';
 import './fundamentals/dft-basis';
 import './fundamentals/windowing';
+import './fundamentals/fft-bins';
 // Layer 1 — Systems (the general idea under filtering)
 import './fundamentals/convolution';
 // Layer 2 — Filtering & multirate
