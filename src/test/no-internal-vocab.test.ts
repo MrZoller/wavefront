@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * Internal organizing vocabulary — layer numbers (Layer 0/1/2…) and track letters (Track A–F) — is
+ * Internal organizing vocabulary — layer numbers (Layer 0/1/2…) and track letters (Track A–G) — is
  * build-time scaffolding. Users never see it; the UI shows human names ("Direction Finding &
  * Geolocation", "Foundations", "The Transmit Chain"). So user-facing copy must never reference
  * `Layer N` / `Track X`: a cross-reference uses the human module/track name (linked where the
@@ -35,9 +35,9 @@ const walk = (dir: string): string[] =>
     return statSync(p).isDirectory() ? walk(p) : [p];
   });
 
-// Capital-L "Layer <n>" / "Track <A–F>" — the rendered coordinates, not identifiers like
+// Capital-L "Layer <n>" / "Track <A–G>" — the rendered coordinates, not identifiers like
 // `layerNames`, `TrackId`, or `getTrackLayers`.
-const LEAK = /\bLayer \d|\bTrack [A-F]\b/;
+const LEAK = /\bLayer \d|\bTrack [A-G]\b/;
 
 describe('user-facing copy never leaks internal layer/track vocabulary', () => {
   it('no rendered string references "Layer N" or "Track X"', () => {

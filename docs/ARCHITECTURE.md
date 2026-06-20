@@ -131,8 +131,9 @@ lesson) → the `docsPage` (the long-form write-up).
 **Marking is map-driven and consistent by construction.** Authors write **plain copy**; a render-time
 matcher (`src/glossary/match.ts`) inside `<GlossedText>` marks terms automatically, and `Term.tsx`
 renders each marker's popover. Nothing is hand-wrapped, so highlighting can't drift page to page —
-"is X glossed?" reduces to "is X in the map?". Prose surfaces are wrapped centrally: `ModuleView`
-wraps the explanation rail + module intro, and module captions wrap their text in `<GlossedText>`.
+"is X glossed?" reduces to "is X in the map?". Each prose surface is wrapped in `<GlossedText>`:
+`ModuleView` wraps the module intro, while each `Explanation` and module caption wraps its own prose
+(a new explanation component must include the wrapper).
 The matcher enforces the deliberate rules — teaching-page exclusion, first-use **per `<section>`**,
 excluded surfaces (headings/code/controls), and boundary-aware tokenization (`QPSK/QAM` → both,
 `16-QAM` as one unit, no `FM`-in-"confirm"). Escape hatches: `<NoGloss>` suppresses, a hand-placed
