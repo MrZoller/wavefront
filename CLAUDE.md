@@ -57,15 +57,16 @@ curriculum is a registry entry, not a wiring change.
   `ConstellationPlot`, `PhasorPlot`, `PolarPlot`, `WorldMap`, … all on `useCanvas`; axis labels via
   `axisLabel.ts` (`AXIS` presets), titles via `<PlotTitle>`. Reuse these; add a view type only when
   genuinely new. The Playwright pipeline lives in `e2e/screenshots.spec.ts`.
-- **Shared layout/components** — `ModuleView` (lays out the module + explanation rail, wraps prose in
-  `<GlossedText>`, portals the `ControlRail`), `ControlRail` (`src/components/ControlRail.tsx`),
+- **Shared layout/components** — `ModuleView` (lays out the module + explanation rail, wraps the
+  module intro in `<GlossedText>`, portals the `ControlRail`), `ControlRail` (`src/components/ControlRail.tsx`),
   `Slider` (`src/components/Slider.tsx`), `Sidebar`/`TrackOverview` (`src/components/layout/`).
 - **Design tokens** — `src/design/tokens.ts` (mirrored as CSS vars in `src/index.css`). Canvas /
   gradient code uses `withAlpha(colors.signal, α)` / `signalRgb` — the sanctioned way to use a token
   where CSS `var()` can't resolve.
 - **Glossary `<Term>`** — `src/glossary/`: a flat single-source map (`glossary.ts`) + a render-time
-  matcher (`match.ts`) inside `<GlossedText>`. Marking is **map-driven, never hand-wrapped** — write
-  plain prose and add the term to the map.
+  matcher (`match.ts`) inside `<GlossedText>`. Wrap a prose block in `<GlossedText>` — every
+  `Explanation` and caption does (`ModuleView` wraps the intro for you) — and the matcher marks
+  glossary terms automatically: write plain prose and add the term to the map, never hand-mark terms.
 - **State** — a small Zustand store, `src/store/appStore.ts` (active module id; in-memory, no
   persistence).
 
@@ -83,11 +84,11 @@ The ones an agent wouldn't infer. Most are guarded by a test (named inline); hon
   (labels, titles, units, formulas). Never accent a static label.
 - **Design tokens only.** Read every color from `src/design/tokens.ts`; never inline a hex. The
   signal accent is guarded (`src/test/no-hardcoded-signal-color.test.ts`).
-- **No internal vocabulary in user-facing copy.** Never render `Layer N` or `Track A–F` — use the
-  human names ("Foundations", "Direction Finding & Geolocation"), or restate the concept. Map
-  internal `status` tokens to badges at render time (`stub` → "Conceptual"), never the raw token.
-  ("track" as an ordinary word is fine; the guard targets only `Track <A–F>` / `Layer <N>`.) Guards:
-  `src/test/no-internal-vocab.test.ts`, `Sidebar.test.tsx`.
+- **No internal vocabulary in user-facing copy.** Never render `Layer N` or a track letter (`Track A`,
+  `Track B`, …) — use the human names ("Foundations", "Direction Finding & Geolocation"), or restate
+  the concept. Map internal `status` tokens to badges at render time (`stub` → "Conceptual"), never
+  the raw token. ("track" as an ordinary word is fine; the ban is on the letter/number coordinate.)
+  Guards: `src/test/no-internal-vocab.test.ts`, `Sidebar.test.tsx`.
 - **Shared primitives only.** All sliders go through `<Slider>` — no raw `<input type="range">`
   (guard in `Slider.test.tsx`). Every Cartesian plot must name its axes (`xLabel`/`yLabel` are
   required props: quantity + _honest_ unit, none for normalized/unitless); a descriptive title goes
