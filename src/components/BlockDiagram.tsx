@@ -27,6 +27,11 @@ export interface BlockDiagramProps {
   columns?: number;
 }
 
+/** Width (px) of a flow arrow — and of the fixed grid track reserved for one in aligned mode. One
+ *  constant keeps an *unused* (placeholder) arrow track exactly as wide as a drawn arrow, so every
+ *  aligned row sizes its tracks identically and a shorter chain's boxes can't drift out of column. */
+const ARROW_WIDTH = 18;
+
 /**
  * An interactive "boxes and wires" block diagram. Each block can route to the registry module that
  * simulates its function — so a hardware/orientation learner can click a block (mixer, ADC, filter…)
@@ -82,16 +87,21 @@ export function BlockDiagram({ blocks, ariaLabel, columns }: BlockDiagramProps) 
   };
 
   // Aligned mode: a fixed grid of `columns` box tracks (minmax(0,1fr) — equal, shrinkable, never
-  // overflowing) interleaved with auto-width arrow tracks. Rendering each block then its trailing
-  // arrow fills the tracks left-to-right, so block i always lands in box-column i and lines up with
-  // block i of any sibling diagram given the same `columns` — that shared coordinate is the point.
+  // overflowing) interleaved with fixed `ARROW_WIDTH` arrow tracks. Fixed, not `auto`, on purpose:
+  // a shorter chain omits its trailing arrows (so no connector dangles into an empty column), and an
+  // *empty* `auto` track collapses to 0 — handing its width to the `1fr` box columns and drifting
+  // block i out of alignment with block i of the taller sibling rows. Reserving the arrow width
+  // unconditionally keeps every row's tracks identical, so block i always lands in box-column i and
+  // lines up column-for-column across sibling diagrams given the same `columns` — the whole point.
   if (columns) {
     return (
       <div
         role="group"
         aria-label={ariaLabel}
         className="grid items-center gap-x-1 rounded-md border border-border bg-surface p-4"
-        style={{ gridTemplateColumns: Array(columns).fill('minmax(0,1fr)').join(' auto ') }}
+        style={{
+          gridTemplateColumns: Array(columns).fill('minmax(0,1fr)').join(` ${ARROW_WIDTH}px `),
+        }}
       >
         {blocks.map((n, i) => (
           <Fragment key={n.id}>
@@ -133,7 +143,7 @@ function FlowArrow() {
   return (
     <svg
       aria-hidden="true"
-      width="18"
+      width={ARROW_WIDTH}
       height="10"
       viewBox="0 0 18 10"
       className="shrink-0 self-center text-text-faint"
