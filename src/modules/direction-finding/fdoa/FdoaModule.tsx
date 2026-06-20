@@ -38,24 +38,33 @@ export function FdoaModule() {
   const fMax = Math.max(1, (f0 / C) * (speed(rx0) + speed(rx1)));
 
   const points: MapPoint[] = [
-    ...receivers.flatMap((r, i) => [
-      {
-        id: `rx${i}`,
-        x: r.x,
-        y: r.y,
-        color: colors.cyan,
-        label: `Rx${i + 1}`,
-        kind: 'site' as const,
-      },
-      {
-        id: `vel${i}`,
-        x: r.x + r.vx * VEL_SCALE,
-        y: r.y + r.vy * VEL_SCALE,
-        color: colors.cyanDim,
-        label: `v${i + 1}`,
-        kind: 'site' as const,
-      },
-    ]),
+    ...receivers.flatMap((r, i) => {
+      // Screen-space unit vector along the velocity arrow (canvas y points down, so flip vy). The
+      // receiver label is pushed back behind its dot and the velocity label out past the arrow tip,
+      // so "Rx{i}" and "v{i}" land on opposite sides instead of colliding into one smudge.
+      const s = Math.hypot(r.vx, r.vy);
+      const dir = s < 1e-6 ? { x: 1, y: 0 } : { x: r.vx / s, y: -r.vy / s };
+      return [
+        {
+          id: `rx${i}`,
+          x: r.x,
+          y: r.y,
+          color: colors.cyan,
+          label: `Rx${i + 1}`,
+          kind: 'site' as const,
+          labelOffset: { dx: -dir.x * 16, dy: -dir.y * 16 - 5 },
+        },
+        {
+          id: `vel${i}`,
+          x: r.x + r.vx * VEL_SCALE,
+          y: r.y + r.vy * VEL_SCALE,
+          color: colors.cyan,
+          label: `v${i + 1}`,
+          kind: 'velocity' as const,
+          labelOffset: { dx: dir.x * 16, dy: dir.y * 16 - 5 },
+        },
+      ];
+    }),
     {
       id: 'emitter',
       x: emitter.x,
@@ -149,8 +158,9 @@ export function FdoaModule() {
         />
         <span className="readout text-xs text-text-faint">
           <GlossedText>
-            drag receivers, their velocity arrows (v1 / v2), or the emitter · higher f₀ ⇒ a larger
-            Doppler shift, so the same geometry yields a bigger Δf
+            drag a receiver dot to move it, or its arrow tip (v1 / v2) to change its velocity · drag
+            the emitter too · or select any marker and nudge it with the arrow keys · higher f₀ ⇒ a
+            larger Doppler shift, so the same geometry yields a bigger Δf
           </GlossedText>
         </span>
       </div>

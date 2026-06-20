@@ -332,3 +332,22 @@ All notable changes to this project are documented here. The format is based on
 - **Automated screenshot pipeline** (`npm run screenshots`, Playwright) capturing the overview
   and phasor scenes into `docs/images/`, embedded in the README.
 - `docs/dsp/complex-and-phasors.md` — the math-honest "go deeper" page linking its tests.
+
+### Changed
+
+- **Direction-finding maps brought up to the affordance/legibility conventions (FDOA worst-case
+  first).** A visual/affordance pass over the older geolocation scenes — no DSP, computed readout, or
+  drag-behavior changes. The shared **`WorldMap`** now (1) draws a quiet, token-derived legibility
+  backing behind every marker label so names read over a heatmap field — either half of a diverging
+  Doppler gradient, the GDOP precision heat, or a bright contour line — without washing the field out;
+  (2) takes a per-marker `labelOffset` so crowded labels separate instead of smudging into one
+  another; and (3) renders a new `velocity` marker kind as an **open ring handle**, visibly distinct
+  from the solid site dot. Its keyboard marker row is relabeled **`move:` → `select:`** to match what
+  it does (select a marker, then arrow-key nudge). **FDOA (Doppler Difference)** — the densest, least
+  discoverable scene — uses all three: each receiver's velocity-vector tip is now separately grabbable
+  from its dot (drag the dot to move the platform, the arrow tip to change its velocity), the
+  `Rx{i}`/`v{i}` labels sit on opposite sides of their markers with breathing room, and the single
+  quiet hint spells out the position / velocity / emitter drags and the select-then-nudge alternative.
+  The sibling maps (**GDOP Heatmap**, **AoA Cross-Fixing**, **TDOA Multilateration**) inherit the
+  label backing automatically — most visibly the GDOP marquee, whose receiver labels now read over the
+  colored precision field. Affected screenshots regenerated.
