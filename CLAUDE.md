@@ -10,6 +10,14 @@ drag a receiver, sweep a slider, and watch everything recompute live.
 This file is the index plus the handful of rules worth stating up front. To extend the project, read
 **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** and **[CONTRIBUTING.md](CONTRIBUTING.md)** first.
 
+## How work happens here
+
+Developed by a **builder agent + an adversarial PR reviewer** in a loop — expect review findings and
+work through them. Two house defaults beyond the conventions below: **verify a fix landed where you
+claimed** (a change billed as shared/app-wide must live in the shared layer, not be patched in one
+spot — confirm by inspection), and **lead with the idea, not the mechanics** (the Pedagogy rule, as
+a general default — copy, commit messages, review replies).
+
 ## Commands
 
 ```bash
@@ -84,9 +92,9 @@ The ones an agent wouldn't infer. Most are guarded by a test (named inline); hon
   (guard in `Slider.test.tsx`). Every Cartesian plot must name its axes (`xLabel`/`yLabel` are
   required props: quantity + _honest_ unit, none for normalized/unitless); a descriptive title goes
   in `<PlotTitle>`, kept visually distinct from the axis caption.
-- **Interactive affordance.** Draggable canvas handles get a `grab`/`grabbing` cursor + a persistent
-  halo + keyboard focus/nudge; chips look pressable; lean on passive affordance with at most **one**
-  quiet textual hint per surface — no on-canvas "drag me" chrome.
+- **Interactive affordance.** Draggable canvas handles get a `grab`/`grabbing` cursor + persistent
+  halo + keyboard focus/nudge; chips look pressable; at most **one** quiet textual hint per surface,
+  no on-canvas "drag me" chrome. (Details in CONTRIBUTING.)
 - **One capstone per track.** Exactly one module sets `isCapstone` — the track's **marquee**, _not_
   necessarily the last by `order` (an `advanced` offshoot may legitimately follow it). Guard:
   `src/registry/registry.test.ts`.
