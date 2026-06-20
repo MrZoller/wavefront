@@ -58,6 +58,32 @@ describe('usePrefersReducedMotion', () => {
     expect(result.current).toBe(false);
   });
 
+  it('uses the legacy addListener API when addEventListener is missing', () => {
+    // Older browsers (Safari ≤13) expose MediaQueryList.add/removeListener but not addEventListener.
+    let matches = false;
+    const listeners = new Set<() => void>();
+    const mql = {
+      get matches() {
+        return matches;
+      },
+      media: '(prefers-reduced-motion: reduce)',
+      onchange: null,
+      addListener: (cb: () => void) => listeners.add(cb),
+      removeListener: (cb: () => void) => listeners.delete(cb),
+      dispatchEvent: () => false,
+    };
+    window.matchMedia = vi.fn().mockReturnValue(mql) as unknown as typeof window.matchMedia;
+
+    const { result } = renderHook(() => usePrefersReducedMotion());
+    expect(result.current).toBe(false);
+
+    act(() => {
+      matches = true;
+      listeners.forEach((cb) => cb());
+    });
+    expect(result.current).toBe(true);
+  });
+
   it('falls back to full motion where matchMedia is unavailable', () => {
     // @ts-expect-error — simulate a non-browser / unsupported environment
     window.matchMedia = undefined;

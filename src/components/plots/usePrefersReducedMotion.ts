@@ -29,8 +29,14 @@ export function usePrefersReducedMotion(): boolean {
     const mql = window.matchMedia(REDUCE_QUERY);
     const sync = () => setReduced(mql.matches);
     sync(); // catch a toggle that landed between first render and effect commit
-    mql.addEventListener('change', sync);
-    return () => mql.removeEventListener('change', sync);
+    // Prefer the standard event API; fall back to the deprecated add/removeListener for browsers
+    // (Safari ≤13) whose MediaQueryList predates addEventListener, so the hook never throws on mount.
+    if (typeof mql.addEventListener === 'function') {
+      mql.addEventListener('change', sync);
+      return () => mql.removeEventListener('change', sync);
+    }
+    mql.addListener(sync);
+    return () => mql.removeListener(sync);
   }, []);
 
   return reduced;
