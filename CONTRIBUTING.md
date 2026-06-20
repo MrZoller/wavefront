@@ -246,14 +246,15 @@ directly above the rail (on the radar module, the range-Doppler map; the explana
 plots sit above that). A tall module signals scrollability with a **bottom fade gradient** on the
 scroll region (`.wf-scroll`): partial plot content fades into the background at the bottom edge — the
 canonical "more below" cue. It's static and background-derived (never the green accent), and there's
-no per-module "scroll for more" text (one quiet visual cue, not prose). A **forced/persistent
-scrollbar was deliberately dropped** — modern browsers (Safari, Chrome) auto-hide overlay scrollbars
-on trackpads regardless of CSS, so it never rendered; the default scrollbar appearing on active
-scroll is fine as a secondary cue. Where this layout doesn't fit, the accepted alternatives are
-placing the controls **beside** a tall plot (two-column) or capping stacked-plot height. A Playwright
-check in `e2e/screenshots.spec.ts` asserts the radar map and its sliders are co-visible, the map
-never renders under the rail, and the fade cue is present — so the regression can't quietly return as
-more tall synthesis modules land.
+no per-module "scroll for more" text (one quiet visual cue, not prose). We don't try to _force_ the
+scrollbar visible (browsers auto-hide overlay scrollbars regardless), but when it does show it's a
+useful position indicator, so it's styled on-theme in every state (`.wf-scroll`, rest/hover/active —
+a quiet token-neutral thumb, never the green accent) so it never falls back to the default grey. The
+fade stays the scrollability cue; the scrollbar just shows position. Where this layout doesn't fit,
+the accepted alternatives are placing the controls **beside** a tall plot (two-column) or capping
+stacked-plot height. A Playwright check in `e2e/screenshots.spec.ts` asserts the radar map and its
+sliders are co-visible, the map never renders under the rail, and the fade cue is present — so the
+regression can't quietly return as more tall synthesis modules land.
 
 ## Coding conventions
 
