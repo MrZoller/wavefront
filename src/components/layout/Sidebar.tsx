@@ -12,6 +12,18 @@ export function Sidebar() {
   const setActiveModule = useAppStore((s) => s.setActiveModule);
   const glossaryOpen = useAppStore((s) => s.glossaryOpen);
   const openGlossary = useAppStore((s) => s.openGlossary);
+  const aboutOpen = useAppStore((s) => s.aboutOpen);
+  const openAbout = useAppStore((s) => s.openAbout);
+
+  // The two reference destinations share one quiet style — muted until active, never the live accent
+  // unless it's the current page (links/active nav are the sanctioned accent use).
+  const refLinkClass = (active: boolean) =>
+    [
+      'flex w-full items-center rounded-md px-2 py-1.5 text-left text-sm transition-colors',
+      active
+        ? 'bg-surface-raised text-signal'
+        : 'text-text-muted hover:bg-surface-raised hover:text-text',
+    ].join(' ');
 
   return (
     <nav
@@ -126,19 +138,21 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Reference companion — a deliberate destination, set apart from the track climb. */}
-      <div className="mt-auto border-t border-border pt-3">
+      {/* Reference companions — deliberate destinations, set apart from the track climb. */}
+      <div className="mt-auto flex flex-col gap-0.5 border-t border-border pt-3">
         <button
           onClick={openGlossary}
           aria-current={glossaryOpen ? 'page' : undefined}
-          className={[
-            'flex w-full items-center rounded-md px-2 py-1.5 text-left text-sm transition-colors',
-            glossaryOpen
-              ? 'bg-surface-raised text-signal'
-              : 'text-text-muted hover:bg-surface-raised hover:text-text',
-          ].join(' ')}
+          className={refLinkClass(glossaryOpen)}
         >
           Glossary
+        </button>
+        <button
+          onClick={openAbout}
+          aria-current={aboutOpen ? 'page' : undefined}
+          className={refLinkClass(aboutOpen)}
+        >
+          About
         </button>
       </div>
     </nav>

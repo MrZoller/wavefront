@@ -44,6 +44,7 @@ const START_STEPS: { id: string; title: string; why: string }[] = [
 /** The landing view: the track/module map (brief §9, §14). Shown when no module is open. */
 export function TrackOverview() {
   const setActiveModule = useAppStore((s) => s.setActiveModule);
+  const openAbout = useAppStore((s) => s.openAbout);
 
   return (
     <div className="mx-auto max-w-3xl px-8 py-12">
@@ -135,11 +136,26 @@ export function TrackOverview() {
         })}
       </div>
 
-      {/* Scope note — calm and quiet, like a license line (no banner, no "Disclaimer"). */}
+      {/*
+       * Scope teaser — calm and quiet, like a license line (no banner, no "Disclaimer"). A one-clause
+       * scope gesture still reassures a reader who never clicks through (the near-term audience cares
+       * about scope), while the em-dashed "more about the project" pulls toward the fuller
+       * scope/independence statement on the About page instead of completing the thought here (which
+       * would just duplicate it). It doubles as the discovery touchpoint a first-time visitor meets on
+       * the landing — the nav keeps its own permanent About link; this is additional, not a move.
+       */}
       <footer className="mt-10 border-t border-border pt-5">
         <p className="text-xs text-text-faint">
-          Wavefront teaches signal processing using publicly available, textbook-level concepts and
-          synthetic signals.
+          Built from scratch, with public, textbook-level content and synthetic signals throughout
+          &mdash;{' '}
+          <button
+            type="button"
+            onClick={openAbout}
+            className="text-signal underline decoration-signal-dim/60 underline-offset-2 transition-colors hover:decoration-signal"
+          >
+            more about the project
+          </button>
+          .
         </p>
       </footer>
     </div>
