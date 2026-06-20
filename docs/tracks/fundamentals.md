@@ -8,11 +8,12 @@ receiver pulls many signals out of one digitized band.
 
 ## Layer 0 — Sampling & the frequency domain
 
-| Module                           | Intuition                                                                       | Status      |
-| -------------------------------- | ------------------------------------------------------------------------------- | ----------- |
-| **Sampling & Aliasing**          | Sampling only sees the tick marks; tones above Nyquist fold down (wagon-wheel). | ✅ shipping |
-| **The DFT as a Change of Basis** | Each spectrum bin is the signal dotted with one sinusoid.                       | ✅ shipping |
-| **Windowing & Leakage**          | Taper a block to trade mainlobe width for sidelobe level.                       | ✅ shipping |
+| Module                           | Intuition                                                                         | Status      |
+| -------------------------------- | --------------------------------------------------------------------------------- | ----------- |
+| **Sampling & Aliasing**          | Sampling only sees the tick marks; tones above Nyquist fold down (wagon-wheel).   | ✅ shipping |
+| **The DFT as a Change of Basis** | Each spectrum bin is the signal dotted with one sinusoid.                         | ✅ shipping |
+| **Windowing & Leakage**          | Taper a block to trade mainlobe width for sidelobe level.                         | ✅ shipping |
+| **FFT Bins & Zero-Padding**      | More bins (zero-padding) resample the spectrum smoother; only more data resolves. | ✅ shipping |
 
 ![Sampling & Aliasing module](../images/sampling-aliasing.png)
 
