@@ -335,6 +335,17 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- **Bottom-fade scroll cue added to the explanation side-rail.** The right-hand explanation panel
+  (`ASIDE`) is one of the app's two main content scroll regions — its write-ups routinely run past the
+  fold — but only the module plot region (`.wf-scroll`) signaled "more below" with a bottom fade; the
+  side-rail had no such cue, so its scrollability wasn't obvious. It now carries the **same** fade,
+  bringing both main scroll regions into alignment (they already shared the app-wide scrollbar styling).
+  The fade is token-derived and quiet (neutral, never the green accent) and — crucially — fades to the
+  panel's own `surface`, the color _behind_ the text: a long explanation fades out at the bottom edge,
+  while a short, non-scrolling one leaves bare surface under the fade and shows nothing, so it's never
+  dimmed. Layout/CSS only; explanation copy and behavior are unchanged. The Modulation Zoo marquee
+  screenshot is regenerated and shows the cue on its long explanation.
+
 - **Sticky controls now pin to whichever edge they're anchored on — top _or_ bottom (fixes Modulation
   Zoo).** The co-visibility rail (`<ControlRail>`) previously only pinned **bottom**-anchored controls
   (the radar / GPS footers); a module whose controls sit at the **top** with plot rows stacked below —

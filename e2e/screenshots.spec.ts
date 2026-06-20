@@ -193,11 +193,14 @@ test('modulation zoo module', async ({ page }) => {
   await page.getByRole('button', { name: 'Modulation Zoo' }).first().click();
   const spectrogram = page.getByRole('img', { name: /QPSK spectrogram/i });
   await expect(spectrogram).toBeVisible();
-  // The mirror image of the radar's pinned footer: Modulation Zoo's controls are top-anchored, so the
-  // SNR slider + scheme chips pin in a header above the scroll region. Confirm the region overflows
-  // and shows the bottom-fade cue, then scroll to a lower plot row (the spectrogram) and check the SNR
-  // slider stays co-visible AND the plot row scrolls *beneath* the pinned header, never under it.
-  // (CONTRIBUTING → "Keep controls co-visible with their target plot".)
+  // Gallery shot first: the natural top-of-module view — the pinned SNR/chip header above the
+  // constellation row, with the bottom fade cueing more below.
+  await page.screenshot({ path: path.join(IMG_DIR, 'modulation-zoo.png') });
+  // Then the layout guard, the mirror image of the radar's pinned footer: Modulation Zoo's controls
+  // are top-anchored, so the SNR slider + scheme chips pin in a header above the scroll region.
+  // Confirm the region overflows and shows the bottom-fade cue, then scroll to a lower plot row (the
+  // spectrogram) and check the SNR slider stays co-visible AND the plot row scrolls *beneath* the
+  // pinned header, never under it. (CONTRIBUTING → "Keep controls co-visible with their target plot".)
   const scroll = page.locator('.wf-scroll');
   expect(await scroll.evaluate((el) => el.scrollHeight > el.clientHeight + 1)).toBe(true);
   await expect(page.locator('.wf-scroll-fade')).toBeVisible();
@@ -210,7 +213,6 @@ test('modulation zoo module', async ({ page }) => {
   const plotBox = await spectrogram.boundingBox();
   if (!railBox || !plotBox) throw new Error('rail or plot not laid out');
   expect(railBox.y + railBox.height).toBeLessThanOrEqual(plotBox.y + 1);
-  await page.screenshot({ path: path.join(IMG_DIR, 'modulation-zoo.png') });
 });
 
 test('ofdm module', async ({ page }) => {
