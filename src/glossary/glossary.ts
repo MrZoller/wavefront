@@ -188,6 +188,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'The map of I/Q points a modulation scheme uses to encode groups of bits.',
     moduleId: 'symbol-mapping',
   },
+  convolution: {
+    id: 'convolution',
+    term: 'convolution',
+    gloss:
+      "Sliding one signal's flipped copy across another, multiplying and summing at each step — how a system turns any input into its output.",
+    moduleId: 'convolution',
+    docsPage: 'convolution',
+  },
   'critical-frequency': {
     id: 'critical-frequency',
     term: 'critical frequency',
@@ -394,6 +402,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'The 3–30 MHz band, where a skywave bounce off the ionosphere can carry a signal around the world.',
     moduleId: 'band-explorer',
   },
+  'impulse-response': {
+    id: 'impulse-response',
+    term: 'impulse response',
+    gloss:
+      'What a system puts out when fed a single impulse — and, for an LTI system, all you need to predict its response to any input.',
+    moduleId: 'convolution',
+    docsPage: 'convolution',
+  },
   ionogram: {
     id: 'ionogram',
     term: 'ionogram',
@@ -460,6 +476,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
       'An adaptive filter that learns the channel inverse by nudging its tap weights downhill on its own error — gradient descent, one step per sample.',
     moduleId: 'equalization',
     docsPage: 'equalization',
+  },
+  lti: {
+    id: 'lti',
+    term: 'LTI system',
+    expansion: 'Linear Time-Invariant',
+    gloss:
+      'A system that is linear and unchanging over time — the kind completely described by its impulse response, so convolution predicts its output.',
+    moduleId: 'convolution',
   },
   'matched-filter': {
     id: 'matched-filter',

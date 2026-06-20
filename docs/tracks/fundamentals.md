@@ -1,10 +1,10 @@
 # Track D — Fundamentals
 
-Conceptually this track comes _first_ — sampling, the FFT, filtering, and multirate underpin
-everything in A–C. It's built later because those tracks already forced most of its primitives into
-existence; here that machinery gets consolidated and named. For a learner it answers "why does any of
-this actually work?" — and its marquee, the **channelizer**, is how a wideband receiver pulls many
-signals out of one digitized band.
+Conceptually this track comes _first_ — sampling, the FFT, convolution, filtering, and multirate
+underpin everything in A–C. It's built later because those tracks already forced most of its
+primitives into existence; here that machinery gets consolidated and named. For a learner it answers
+"why does any of this actually work?" — and its marquee, the **channelizer**, is how a wideband
+receiver pulls many signals out of one digitized band.
 
 ## Layer 0 — Sampling & the frequency domain
 
@@ -18,7 +18,20 @@ signals out of one digitized band.
 
 ![DFT as a change of basis module](../images/dft-basis.png)
 
-## Layer 1 — Filtering & multirate
+## Layer 1 — Systems
+
+| Module                                 | Intuition                                                                          | Status      |
+| -------------------------------------- | ---------------------------------------------------------------------------------- | ----------- |
+| **Convolution & the Impulse Response** | A system _is_ its impulse response; any output is a sum of shifted, scaled copies. | ✅ shipping |
+
+![Convolution & the Impulse Response module](../images/convolution.png)
+
+> The organizing idea under the filtering layer: an FIR filter's taps _are_ an impulse response, the
+> matched filter _is_ convolution with a flipped pulse, and multipath _is_ a few-tap echo response —
+> same operation, only `h` differs. One tested `convolve` primitive backs this module and the
+> filtering ones (it precedes them on purpose). All signals are synthetic.
+
+## Layer 2 — Filtering & multirate
 
 | Module                         | Intuition                                                             | Status      |
 | ------------------------------ | --------------------------------------------------------------------- | ----------- |
@@ -27,7 +40,7 @@ signals out of one digitized band.
 
 ![FIR Filtering module](../images/fir-filter.png)
 
-## Layer 2 — Channelization (marquee)
+## Layer 3 — Channelization (marquee)
 
 | Module                | Intuition                                                                        | Status      |
 | --------------------- | -------------------------------------------------------------------------------- | ----------- |

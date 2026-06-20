@@ -8,6 +8,31 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Fundamentals module: Convolution & the Impulse Response.** A new module in a new **"Systems"**
+  stage of **Fundamentals**, slotted _before_ the filtering layer (Channelizer/PFB stays the track's
+  marquee — one capstone per track). It names the organizing idea the app already runs on everywhere
+  but never taught on its own. The framing leads with the **impulse response**, not "flip, slide,
+  multiply, sum": an **LTI system** is completely described by how it answers a single impulse, and
+  its output for any signal is a sum of shifted, scaled copies of that response — which _is_
+  **convolution**. Three linked interactions on one shared impulse response `h`: (1) **ping the
+  system** — drag/sketch the response taps (a draggable, keyboard-operable stem editor with
+  grab/grabbing cursor + halos), defining a system by drawing how it answers a ping; (2) the
+  **sliding mechanism** — a scrubbable slide position `k` shows the flipped `h` overlapping the
+  input, the per-pair products, and one output sample being built, left to right; (3) the **payoff**
+  — preset responses that _are_ other modules (a moving-average **low-pass FIR filter**, a flipped
+  pulse = the **matched filter**, a spike-plus-echo = **multipath**), run through the same operation
+  to wildly different outputs, cross-linked to **FIR Filtering**, **Matched Filter**, and **Multipath
+  & Fading** by human name. A "go deeper" rail adds **time convolution = frequency multiplication**
+  (why the FFT enables fast convolution), linked to **The DFT as a Change of Basis**. One
+  from-scratch, tested `dsp/` primitive backs it (`src/dsp/convolution.ts`: `convolve`,
+  `convolveAt`) — surfaced as the **named** concept and reused: pulse shaping now re-exports
+  `convolve` from here rather than carrying its own copy. Tests pin identity (a unit impulse returns
+  the input), length (`N + M − 1`), commutativity, worked-by-hand examples, `convolveAt`-vs-`convolve`
+  agreement, and the cross-link proof that `convolve(sig, reverse(pulse))` equals
+  `crossCorrelate(pulse, sig)` (the matched filter is the same operation). Three glossary terms
+  (convolution, impulse response, LTI system) and `docs/dsp/convolution.md`. Strictly textbook-level;
+  all signals synthetic.
+
 - **Synthesis module: GPS Acquisition.** A deliberately bounded synthesis scene added to
   **Modulations & Waveforms** (alongside the radar scene in the "Synthesis" stage; the Modulation Zoo
   stays the track's marquee), making one point click: GPS is three things already built — spread

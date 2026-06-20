@@ -298,6 +298,15 @@ test('windowing module', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'windowing.png') });
 });
 
+test('convolution module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Convolution & the Impulse Response' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /flipped impulse response sliding across the input/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'convolution.png') });
+});
+
 test('fir filter module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'FIR Filtering' }).first().click();

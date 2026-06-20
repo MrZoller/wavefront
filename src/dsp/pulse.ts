@@ -4,6 +4,11 @@
  * per I/Q component; `sps` is samples per symbol (the oversampling factor of the waveform).
  */
 
+// Pulse shaping is literally "convolve the symbols with the pulse", so it reuses the named
+// convolution primitive (Fundamentals — Systems) rather than carrying its own copy. Re-exported here
+// so existing `@/dsp/pulse` callers keep importing `convolve` from where they shape with it.
+export { convolve } from './convolution';
+
 /** Normalized sinc, sinc(x) = sin(πx)/(πx), with sinc(0) = 1. */
 const sinc = (x: number): number => (x === 0 ? 1 : Math.sin(Math.PI * x) / (Math.PI * x));
 
@@ -63,16 +68,5 @@ export function rootRaisedCosine(beta: number, span = 8, sps = 8): number[] {
 export function upsample(symbols: number[], sps: number): number[] {
   const out = new Array(symbols.length * sps).fill(0);
   for (let i = 0; i < symbols.length; i++) out[i * sps] = symbols[i];
-  return out;
-}
-
-/** Full linear convolution of `x` with FIR taps `h` (length `x.length + h.length − 1`). */
-export function convolve(x: number[], h: number[]): number[] {
-  const out = new Array(x.length + h.length - 1).fill(0);
-  for (let i = 0; i < x.length; i++) {
-    const xi = x[i];
-    if (xi === 0) continue;
-    for (let j = 0; j < h.length; j++) out[i + j] += xi * h[j];
-  }
   return out;
 }
