@@ -67,9 +67,10 @@ introduces a non-obvious term or acronym, you do **one** thing:
   `I/Q` for `IQ`, `16-QAM` for `QAM`) go in the `ALIASES` map in `match.ts`.
 
 Then just write plain prose — `the FFT turns the waveform into its spectrum…` — and the side rail,
-captions, and module intro all gloss it automatically. Prose surfaces are wrapped centrally
-(`ModuleView` wraps the explanation + intro; module captions wrap their text in `<GlossedText>`), so
-new copy is glossed by construction.
+captions, and module intro all gloss it automatically. Each prose surface is wrapped in
+`<GlossedText>` (`ModuleView` wraps the module intro for you; each `Explanation` and module caption
+wraps its own prose — a new explanation component must include the wrapper), so wrapped copy is
+glossed by construction.
 
 **The marking rules the matcher enforces (you don't think about these):**
 
