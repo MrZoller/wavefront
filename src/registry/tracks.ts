@@ -53,9 +53,10 @@ export const TRACKS: TrackDef[] = [
   {
     id: 'propagation-and-bands',
     title: 'Propagation & Bands',
-    description: 'The RF physics around the signal: bands, line-of-sight, and HF skywave.',
+    description:
+      'The RF physics around the signal: bands, line-of-sight, HF skywave, and sounding the ionosphere.',
     status: 'shipping',
-    layerNames: { 0: 'Bands & Reach' },
+    layerNames: { 0: 'Bands & Reach', 1: 'Synthesis' },
   },
   {
     id: 'coding-and-equalization',
