@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 Wavefront is an interactive, **from-scratch, test-verified DSP/RF learning tool** for strong
-software engineers who are *not* electrical engineers. Seven tracks take a reader from a signal as
+software engineers who are _not_ electrical engineers. Seven tracks take a reader from a signal as
 a rotating vector to direction finding, the full radio chain, and channel coding — every transform
 built **from scratch** (no black-box DSP libraries) and checked against reference values, so the
 math is readable and trustworthy. The soul of the tool is **direct manipulation**: drag the emitter,
@@ -26,7 +26,7 @@ pushing. Stack: React 19 + TypeScript (strict) + Vite + Tailwind v4 + Zustand + 
 Audio. Imports use the `@/` alias for `src/`.
 
 **Screenshots — regenerate only what structurally changed.** A full `npm run screenshots` re-renders
-the whole gallery, and the render is environment-specific: even an *unchanged* scene diffs across
+the whole gallery, and the render is environment-specific: even an _unchanged_ scene diffs across
 machines, so a full regen buries the one real change in noise. Verify app-wide visual changes live
 (`npm run dev`), then commit **only** the screenshots whose content actually changed.
 
@@ -65,7 +65,7 @@ curriculum is a registry entry, not a wiring change.
 
 The ones an agent wouldn't infer. Most are guarded by a test (named inline); honor them in spirit too.
 
-- **From-scratch + test-first.** Build and test the `dsp/` / `propagation/` function *before* the UI.
+- **From-scratch + test-first.** Build and test the `dsp/` / `propagation/` function _before_ the UI.
   Tests pin real expected values against an **independent** reference (GDOP `√(8/9)`, Hamming `9·p²`,
   Parseval, peak-at-known-lag) — not the code's own comments — and cross-link proofs where apt (e.g.
   `convolve(sig, reverse(pulse)) == crossCorrelate`, `convolution.test.ts`). The independent
@@ -82,20 +82,20 @@ The ones an agent wouldn't infer. Most are guarded by a test (named inline); hon
   `src/test/no-internal-vocab.test.ts`, `Sidebar.test.tsx`.
 - **Shared primitives only.** All sliders go through `<Slider>` — no raw `<input type="range">`
   (guard in `Slider.test.tsx`). Every Cartesian plot must name its axes (`xLabel`/`yLabel` are
-  required props: quantity + *honest* unit, none for normalized/unitless); a descriptive title goes
+  required props: quantity + _honest_ unit, none for normalized/unitless); a descriptive title goes
   in `<PlotTitle>`, kept visually distinct from the axis caption.
 - **Interactive affordance.** Draggable canvas handles get a `grab`/`grabbing` cursor + a persistent
   halo + keyboard focus/nudge; chips look pressable; lean on passive affordance with at most **one**
   quiet textual hint per surface — no on-canvas "drag me" chrome.
-- **One capstone per track.** Exactly one module sets `isCapstone` — the track's **marquee**, *not*
+- **One capstone per track.** Exactly one module sets `isCapstone` — the track's **marquee**, _not_
   necessarily the last by `order` (an `advanced` offshoot may legitimately follow it). Guard:
   `src/registry/registry.test.ts`.
 - **Layout.** Tall modules pin their controls in a `<ControlRail edge>` to whichever edge they live
-  on (top *or* bottom), so a control never scrolls away from the plot it drives. Both scroll regions
+  on (top _or_ bottom), so a control never scrolls away from the plot it drives. Both scroll regions
   (module region + explanation side-rail) carry the token-derived bottom-fade "more below" cue.
   Respect `prefers-reduced-motion` (`usePrefersReducedMotion`). Co-visibility is checked in
   `e2e/screenshots.spec.ts`.
-- **Pedagogy.** Lead with the *idea / intuition*, not the mechanics; cross-link related modules by
+- **Pedagogy.** Lead with the _idea / intuition_, not the mechanics; cross-link related modules by
   human name; use progressive disclosure ("go deeper") for the rigorous material; gloss jargon via
   the map.
 
