@@ -84,3 +84,15 @@ export function fftShift<T>(x: T[]): T[] {
   const h = Math.ceil(x.length / 2);
   return [...x.slice(h), ...x.slice(0, h)];
 }
+
+/**
+ * The `fftShift`ed bin index a normalized frequency `f` (cycles per sample) lands in for an `n`-point
+ * transform. Zero frequency maps to the centre bin `⌈n/2⌉`; this is the inverse of the `fftShift`
+ * reordering. Used wherever a centered spectrum is read back as a measurement — the Doppler axis of
+ * the radar range-Doppler map and the GPS acquisition surface alike.
+ */
+export function fftShiftedBin(f: number, n: number): number {
+  const k = ((Math.round(f * n) % n) + n) % n; // raw FFT bin
+  const h = Math.ceil(n / 2);
+  return k >= h ? k - h : k + (n - h);
+}

@@ -19,7 +19,7 @@
 
 import { type Complex, magnitude } from './complex';
 import { crossCorrelateComplex } from './correlation';
-import { fft, fftShift } from './fft';
+import { fft, fftShift, fftShiftedBin } from './fft';
 import { gaussianNoise } from './random';
 
 /** One synthetic point target in the scene. */
@@ -123,12 +123,11 @@ export function rangeDopplerMap(rx: Complex[][], tx: Complex[], rangeBins: numbe
 
 /**
  * The `fftShift`ed bin index a normalized Doppler `f` (cycles/pulse) lands in for an `n`-pulse FFT.
- * Zero Doppler maps to the centre bin `⌈n/2⌉`; the inverse of the `fftShift` reordering.
+ * Zero Doppler maps to the centre bin `⌈n/2⌉`. Thin alias of the shared {@link fftShiftedBin} — the
+ * slow-time Doppler axis is just a centered spectrum read back as a measurement.
  */
 export function dopplerBin(f: number, n: number): number {
-  const k = ((Math.round(f * n) % n) + n) % n; // raw FFT bin
-  const h = Math.ceil(n / 2);
-  return k >= h ? k - h : k + (n - h);
+  return fftShiftedBin(f, n);
 }
 
 /** Time-bandwidth product of an LFM chirp: duration (samples) × swept bandwidth (cycles/sample). */
