@@ -9,10 +9,11 @@ import { useAppStore } from '@/store/appStore';
  * in a calm collapsible side rail rather than a wall of text (brief §11).
  *
  * The module column is laid out as a **scrolling plot region above a pinned footer**: the plots
- * scroll in `.wf-scroll` (a persistent, on-theme scrollbar so tall modules read as scrollable on
- * load), and a module's primary controls portal into the footer via `<ControlRail>` so they stay
- * co-visible with the plot they drive — the plots scroll *up to* the rail and stop, never under it.
- * A subtle bottom fade marks "more below". See CONTRIBUTING → "Keep controls co-visible".
+ * scroll in `.wf-scroll`, and a module's primary controls portal into the footer via `<ControlRail>`
+ * so they stay co-visible with the plot they drive — the plots scroll *up to* the rail and stop,
+ * never under it. A **bottom fade** is the scroll cue: partial plot content fades into the background
+ * at the bottom edge, signaling "more below" (a forced/persistent scrollbar was dropped — modern
+ * browsers auto-hide overlay scrollbars regardless). See CONTRIBUTING → "Keep controls co-visible".
  */
 export function ModuleView({ moduleId }: { moduleId: string }) {
   const setActiveModule = useAppStore((s) => s.setActiveModule);
@@ -65,9 +66,10 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
               <Interactive />
             </ControlRailSlotProvider>
           </div>
-          {/* "More below" cue that also softens the rail's top edge — content fades toward the
-              background as it approaches the footer. */}
-          <div className="pointer-events-none relative z-10 -mt-8 h-8 bg-gradient-to-b from-transparent to-bg" />
+          {/* The scroll cue: partial plot content fades into the background at the bottom edge, so a
+              tall module reads as "more below" without relying on a scrollbar. Also softens the rail's
+              top edge. Deep enough that clipped content visibly disappears into it. */}
+          <div className="wf-scroll-fade pointer-events-none relative z-10 -mt-12 h-12 bg-gradient-to-b from-transparent to-bg" />
           {/* The pinned control-rail footer: <ControlRail> portals here, so the plots scroll up to it
               and stop rather than under it. Zero-height (hidden) when a module has no rail. */}
           <div ref={setFooter} className="relative z-10 empty:hidden" />

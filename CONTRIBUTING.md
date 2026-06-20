@@ -243,15 +243,17 @@ stop, **never under it** (an in-flow `sticky` footer can't avoid that: the conte
 box and slides beneath, showing a peek-through strip). The rail is a solid, opaque `bg-surface`
 floor with a top border + shadow. Place the module's **marquee / target plot last** so it sits
 directly above the rail (on the radar module, the range-Doppler map; the explanatory single-pulse
-plots sit above that). Two affordance details ride along so a tall module reads as scrollable on
-load: the scroll region (`.wf-scroll`) shows a persistent thin, **neutral** scrollbar (a static
-affordance, never the green accent — macOS overlay scrollbars otherwise auto-hide), and a subtle
-bottom fade marks "more below". No per-module "scroll for more" text — the scrollbar + fade are the
-cue (one quiet visual hint, not prose). Where this layout doesn't fit, the accepted alternatives are
+plots sit above that). A tall module signals scrollability with a **bottom fade gradient** on the
+scroll region (`.wf-scroll`): partial plot content fades into the background at the bottom edge — the
+canonical "more below" cue. It's static and background-derived (never the green accent), and there's
+no per-module "scroll for more" text (one quiet visual cue, not prose). A **forced/persistent
+scrollbar was deliberately dropped** — modern browsers (Safari, Chrome) auto-hide overlay scrollbars
+on trackpads regardless of CSS, so it never rendered; the default scrollbar appearing on active
+scroll is fine as a secondary cue. Where this layout doesn't fit, the accepted alternatives are
 placing the controls **beside** a tall plot (two-column) or capping stacked-plot height. A Playwright
-check in `e2e/screenshots.spec.ts` asserts the radar map and its sliders are co-visible and the map
-never renders under the rail, so the regression can't quietly return as more tall synthesis modules
-land.
+check in `e2e/screenshots.spec.ts` asserts the radar map and its sliders are co-visible, the map
+never renders under the rail, and the fade cue is present — so the regression can't quietly return as
+more tall synthesis modules land.
 
 ## Coding conventions
 

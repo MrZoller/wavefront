@@ -229,12 +229,14 @@ test('pulse compression & range-Doppler module', async ({ page }) => {
   const map = page.getByRole('img', { name: /range-Doppler map/i });
   await expect(map).toBeVisible();
   // The plots live in a scroll region; the controls are pinned in a footer below it. Confirm the
-  // region actually scrolls (so the persistent scrollbar + fade affordance is warranted), then with
-  // it scrolled to the bottom the marquee map and the range/velocity sliders are co-visible AND the
+  // region overflows and shows the bottom-fade scroll cue (the canonical affordance — a forced
+  // scrollbar was dropped since browsers auto-hide overlay scrollbars). Then, with the region
+  // scrolled to the bottom, the marquee map and the range/velocity sliders are co-visible AND the
   // map never renders under the rail. (CONTRIBUTING → "Keep controls co-visible with their target
   // plot".)
   const scroll = page.locator('.wf-scroll');
   expect(await scroll.evaluate((el) => el.scrollHeight > el.clientHeight + 1)).toBe(true);
+  await expect(page.locator('.wf-scroll-fade')).toBeVisible();
   await scroll.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
   const rangeSlider = page.getByRole('slider', { name: /Target range/i });
   await expect(map).toBeInViewport();
