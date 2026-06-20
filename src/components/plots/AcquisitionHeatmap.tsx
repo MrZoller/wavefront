@@ -214,6 +214,17 @@ export function AcquisitionHeatmap({
               }
             : undefined
         }
+        onPointerCancel={
+          interactive
+            ? (e) => {
+                // A browser/OS-interrupted touch or stylus drag fires pointercancel, not pointerup —
+                // clear the drag here too so a later move can't keep dragging the marker (and the
+                // GPS sliders) with no handle held.
+                dragging.current = false;
+                e.currentTarget.style.cursor = 'crosshair';
+              }
+            : undefined
+        }
         onFocus={interactive ? () => setFocused(true) : undefined}
         onBlur={interactive ? () => setFocused(false) : undefined}
         onKeyDown={

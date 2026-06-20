@@ -14,11 +14,15 @@ import { prnReceived, acquisitionSurface, acquisitionPeak, codePhaseProfile } fr
 const L = 64; // synthetic PRN code length (chips) — the code-phase search extent
 const CODE_SEED = 1207; // a fixed synthetic PRN code (no real PRN assignments)
 const NOISE_SEED = 2024;
-const PERIOD_OPTIONS = [4, 8, 16, 32]; // coherent integration lengths (powers of two — the Doppler FFT)
-// Fraction of the ±½-cycle/period band the Doppler control sweeps. Held below the coarsest FFT's
-// Nyquist-rounding threshold — round(span·4) must stay ≤ 1, i.e. span < 0.375 — so the true (code
-// phase, Doppler) the marker draws never rounds onto the Nyquist bin, which fftShift wraps to the
-// opposite edge and would split the green handle from the detected-peak ring at the Doppler extremes.
+// Coherent integration lengths (powers of two = the Doppler-FFT length). 8 is the shortest kept: a
+// 4-period FFT's 4-bin Doppler axis is too coarse for the draggable marker to round-trip a drag —
+// its top cell would clamp and collapse the high-Doppler end of the control.
+const PERIOD_OPTIONS = [8, 16, 32];
+// Fraction of the ±½-cycle/period band the Doppler control sweeps. Held below the coarsest (8-period)
+// FFT's edge so the true Doppler the marker draws stays on an interior bin: never the Nyquist bin
+// (which fftShift wraps to the opposite row) and never past the top/bottom cell (which the row clamp
+// would collapse) — so the green handle and the detected-peak ring stay locked together across the
+// whole drag (round(0.36·8) = 3 < 4, and 8·(0.5 + 0.36) = 6.9 < 7).
 const DOPPLER_SPAN = 0.36;
 const DOPPLER_HZ_MAX = 5000; // illustrative Hz at full deflection (real GPS Doppler is a few kHz)
 const FLOOR_DB = -20; // display range — the acquired peak rides ~20–30 dB over the noise once integrated
@@ -41,7 +45,7 @@ export function GpsAcquisitionModule() {
   const [codePhase, setCodePhase] = useState(21);
   const [dopplerControl, setDopplerControl] = useState(0.28); // −1 … +1 (relative velocity / satellite)
   const [snrDb, setSnrDb] = useState(-10); // negative ⇒ the signal is genuinely below the noise
-  const [periodIdx, setPeriodIdx] = useState(2); // → PERIOD_OPTIONS[periodIdx]
+  const [periodIdx, setPeriodIdx] = useState(1); // → PERIOD_OPTIONS[periodIdx] (16 periods)
 
   const periods = PERIOD_OPTIONS[periodIdx];
   const doppler = (DOPPLER_SPAN * dopplerControl) / L; // cycles/sample
