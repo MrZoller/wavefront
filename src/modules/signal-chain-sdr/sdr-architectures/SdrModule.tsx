@@ -43,6 +43,11 @@ const ARCHITECTURES: { id: string; name: string; examples: string; blocks: Diagr
   },
 ];
 
+// The three chains share one left-to-right grid this many columns wide (the longest chain), so the
+// ADC sits in the same column scale across all three — that shared coordinate is what lets the eye
+// read the ADC marching toward the antenna down the stack. The shorter chains left-align into it.
+const COLUMNS = Math.max(...ARCHITECTURES.map((a) => a.blocks.length));
+
 /**
  * SDR architectures (Track F). The same chain with the ADC in three different places: late
  * (superheterodyne), at baseband (zero-IF), or right behind the antenna (direct sampling). The lit
@@ -59,6 +64,7 @@ export function SdrModule() {
           </PlotTitle>
           <BlockDiagram
             blocks={a.blocks}
+            columns={COLUMNS}
             ariaLabel={`${a.name} architecture: ${a.blocks.map((n) => n.label).join(', ')}`}
           />
         </div>
