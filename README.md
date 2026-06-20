@@ -14,9 +14,10 @@
 ![GDOP heatmap — drag the receivers and watch the precision field repaint](./docs/images/gdop-heatmap.png)
 
 Wavefront is an interactive, visually striking web app that teaches DSP to **strong software
-engineers who are not electrical engineers**. The first track is **Direction Finding &
-Geolocation** — the most visual corner of DSP — built on a small foundation of reusable,
-**from-scratch** DSP primitives and visualization components.
+engineers who are not electrical engineers**. Its seven tracks take you from a signal as a
+rotating vector all the way to direction finding, the full radio chain, and channel coding —
+every transform built **from scratch** (no black-box libraries) and checked against reference
+values by the test suite, so you can read and trust the math.
 
 > The signature interaction is **direct manipulation**: drag the emitter, drag a receiver,
 > sweep a slider — and watch _everything_ recompute and animate in real time. That live
@@ -35,7 +36,8 @@ Everything is explained in software-developer analogies:
 ## Gallery
 
 _Marquee scenes are captured automatically (`npm run screenshots` → `docs/images/`)._ **v1 ships
-the full Direction Finding track** — from the rotating phasor up to the live GDOP map.
+all seven tracks**; the scenes below walk the **Direction Finding & Geolocation** track from the
+rotating phasor up to the live GDOP map, and the overview map shows the full curriculum.
 
 |                                                                 |                                                           |
 | --------------------------------------------------------------- | --------------------------------------------------------- |
@@ -91,6 +93,8 @@ conceptually interesting work (a fast FFT lib is acceptable only as an optimizat
 from-scratch reference the tests check against). The `dsp/` core is covered by
 **numerical-correctness tests** (Vitest): known inputs → known outputs, reference-vs-optimized
 agreement, Parseval/energy checks, correlation-peak-at-known-lag, and closed-form spot checks.
+An independent correctness audit re-derived every `dsp/` and `propagation/` primitive against
+closed-form and textbook references — see **[docs/AUDIT.md](./docs/AUDIT.md)**.
 
 The Propagation & Bands track adds a sibling from-scratch module, `src/propagation/` — RF _physics_
 (wavelength, bands, the radio horizon, skywave/MUF), deliberately kept **out** of the `dsp/` core and
