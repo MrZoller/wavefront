@@ -25,7 +25,7 @@ export function AboutPage() {
             <h2 className="text-base font-medium text-text">What it is</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-muted">
               Wavefront is an interactive tool for learning digital signal processing and radio,
-              built mainly for software engineers who aren&rsquo;t electrical engineers. Every
+              built mainly for software developers who aren&rsquo;t electrical engineers. Every
               transform is built from scratch &mdash; no black-box libraries do the interesting math
               &mdash; and each one is checked against independent reference values by the test
               suite, so you can open the code and trust it rather than take a library&rsquo;s word
@@ -51,8 +51,8 @@ export function AboutPage() {
           <section>
             <h2 className="text-base font-medium text-text">Independence</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-text-muted">
-              Wavefront is a personal project, built on personal time and equipment. It isn&rsquo;t
-              affiliated with, sponsored by, or representative of any employer.
+              Wavefront is a personal project by Chris Zoller, built on personal time and equipment.
+              It isn&rsquo;t affiliated with, sponsored by, or representative of any employer.
             </p>
           </section>
         </div>
