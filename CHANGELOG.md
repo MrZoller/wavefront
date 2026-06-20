@@ -337,9 +337,11 @@ All notable changes to this project are documented here. The format is based on
 
 - **Direction-finding maps brought up to the affordance/legibility conventions (FDOA worst-case
   first).** A visual/affordance pass over the older geolocation scenes — no DSP, computed readout, or
-  drag-behavior changes. The shared **`WorldMap`** now (1) draws a quiet, token-derived legibility
-  backing behind every marker label so names read over a heatmap field — either half of a diverging
-  Doppler gradient, the GDOP precision heat, or a bright contour line — without washing the field out;
+  drag-behavior changes. The shared **`WorldMap`** now (1) sizes every marker label to the app's type
+  scale (Tailwind `text-sm`, the readable step above the body) and draws a quiet, token-derived
+  legibility backing behind it, so names read clearly over a heatmap field — either half of a
+  diverging Doppler gradient, the GDOP precision heat, or a bright contour line — without competing
+  with it;
   (2) takes a per-marker `labelOffset` so crowded labels separate instead of smudging into one
   another; and (3) renders a new `velocity` marker kind as an **open ring handle**, visibly distinct
   from the solid site dot. Its keyboard marker row is relabeled **`move:` → `select:`** to match what
