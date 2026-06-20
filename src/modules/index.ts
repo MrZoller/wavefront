@@ -46,6 +46,7 @@ import './modulations-and-waveforms/chirp';
 import './modulations-and-waveforms/classifier';
 // Layer 2 — Synthesis
 import './modulations-and-waveforms/range-doppler';
+import './modulations-and-waveforms/gps-acquisition';
 
 // Track D — Fundamentals
 // Layer 0 — Sampling & the frequency domain
