@@ -208,15 +208,19 @@ export function WorldMap({
         const align: CanvasTextAlign = off.dx < 0 ? 'right' : 'left';
         const lx = px + off.dx;
         const ly = py + off.dy;
-        ctx.font = '11px ui-monospace, monospace';
+        // On-canvas annotation labels, sized to the app's type scale (Tailwind `text-sm` = 14px, the
+        // readable step above the `text-xs` body) so they don't read as undersized against the large
+        // map visuals. The backing box derives from this size so it keeps wrapping the glyphs.
+        const labelPx = 14;
+        ctx.font = `${labelPx}px ui-monospace, monospace`;
         ctx.textAlign = align;
         ctx.textBaseline = 'alphabetic';
         // Quiet legibility backing so the muted label reads over a heatmap field — either half of a
         // diverging gradient, plus the bright contour line — without washing the field out.
         const tw = ctx.measureText(p.label).width;
-        const padX = 3.5;
+        const padX = 4;
         const rectX = (align === 'right' ? lx - tw : lx) - padX;
-        roundRectPath(ctx, rectX, ly - 9, tw + 2 * padX, 13, 3);
+        roundRectPath(ctx, rectX, ly - labelPx * 0.82, tw + 2 * padX, labelPx * 1.2, 3.5);
         ctx.fillStyle = withAlpha(colors.bg, 0.72);
         ctx.fill();
         ctx.fillStyle = colors.textMuted;
