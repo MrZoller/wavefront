@@ -28,6 +28,7 @@ const ALIASES: Record<string, string[]> = {
   ber: ['bit error rate'],
   'channel-estimation': ['channel estimate', 'channel estimator', 'estimated channel'],
   'constant-envelope': ['constant envelope'],
+  'critical-frequency': ['foF2'],
   ddc: ['digital downconverter', 'digital down-conversion', 'digital downconversion'],
   decimation: ['decimate', 'decimating'],
   'direct-sampling': ['direct-sampling'],

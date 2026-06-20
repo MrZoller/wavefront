@@ -22,4 +22,16 @@ export {
   skywaveApparentBearingRad,
   reflectionMidpoint,
 } from './skywave';
+export {
+  type IonoLayer,
+  type IonogramPoint,
+  type IonogramOptions,
+  LAYER_PEAK_HEIGHT_KM,
+  LAYER_SEMI_THICKNESS_KM,
+  virtualHeightKmFromDelay,
+  echoDelaySecondsForHeight,
+  reflectsVertical,
+  virtualHeightKm,
+  ionogramTrace,
+} from './ionosonde';
 export { formatFrequency, formatWavelength, formatDistanceKm } from './format';

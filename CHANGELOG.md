@@ -8,6 +8,26 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Synthesis module: The Ionosonde & the Ionogram.** A deliberately bounded synthesis scene added
+  to **Propagation & Bands** (a new "Synthesis" stage; Band Explorer stays the track's marquee),
+  making one point click: an ionosonde is echo-delay radar pointed straight up. Ping the sky and the
+  round-trip delay is a **virtual height** (`h' = c·t/2` — the radar range primitive, aimed upward);
+  sweep the frequency and the heights trace out the **ionogram**, which cusps up and cuts off at the
+  **critical frequency** (foF2) the HF Skywave stub only asserts. That cutoff _is_ the measurement;
+  the secant law then turns foF2 into the MUF for an oblique path (`MUF = foF2·sec φ`), closing the
+  Track-E loop. Drag foF2 (day/night, like the skywave scene), the layer peak height, the probe
+  frequency, or the oblique angle and watch the single-ping echo, the ionogram, and the readouts
+  recompute live. One from-scratch, tested `propagation/` addition backs it
+  (`src/propagation/ionosonde.ts`: `virtualHeightKmFromDelay`, `echoDelaySecondsForHeight`,
+  `reflectsVertical`, `virtualHeightKm`, `ionogramTrace`) — a single parabolic-layer reflection model
+  and the sweep that cuts off at foF2 — reusing the radar echo-delay idea, the chirp/sweep machinery,
+  the shared x–y plot, and the skywave `mufMHz` secant law wholesale (no new viz component). Five
+  glossary terms (ionosonde, ionogram, virtual height, critical frequency, sounding) and
+  `docs/propagation/ionosonde.md`. Strictly public/textbook-level — a single illustrative layer with
+  stand-in critical frequencies, no real ionograms, station identifiers, or space-weather data — and
+  explicitly **not** a new sounding track (o/x ray splitting, multi-layer D/E/F profiles, true-height
+  inversion, and oblique sounding are named as out-of-scope directions, not built).
+
 - **Synthesis module: Pulse Compression & Range-Doppler.** A deliberately bounded capstone-style
   scene added to **Modulations & Waveforms** (a new "Synthesis" stage; the Modulation Zoo stays the
   track's marquee), making one point click: radar's core signal processing is primitives already

@@ -172,6 +172,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'The map of I/Q points a modulation scheme uses to encode groups of bits.',
     moduleId: 'symbol-mapping',
   },
+  'critical-frequency': {
+    id: 'critical-frequency',
+    term: 'critical frequency',
+    gloss:
+      'The highest frequency a layer reflects straight back down (foF2 for the F-layer); above it a vertical wave punches through — the cutoff an ionogram measures.',
+    moduleId: 'ionosonde',
+  },
   'cross-correlation': {
     id: 'cross-correlation',
     term: 'cross-correlation',
@@ -370,6 +377,20 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'The 3–30 MHz band, where a skywave bounce off the ionosphere can carry a signal around the world.',
     moduleId: 'band-explorer',
+  },
+  ionogram: {
+    id: 'ionogram',
+    term: 'ionogram',
+    gloss:
+      'The trace an ionosonde builds by sweeping frequency — echo (virtual) height versus frequency — rising and then cutting off at the critical frequency.',
+    moduleId: 'ionosonde',
+  },
+  ionosonde: {
+    id: 'ionosonde',
+    term: 'ionosonde',
+    gloss:
+      'A sounder that pings the ionosphere straight up and times the echo — radar aimed at the sky — to read off reflection height and the critical frequency.',
+    moduleId: 'ionosonde',
   },
   ionosphere: {
     id: 'ionosphere',
@@ -613,6 +634,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'noisy-channel',
     docsPage: 'comms',
   },
+  sounding: {
+    id: 'sounding',
+    term: 'sounding',
+    gloss:
+      'Probing a medium by sending a pulse and timing its echo; an ionosonde sounds the ionosphere vertically, mapping reflection height against frequency.',
+    moduleId: 'ionosonde',
+  },
   sqnr: {
     id: 'sqnr',
     term: 'SQNR',
@@ -694,6 +722,13 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     expansion: 'Very High Frequency',
     gloss: 'The 30–300 MHz band, line-of-sight and local — where FM radio and broadcast TV live.',
     moduleId: 'band-explorer',
+  },
+  'virtual-height': {
+    id: 'virtual-height',
+    term: 'virtual height',
+    gloss:
+      "The reflection height implied by an echo's round-trip delay if the pulse travelled at light speed (h′ = c·t/2); the true height is a little lower, as the wave slows in the plasma.",
+    moduleId: 'ionosonde',
   },
   wavelength: {
     id: 'wavelength',

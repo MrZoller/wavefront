@@ -71,6 +71,8 @@ import './signal-chain-sdr/sdr-architectures';
 import './propagation-and-bands/band-explorer';
 import './propagation-and-bands/radio-horizon';
 import './propagation-and-bands/hf-skywave';
+// Layer 1 — Synthesis
+import './propagation-and-bands/ionosonde';
 
 // Track G — Coding & Equalization
 // Layer 0 — Error Control
