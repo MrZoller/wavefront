@@ -158,3 +158,14 @@ html {
 *::-webkit-scrollbar-thumb:active {
   background-color: var(--color-text-faint);
 }
+
+/*
+ * The bottom-fade scroll cue (`ModuleView`'s `.wf-scroll-fade`) belongs only to modules whose
+ * controls are pinned in a rail (`.wf-rail`): there the controls live outside the scroll region, so
+ * the fade only ever covers plots. A module *without* a rail keeps its controls at the end of the
+ * scroll content, so hide the fade for it — it must never dim the last controls at the bottom, the
+ * one spot they should be fully readable. (Default scrollbar still cues scrollability there.)
+ */
+main:not(:has(.wf-rail)) .wf-scroll-fade {
+  display: none;
+}

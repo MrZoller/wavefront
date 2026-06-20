@@ -43,7 +43,7 @@ export function ControlRail({ children, className, style }: ControlRailProps) {
   const rail = (
     <div
       className={[
-        'border-t border-border bg-surface px-6 pt-4 pb-6 shadow-[0_-10px_24px_-14px_rgba(0,0,0,0.85)]',
+        'wf-rail border-t border-border bg-surface px-6 pt-4 pb-6 shadow-[0_-10px_24px_-14px_rgba(0,0,0,0.85)]',
         className,
       ]
         .filter(Boolean)
