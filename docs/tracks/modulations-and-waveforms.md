@@ -1,6 +1,6 @@
 # Track C — Modulations & Waveforms
 
-Modulation is the most visual content in the project: every scheme has a distinct fingerprint across
+Modulation is some of the most visual content in the project: every scheme has a distinct fingerprint across
 time-domain I/Q, spectrum, constellation, eye, and spectrogram. Rather than an encyclopedia, this
 track leans on the pluggable `Modulator` interface (from Track B's design note) so coverage scales by
 adding strategies, and spends the effort on a few explorer/comparison surfaces.
