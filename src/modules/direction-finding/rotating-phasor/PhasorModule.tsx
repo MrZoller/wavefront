@@ -38,6 +38,13 @@ const prefill = (fn: (angle: number) => number, frequency: number, endPhase: num
   );
 };
 
+/** A full static frame — phasor angle plus prefilled I/Q windows — at a given frequency and phase. */
+const staticFrame = (frequency: number, angle: number): Frame => ({
+  angle,
+  i: prefill(Math.cos, frequency, angle),
+  q: prefill(Math.sin, frequency, angle),
+});
+
 /**
  * The rotating phasor / IQ module (brief §4, Layer 0) — the first vertical slice.
  *
@@ -54,11 +61,7 @@ export function PhasorModule() {
   // opts back into motion.
   const [running, setRunning] = useReducedMotionPlayState(prefersReducedMotion); // phasor rotation
   const startAngle = prefersReducedMotion ? REST_ANGLE : 0;
-  const [frame, setFrame] = useState<Frame>(() => ({
-    angle: startAngle,
-    i: prefill(Math.cos, 1.0, startAngle),
-    q: prefill(Math.sin, 1.0, startAngle),
-  }));
+  const [frame, setFrame] = useState<Frame>(() => staticFrame(frequency, startAngle));
 
   // Accumulate phase across frames so changing frequency never makes the phasor jump. Seed it at the
   // resting angle so a Resume from the static frame continues smoothly rather than snapping to 0.
@@ -97,6 +100,18 @@ export function PhasorModule() {
       audio.start(toAudioHz(frequency));
       setPlaying(true);
     }
+  };
+
+  // While paused (e.g. the reduced-motion default) the animation loop isn't running to redraw the
+  // I/Q windows, so refresh the static frame here — otherwise the plots would keep their old waveform
+  // beside an updated period/Hz readout. While running, the loop already tracks the new frequency.
+  const handleFrequency = (f: number) => {
+    setFrequency(f);
+    if (running) return;
+    const next = staticFrame(f, phaseRef.current);
+    iBuf.current = next.i.slice();
+    qBuf.current = next.q.slice();
+    setFrame(next);
   };
 
   const period = 1 / frequency;
@@ -163,7 +178,7 @@ export function PhasorModule() {
             step={0.1}
             decimals={1}
             unit=" Hz"
-            onChange={setFrequency}
+            onChange={handleFrequency}
             ariaLabel="Frequency in hertz"
           />
           <span className="readout text-xs text-text-faint">
