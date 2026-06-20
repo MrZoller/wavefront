@@ -237,14 +237,21 @@ push the controls below the fold, and the drag-watch loop silently breaks on exa
 most need it.
 
 The shared mechanism is **`<ControlRail>`** (`src/components/ControlRail.tsx`): wrap a module's
-primary controls in it and they stick to the bottom of the scrolling module column, always reachable
-while the visualizations scroll behind them. Place the module's **marquee / target plot directly
-above the rail** so the thing you drag against is the plot nearest the sliders (on the radar module,
-the range-Doppler map sits right above the rail; the explanatory single-pulse plots sit above that).
-Where sticky doesn't fit, the accepted alternatives are placing the controls **beside** a tall plot
-(two-column) or capping stacked-plot height so the panel stays above the fold. A Playwright check in
-`e2e/screenshots.spec.ts` asserts the radar map and its sliders are both in the viewport, so the
-regression can't quietly return as more tall synthesis modules land.
+primary controls in it and `ModuleView` lays the column out as a **scrolling plot region above a
+pinned footer** — the rail portals into the footer, so the plots scroll _up to_ its top edge and
+stop, **never under it** (an in-flow `sticky` footer can't avoid that: the content shares its scroll
+box and slides beneath, showing a peek-through strip). The rail is a solid, opaque `bg-surface`
+floor with a top border + shadow. Place the module's **marquee / target plot last** so it sits
+directly above the rail (on the radar module, the range-Doppler map; the explanatory single-pulse
+plots sit above that). Two affordance details ride along so a tall module reads as scrollable on
+load: the scroll region (`.wf-scroll`) shows a persistent thin, **neutral** scrollbar (a static
+affordance, never the green accent — macOS overlay scrollbars otherwise auto-hide), and a subtle
+bottom fade marks "more below". No per-module "scroll for more" text — the scrollbar + fade are the
+cue (one quiet visual hint, not prose). Where this layout doesn't fit, the accepted alternatives are
+placing the controls **beside** a tall plot (two-column) or capping stacked-plot height. A Playwright
+check in `e2e/screenshots.spec.ts` asserts the radar map and its sliders are co-visible and the map
+never renders under the rail, so the regression can't quietly return as more tall synthesis modules
+land.
 
 ## Coding conventions
 

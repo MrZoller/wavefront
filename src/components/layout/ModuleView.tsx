@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ControlRailSlotProvider } from '@/components/ControlRail';
 import { GlossedText } from '@/components/GlossedText';
 import { getModule, TRACK_BY_ID } from '@/registry';
 import { useAppStore } from '@/store/appStore';
@@ -6,10 +7,17 @@ import { useAppStore } from '@/store/appStore';
 /**
  * Hosts a single module: the interactive canvas dominates, with the explanation
  * in a calm collapsible side rail rather than a wall of text (brief §11).
+ *
+ * The module column is laid out as a **scrolling plot region above a pinned footer**: the plots
+ * scroll in `.wf-scroll` (a persistent, on-theme scrollbar so tall modules read as scrollable on
+ * load), and a module's primary controls portal into the footer via `<ControlRail>` so they stay
+ * co-visible with the plot they drive — the plots scroll *up to* the rail and stop, never under it.
+ * A subtle bottom fade marks "more below". See CONTRIBUTING → "Keep controls co-visible".
  */
 export function ModuleView({ moduleId }: { moduleId: string }) {
   const setActiveModule = useAppStore((s) => s.setActiveModule);
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [footer, setFooter] = useState<HTMLElement | null>(null);
   const mod = getModule(moduleId);
 
   if (!mod) {
@@ -51,8 +59,18 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        <main className="min-w-0 flex-1 overflow-auto p-6">
-          <Interactive />
+        <main className="flex min-w-0 flex-1 flex-col">
+          <div className="wf-scroll min-h-0 flex-1 overflow-y-auto p-6">
+            <ControlRailSlotProvider slot={footer}>
+              <Interactive />
+            </ControlRailSlotProvider>
+          </div>
+          {/* "More below" cue that also softens the rail's top edge — content fades toward the
+              background as it approaches the footer. */}
+          <div className="pointer-events-none relative z-10 -mt-8 h-8 bg-gradient-to-b from-transparent to-bg" />
+          {/* The pinned control-rail footer: <ControlRail> portals here, so the plots scroll up to it
+              and stop rather than under it. Zero-height (hidden) when a module has no rail. */}
+          <div ref={setFooter} className="relative z-10 empty:hidden" />
         </main>
         {Explanation && drawerOpen && (
           <aside className="w-80 shrink-0 overflow-y-auto border-l border-border bg-surface px-5 py-5 text-sm leading-relaxed text-text-muted">

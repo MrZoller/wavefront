@@ -228,16 +228,19 @@ test('pulse compression & range-Doppler module', async ({ page }) => {
   await page.getByRole('button', { name: 'Pulse Compression & Range-Doppler' }).first().click();
   const map = page.getByRole('img', { name: /range-Doppler map/i });
   await expect(map).toBeVisible();
-  // The drag-watch loop: scroll the column to the bottom, where the sticky control rail rests just
-  // below the marquee map. The range/velocity sliders and the map must be co-visible AND not
-  // overlap — dragging must move the blob without scrolling. (CONTRIBUTING → "Keep controls
-  // co-visible with their target plot".)
-  await page.getByRole('main').evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+  // The plots live in a scroll region; the controls are pinned in a footer below it. Confirm the
+  // region actually scrolls (so the persistent scrollbar + fade affordance is warranted), then with
+  // it scrolled to the bottom the marquee map and the range/velocity sliders are co-visible AND the
+  // map never renders under the rail. (CONTRIBUTING → "Keep controls co-visible with their target
+  // plot".)
+  const scroll = page.locator('.wf-scroll');
+  expect(await scroll.evaluate((el) => el.scrollHeight > el.clientHeight + 1)).toBe(true);
+  await scroll.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
   const rangeSlider = page.getByRole('slider', { name: /Target range/i });
   await expect(map).toBeInViewport();
   await expect(rangeSlider).toBeInViewport();
   await expect(page.getByRole('slider', { name: /Radial velocity/i })).toBeInViewport();
-  // The map sits fully above the control rail (no occlusion).
+  // The map sits fully above the control rail — no occlusion.
   const mapBox = await map.boundingBox();
   const sliderBox = await rangeSlider.boundingBox();
   if (!mapBox || !sliderBox) throw new Error('map or slider not laid out');
