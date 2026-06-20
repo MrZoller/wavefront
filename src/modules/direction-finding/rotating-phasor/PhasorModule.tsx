@@ -5,12 +5,18 @@ import { PhasorPlot } from '@/components/plots/PhasorPlot';
 import { PlotTitle } from '@/components/plots/PlotTitle';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
+import { usePrefersReducedMotion } from '@/components/plots/usePrefersReducedMotion';
 import { colors } from '@/design/tokens';
 import { useToneAudio } from '@/audio/useToneAudio';
 
 const WINDOW_SAMPLES = 240; // points in the scrolling I/Q waveforms
 const MIN_F = 0.2;
 const MAX_F = 4.0;
+
+// Where the phasor rests when motion is reduced: a representative mid-rotation instant — not the
+// degenerate θ=0 start — so the arrow, both I/Q waveforms, and the I/Q/θ readouts all read the
+// concept at a glance. cos and sin are both ≈0.707 here, so neither rail reads as zero.
+const REST_ANGLE = Math.PI / 4;
 
 /** Map the visual frequency (Hz) to an audible pitch so frequency changes are hearable. */
 const toAudioHz = (f: number) => 110 * Math.pow(2, f); // 0.2..4 Hz → ~126..1760 Hz
@@ -37,17 +43,22 @@ const prefill = (fn: (angle: number) => number, frequency: number, endPhase: num
  * watch all three respond together — the live-feedback loop that is the soul of the project (§1).
  */
 export function PhasorModule() {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [frequency, setFrequency] = useState(1.0);
   const [playing, setPlaying] = useState(false);
-  const [running, setRunning] = useState(true); // phasor rotation (pause/resume)
+  // Auto-rotate on arrival — the "this is alive" cue — unless the user prefers reduced motion, in
+  // which case start paused on a static frame and let them opt into motion via Resume.
+  const [running, setRunning] = useState(!prefersReducedMotion); // phasor rotation (pause/resume)
+  const startAngle = prefersReducedMotion ? REST_ANGLE : 0;
   const [frame, setFrame] = useState<Frame>(() => ({
-    angle: 0,
-    i: prefill(Math.cos, 1.0, 0),
-    q: prefill(Math.sin, 1.0, 0),
+    angle: startAngle,
+    i: prefill(Math.cos, 1.0, startAngle),
+    q: prefill(Math.sin, 1.0, startAngle),
   }));
 
-  // Accumulate phase across frames so changing frequency never makes the phasor jump.
-  const phaseRef = useRef(0);
+  // Accumulate phase across frames so changing frequency never makes the phasor jump. Seed it at the
+  // resting angle so a Resume from the static frame continues smoothly rather than snapping to 0.
+  const phaseRef = useRef(startAngle);
   const iBuf = useRef<number[]>(frame.i.slice());
   const qBuf = useRef<number[]>(frame.q.slice());
   const freqRef = useRef(frequency);

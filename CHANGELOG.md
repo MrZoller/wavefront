@@ -8,6 +8,22 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Reduced-motion support (`prefers-reduced-motion`).** Auto-animating modules now respect the
+  OS-level "reduce motion" accessibility setting. With it **on**, every module that would otherwise
+  start moving on arrival loads **paused on a representative static frame** and exposes its existing
+  play/Resume control, so motion is opt-in; with it **off**, behavior is unchanged (the phasor spins,
+  the front-door "this is alive" cue stays). The frames are chosen to teach the concept at rest — the
+  **rotating phasor** rests mid-rotation (arrow at 45°, I/Q waveforms drawn, I/Q/θ readouts
+  populated); the **carrier offset** freezes the constellation at a clearly-rotated instant with both
+  sliders still live; the **adaptive equalizer** rests on its converged frame (taps learned, error
+  fallen) with Reset to replay the run. A shared `usePrefersReducedMotion` hook
+  (`src/components/plots/usePrefersReducedMotion.ts`) seeds each module's default play-state and
+  updates live when the OS setting is toggled, so future animated modules inherit the behavior by
+  calling it; a global `@media (prefers-reduced-motion: reduce)` rule in `index.css` collapses the
+  decorative CSS layer (hover/colour transitions, the slider-thumb halo, any future keyframe
+  animation). No DSP, computed values, copy, or play/pause controls changed — only the default
+  play-state and resting frame under the preference.
+
 - **Fundamentals module: Convolution & the Impulse Response.** A new module in a new **"Systems"**
   stage of **Fundamentals**, slotted _before_ the filtering layer (Channelizer/PFB stays the track's
   marquee — one capstone per track). It names the organizing idea the app already runs on everywhere

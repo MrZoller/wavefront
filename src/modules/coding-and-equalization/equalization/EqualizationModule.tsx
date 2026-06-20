@@ -8,6 +8,7 @@ import { TapStemPlot } from '@/components/plots/TapStemPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { AXIS } from '@/components/plots/axisLabel';
 import { useAnimationFrame } from '@/components/plots/useAnimationFrame';
+import { usePrefersReducedMotion } from '@/components/plots/usePrefersReducedMotion';
 import { colors } from '@/design/tokens';
 import { type Complex } from '@/dsp/complex';
 import {
@@ -232,6 +233,7 @@ export function EqualizationModule() {
 
 /** The "go deeper" adaptive-equalizer view: an LMS run animated tap-by-tap, plus the ML throughline. */
 function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity: number }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const lms = useMemo(() => {
     const run = lmsEqualizer(rx, tx, LMS_TAPS, LMS_MU, { epochs: LMS_EPOCHS });
     // Smooth the noisy instantaneous error into a readable convergence curve.
@@ -252,8 +254,11 @@ function LmsView({ rx, tx, severity }: { rx: Complex[]; tx: Complex[]; severity:
     return { frames, target, errorMax: Math.max(...frames.map((f) => f.error)) };
   }, [rx, tx, severity]);
 
-  const [step, setStep] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  // Normally the run plays from the start on reveal. Under reduced motion, rest on the *converged*
+  // frame (taps learned onto the target rings, error fallen) — the informative end state — paused,
+  // so the still shows the payoff; Reset replays the convergence for anyone who wants the motion.
+  const [step, setStep] = useState(prefersReducedMotion ? lms.frames.length - 1 : 0);
+  const [playing, setPlaying] = useState(!prefersReducedMotion);
   const accRef = useRef(0);
 
   useAnimationFrame((_, dt) => {
