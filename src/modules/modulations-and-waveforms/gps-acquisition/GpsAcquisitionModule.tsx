@@ -15,7 +15,11 @@ const L = 64; // synthetic PRN code length (chips) — the code-phase search ext
 const CODE_SEED = 1207; // a fixed synthetic PRN code (no real PRN assignments)
 const NOISE_SEED = 2024;
 const PERIOD_OPTIONS = [4, 8, 16, 32]; // coherent integration lengths (powers of two — the Doppler FFT)
-const DOPPLER_SPAN = 0.45; // fraction of the ±½-cycle/period band the Doppler control sweeps
+// Fraction of the ±½-cycle/period band the Doppler control sweeps. Held below the coarsest FFT's
+// Nyquist-rounding threshold — round(span·4) must stay ≤ 1, i.e. span < 0.375 — so the true (code
+// phase, Doppler) the marker draws never rounds onto the Nyquist bin, which fftShift wraps to the
+// opposite edge and would split the green handle from the detected-peak ring at the Doppler extremes.
+const DOPPLER_SPAN = 0.36;
 const DOPPLER_HZ_MAX = 5000; // illustrative Hz at full deflection (real GPS Doppler is a few kHz)
 const FLOOR_DB = -20; // display range — the acquired peak rides ~20–30 dB over the noise once integrated
 
