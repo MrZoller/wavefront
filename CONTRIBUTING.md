@@ -227,6 +227,36 @@ same way everywhere (documented so new tracks inherit it):
   textual hint** per interactive map (a single `text-text-faint` line near the controls) — never
   on-canvas "drag me" labels or persistent instructional chrome.
 
+## Keep controls co-visible with their target plot
+
+Wavefront is drag-and-watch: a control and the visualization it changes must stay **co-visible** — a
+reader must never have to choose between seeing the sliders and seeing the plot they affect. Most
+modules have a plot or two above the controls, so this holds for free. The **synthesis** modules that
+stack several representations (the radar range-Doppler scene; GPS and ionospheric sounding to come)
+push the controls below the fold, and the drag-watch loop silently breaks on exactly the modules that
+most need it.
+
+The shared mechanism is **`<ControlRail>`** (`src/components/ControlRail.tsx`): wrap a module's
+primary controls in it and `ModuleView` lays the column out as a **scrolling plot region above a
+pinned footer** — the rail portals into the footer, so the plots scroll _up to_ its top edge and
+stop, **never under it** (an in-flow `sticky` footer can't avoid that: the content shares its scroll
+box and slides beneath, showing a peek-through strip). The rail is a solid, opaque `bg-surface`
+floor with a top border + shadow. Place the module's **marquee / target plot last** so it sits
+directly above the rail (on the radar module, the range-Doppler map; the explanatory single-pulse
+plots sit above that). A tall module signals scrollability with a **bottom fade gradient** on the
+scroll region (`.wf-scroll`): partial plot content fades into the background at the bottom edge — the
+canonical "more below" cue. It's static and background-derived (never the green accent), and there's
+no per-module "scroll for more" text (one quiet visual cue, not prose). We don't try to _force_ the
+scrollbar visible (browsers auto-hide overlay scrollbars regardless), but when it does show it's a
+useful position indicator, so it's styled on-theme **app-wide** — a single global rule in
+`index.css` (nav, module region, and side-rail all match) styles every state (rest/hover/active — a
+quiet token-neutral thumb, never the green accent) so no scrollbar ever falls back to the default
+grey. The fade stays the scrollability cue; the scrollbar just shows position. Where this layout
+doesn't fit, the accepted alternatives are placing the controls **beside** a tall plot (two-column)
+or capping stacked-plot height. A Playwright check in `e2e/screenshots.spec.ts` asserts the radar map
+and its sliders are co-visible, the map never renders under the rail, and the fade cue is present —
+so the regression can't quietly return as more tall synthesis modules land.
+
 ## Coding conventions
 
 - **TypeScript strict**; no `any` where a real type fits.

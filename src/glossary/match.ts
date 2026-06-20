@@ -44,10 +44,13 @@ const ALIASES: Record<string, string[]> = {
   'matched-filter': ['matched filtering', 'matched-filter'],
   nyquist: ['Nyquist'],
   pfb: ['polyphase filter bank'],
+  'pulse-compression': ['pulse-compressed'],
   'pulse-shaping': ['pulse-shaping'],
   qam: ['16-QAM', '64-QAM', '256-QAM'],
+  'range-doppler': ['range-Doppler', 'range-doppler'],
   snr: ['signal-to-noise ratio'],
   'steering-vector': ['steering vectors'],
+  'time-bandwidth': ['time-bandwidth', 'TBP'],
 };
 
 interface Form {
