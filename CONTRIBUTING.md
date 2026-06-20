@@ -227,6 +227,25 @@ same way everywhere (documented so new tracks inherit it):
   textual hint** per interactive map (a single `text-text-faint` line near the controls) — never
   on-canvas "drag me" labels or persistent instructional chrome.
 
+## Keep controls co-visible with their target plot
+
+Wavefront is drag-and-watch: a control and the visualization it changes must stay **co-visible** — a
+reader must never have to choose between seeing the sliders and seeing the plot they affect. Most
+modules have a plot or two above the controls, so this holds for free. The **synthesis** modules that
+stack several representations (the radar range-Doppler scene; GPS and ionospheric sounding to come)
+push the controls below the fold, and the drag-watch loop silently breaks on exactly the modules that
+most need it.
+
+The shared mechanism is **`<ControlRail>`** (`src/components/ControlRail.tsx`): wrap a module's
+primary controls in it and they stick to the bottom of the scrolling module column, always reachable
+while the visualizations scroll behind them. Place the module's **marquee / target plot directly
+above the rail** so the thing you drag against is the plot nearest the sliders (on the radar module,
+the range-Doppler map sits right above the rail; the explanatory single-pulse plots sit above that).
+Where sticky doesn't fit, the accepted alternatives are placing the controls **beside** a tall plot
+(two-column) or capping stacked-plot height so the panel stays above the fold. A Playwright check in
+`e2e/screenshots.spec.ts` asserts the radar map and its sliders are both in the viewport, so the
+regression can't quietly return as more tall synthesis modules land.
+
 ## Coding conventions
 
 - **TypeScript strict**; no `any` where a real type fits.
