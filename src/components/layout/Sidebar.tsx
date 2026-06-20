@@ -30,87 +30,101 @@ export function Sidebar() {
         </button>
       </header>
 
-      {TRACKS.map((track) => {
-        const layers = getTrackLayers(track.id);
-        // Layer subheaders only earn their place once a track has more than one stage.
-        const showLayerNames = layers.length > 1;
-        return (
-          <section key={track.id} className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-text-muted">
-                {track.title}
-              </h2>
-              {track.status !== 'shipping' && (
-                <span
-                  className={[
-                    'rounded-sm border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-wide',
-                    track.status === 'building' ? 'text-cyan' : 'text-text-faint',
-                  ].join(' ')}
-                >
-                  {track.status === 'building' ? 'Building' : 'Planned'}
-                </span>
-              )}
-            </div>
+      {/*
+       * Anchor "track" as a visible concept: a quiet overline labels the persistent nav's top-level
+       * units as tracks, so prose like "this track" / "a later track" resolves to something on screen
+       * even when the landing is closed. The nav already names the group for assistive tech via its
+       * aria-label, so this is a visual reinforcement (a plain label, not another heading). Structural
+       * → neutral, never the live accent.
+       */}
+      <div>
+        <p className="mb-3 px-1 text-[10px] font-semibold uppercase tracking-wider text-text-faint">
+          Tracks
+        </p>
+        <div className="flex flex-col gap-6">
+          {TRACKS.map((track) => {
+            const layers = getTrackLayers(track.id);
+            // Layer subheaders only earn their place once a track has more than one stage.
+            const showLayerNames = layers.length > 1;
+            return (
+              <section key={track.id} className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between px-1">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-text-muted">
+                    {track.title}
+                  </h2>
+                  {track.status !== 'shipping' && (
+                    <span
+                      className={[
+                        'rounded-sm border border-border px-1.5 py-0.5 text-[10px] uppercase tracking-wide',
+                        track.status === 'building' ? 'text-cyan' : 'text-text-faint',
+                      ].join(' ')}
+                    >
+                      {track.status === 'building' ? 'Building' : 'Planned'}
+                    </span>
+                  )}
+                </div>
 
-            {layers.length === 0 ? (
-              <p className="px-1 text-xs text-text-faint">
-                {track.status === 'planned' ? 'Coming later.' : 'Modules in progress…'}
-              </p>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {layers.map((layer) => (
-                  <div key={layer.layer} className="flex flex-col gap-0.5">
-                    {showLayerNames && (
-                      <h3 className="px-2 pt-0.5 text-[10px] font-medium uppercase tracking-wider text-text-faint">
-                        {layer.name}
-                      </h3>
-                    )}
-                    <ul className="flex flex-col gap-0.5">
-                      {layer.modules.map((m, i) => {
-                        const isActive = m.id === activeModuleId;
-                        // Internal status tokens (e.g. `stub`) are mapped to user-facing labels — a
-                        // raw "STUB" reads as "unfinished" (CONTRIBUTING → no internal vocabulary).
-                        const statusBadge = moduleStatusBadge(m.status);
-                        return (
-                          <li key={m.id}>
-                            <button
-                              onClick={() => setActiveModule(m.id)}
-                              aria-current={isActive ? 'page' : undefined}
-                              className={[
-                                'flex w-full items-baseline gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors',
-                                isActive
-                                  ? 'bg-surface-raised text-signal'
-                                  : 'text-text hover:bg-surface-raised hover:text-text',
-                              ].join(' ')}
-                            >
-                              {/* Step within the layer — quiet directional cue. */}
-                              <span className="shrink-0 text-[11px] tabular-nums text-text-faint">
-                                {i + 1}
-                              </span>
-                              <span className="min-w-0 flex-1">{m.title}</span>
-                              {m.isCapstone ? (
-                                <span className="shrink-0 text-[10px] uppercase tracking-wide text-signal">
-                                  Capstone
-                                </span>
-                              ) : (
-                                statusBadge && (
-                                  <span className="shrink-0 text-[10px] uppercase text-text-faint">
-                                    {statusBadge}
+                {layers.length === 0 ? (
+                  <p className="px-1 text-xs text-text-faint">
+                    {track.status === 'planned' ? 'Coming later.' : 'Modules in progress…'}
+                  </p>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {layers.map((layer) => (
+                      <div key={layer.layer} className="flex flex-col gap-0.5">
+                        {showLayerNames && (
+                          <h3 className="px-2 pt-0.5 text-[10px] font-medium uppercase tracking-wider text-text-faint">
+                            {layer.name}
+                          </h3>
+                        )}
+                        <ul className="flex flex-col gap-0.5">
+                          {layer.modules.map((m, i) => {
+                            const isActive = m.id === activeModuleId;
+                            // Internal status tokens (e.g. `stub`) are mapped to user-facing labels — a
+                            // raw "STUB" reads as "unfinished" (CONTRIBUTING → no internal vocabulary).
+                            const statusBadge = moduleStatusBadge(m.status);
+                            return (
+                              <li key={m.id}>
+                                <button
+                                  onClick={() => setActiveModule(m.id)}
+                                  aria-current={isActive ? 'page' : undefined}
+                                  className={[
+                                    'flex w-full items-baseline gap-2 rounded-md px-2 py-1.5 text-left text-sm transition-colors',
+                                    isActive
+                                      ? 'bg-surface-raised text-signal'
+                                      : 'text-text hover:bg-surface-raised hover:text-text',
+                                  ].join(' ')}
+                                >
+                                  {/* Step within the layer — quiet directional cue. */}
+                                  <span className="shrink-0 text-[11px] tabular-nums text-text-faint">
+                                    {i + 1}
                                   </span>
-                                )
-                              )}
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                                  <span className="min-w-0 flex-1">{m.title}</span>
+                                  {m.isCapstone ? (
+                                    <span className="shrink-0 text-[10px] uppercase tracking-wide text-signal">
+                                      Capstone
+                                    </span>
+                                  ) : (
+                                    statusBadge && (
+                                      <span className="shrink-0 text-[10px] uppercase text-text-faint">
+                                        {statusBadge}
+                                      </span>
+                                    )
+                                  )}
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
-          </section>
-        );
-      })}
+                )}
+              </section>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Reference companion — a deliberate destination, set apart from the track climb. */}
       <div className="mt-auto border-t border-border pt-3">
