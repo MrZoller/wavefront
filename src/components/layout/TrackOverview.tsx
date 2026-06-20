@@ -137,22 +137,23 @@ export function TrackOverview() {
       </div>
 
       {/*
-       * Scope note — calm and quiet, like a license line (no banner, no "Disclaimer"). The About
-       * link rides along here as a discovery touchpoint: a first-time visitor forms their impression
-       * from the landing, not the bottom of the nav, so the fuller scope/independence statement gets
-       * a findable spot where their eye lands. The nav keeps its own permanent About link — this is
-       * additional, not a move.
+       * Scope teaser — calm and quiet, like a license line (no banner, no "Disclaimer"). A one-clause
+       * scope gesture still reassures a reader who never clicks through (the near-term audience cares
+       * about scope), while the em-dashed "more about the project" pulls toward the fuller
+       * scope/independence statement on the About page instead of completing the thought here (which
+       * would just duplicate it). It doubles as the discovery touchpoint a first-time visitor meets on
+       * the landing — the nav keeps its own permanent About link; this is additional, not a move.
        */}
       <footer className="mt-10 border-t border-border pt-5">
         <p className="text-xs text-text-faint">
-          Wavefront teaches signal processing using publicly available, textbook-level concepts and
-          synthetic signals.{' '}
+          Built from scratch, with public, textbook-level content and synthetic signals throughout
+          &mdash;{' '}
           <button
             type="button"
             onClick={openAbout}
             className="text-signal underline decoration-signal-dim/60 underline-offset-2 transition-colors hover:decoration-signal"
           >
-            More about the project
+            more about the project
           </button>
           .
         </p>
