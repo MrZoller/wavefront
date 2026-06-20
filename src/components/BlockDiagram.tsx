@@ -30,9 +30,10 @@ export interface BlockDiagramProps {
  * Layout: a flow of comfortable, fixed-width blocks that **wraps responsively** — one clean row when
  * the chain fits the container, breaking onto further rows when it doesn't. Each block keeps a
  * minimum readable width rather than shrinking to fit, so a long chain (the 8-box receive chain)
- * stays legible at any width. The right-pointing arrows between blocks carry the left-to-right
- * reading across a wrap (the standard block-diagram idiom — flow continues on the next row), so the
- * row can break without ever needing a horizontal scroll.
+ * stays legible at any width. Each right-pointing arrow stays welded to the block it points into, so
+ * a wrapped row begins with its incoming connector and the chain reads as one continuous flow across
+ * the break (the standard block-diagram idiom — flow continues on the next row) — never a stranded
+ * arrow or a horizontal scroll.
  */
 export function BlockDiagram({ blocks, ariaLabel }: BlockDiagramProps) {
   const setActiveModule = useAppStore((s) => s.setActiveModule);
@@ -64,30 +65,38 @@ export function BlockDiagram({ blocks, ariaLabel }: BlockDiagramProps) {
           </>
         );
 
-        return (
-          <Fragment key={n.id}>
-            {linked ? (
-              <button
-                type="button"
-                aria-label={`${n.label} — open the ${n.label} module`}
-                onClick={go}
-                className={`${base} ${lit}`}
-              >
-                {content}
-              </button>
-            ) : (
-              <div className={`${base} ${quiet}`}>{content}</div>
-            )}
-            {i < blocks.length - 1 && <FlowArrow />}
-          </Fragment>
+        const box = linked ? (
+          <button
+            type="button"
+            aria-label={`${n.label} — open the ${n.label} module`}
+            onClick={go}
+            className={`${base} ${lit}`}
+          >
+            {content}
+          </button>
+        ) : (
+          <div className={`${base} ${quiet}`}>{content}</div>
+        );
+
+        // The first block leads the chain; every other block travels glued to the arrow that points
+        // into it as one non-wrapping unit. So a wrap breaks *between* blocks but never strands an
+        // arrow at a row's end — each continued row instead begins with its incoming connector,
+        // which is what reads as "the flow continues here" rather than a fresh, disconnected chain.
+        return i === 0 ? (
+          <Fragment key={n.id}>{box}</Fragment>
+        ) : (
+          <div key={n.id} className="flex min-w-0 items-center gap-x-1">
+            <FlowArrow />
+            {box}
+          </div>
         );
       })}
     </div>
   );
 }
 
-/** A right-pointing flow arrow between two blocks — the connective tissue that keeps the chain
- *  reading left-to-right across a wrap. Decorative: the order is conveyed by the block sequence. */
+/** A right-pointing flow arrow welded to the block that follows it — the connective tissue that
+ *  keeps the chain reading left-to-right across a wrap. Decorative: order is in the block sequence. */
 function FlowArrow() {
   return (
     <svg
