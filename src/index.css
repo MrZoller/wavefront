@@ -125,34 +125,36 @@ input[type='range']:focus {
 }
 
 /*
- * Module scroll-region scrollbar (`.wf-scroll`). The scrollbar is a useful position indicator, so
- * keep it visible — but style it on-theme in *every* state so hover/active never fall back to the
- * default grey (the reported bug was an unstyled :hover). It's a static indicator, not a live value,
- * so it stays a quiet, token-neutral phosphor-tinted thumb that only grows in opacity with
- * interaction — never the green accent. Translucency via `color-mix` (the CSS analogue of the
- * `withAlpha` token helper). The bottom fade stays the scrollability cue; this is just the
- * indicator's appearance. Scoped to `.wf-scroll` so other scroll surfaces keep the browser default.
+ * Scrollbars, app-wide. The app has three scroll surfaces — the left nav, the module scroll region
+ * (`.wf-scroll`), and the explanation side-rail — and none has a reason to differ, so style every
+ * scrollbar on-theme in *every* state (rest / hover / active) so hover/active never fall back to the
+ * default grey. It's a static position indicator, not a live value, so it stays a quiet,
+ * token-neutral phosphor-tinted thumb that only grows in opacity with interaction — never the green
+ * accent. Translucency via `color-mix` (the CSS analogue of the `withAlpha` token helper). A single
+ * global rule so future scroll surfaces inherit it automatically (Firefox's `scrollbar-*` inherit
+ * from the root; WebKit's pseudo-elements don't, so they use a universal selector). The `.wf-scroll`
+ * bottom fade is a separate cue and stays.
  */
-.wf-scroll {
+html {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--color-text-faint) 55%, transparent) transparent;
 }
-.wf-scroll::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
-.wf-scroll::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: transparent;
 }
-.wf-scroll::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background-color: color-mix(in srgb, var(--color-text-faint) 55%, transparent);
   border-radius: 999px;
   border: 3px solid transparent;
   background-clip: padding-box;
 }
-.wf-scroll::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(in srgb, var(--color-text-faint) 85%, transparent);
 }
-.wf-scroll::-webkit-scrollbar-thumb:active {
+*::-webkit-scrollbar-thumb:active {
   background-color: var(--color-text-faint);
 }

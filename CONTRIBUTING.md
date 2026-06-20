@@ -248,13 +248,14 @@ scroll region (`.wf-scroll`): partial plot content fades into the background at 
 canonical "more below" cue. It's static and background-derived (never the green accent), and there's
 no per-module "scroll for more" text (one quiet visual cue, not prose). We don't try to _force_ the
 scrollbar visible (browsers auto-hide overlay scrollbars regardless), but when it does show it's a
-useful position indicator, so it's styled on-theme in every state (`.wf-scroll`, rest/hover/active —
-a quiet token-neutral thumb, never the green accent) so it never falls back to the default grey. The
-fade stays the scrollability cue; the scrollbar just shows position. Where this layout doesn't fit,
-the accepted alternatives are placing the controls **beside** a tall plot (two-column) or capping
-stacked-plot height. A Playwright check in `e2e/screenshots.spec.ts` asserts the radar map and its
-sliders are co-visible, the map never renders under the rail, and the fade cue is present — so the
-regression can't quietly return as more tall synthesis modules land.
+useful position indicator, so it's styled on-theme **app-wide** — a single global rule in
+`index.css` (nav, module region, and side-rail all match) styles every state (rest/hover/active — a
+quiet token-neutral thumb, never the green accent) so no scrollbar ever falls back to the default
+grey. The fade stays the scrollability cue; the scrollbar just shows position. Where this layout
+doesn't fit, the accepted alternatives are placing the controls **beside** a tall plot (two-column)
+or capping stacked-plot height. A Playwright check in `e2e/screenshots.spec.ts` asserts the radar map
+and its sliders are co-visible, the map never renders under the rail, and the fade cue is present —
+so the regression can't quietly return as more tall synthesis modules land.
 
 ## Coding conventions
 
