@@ -1,5 +1,5 @@
-import { signalRgb } from '@/design/tokens';
 import { type AxisLabel, axisAriaLabel } from './axisLabel';
+import { heatColor } from './heat';
 import { PlotFrame } from './PlotFrame';
 import { useCanvas } from './useCanvas';
 
@@ -15,28 +15,6 @@ export interface SpectrogramPlotProps {
   yLabel: AxisLabel;
   /** Richer screen-reader description; defaults to "{y} versus {x}". */
   ariaLabel?: string;
-}
-
-// Dark → cyan → green → amber heat ramp for dB magnitude (t in [0,1]).
-function heat(t: number): string {
-  const stops: Array<[number, [number, number, number]]> = [
-    [0, [7, 11, 14]],
-    [0.45, [31, 106, 134]],
-    [0.7, signalRgb],
-    [1, [244, 197, 66]],
-  ];
-  let lo = stops[0];
-  let hi = stops[stops.length - 1];
-  for (let i = 0; i < stops.length - 1; i++) {
-    if (t >= stops[i][0] && t <= stops[i + 1][0]) {
-      lo = stops[i];
-      hi = stops[i + 1];
-      break;
-    }
-  }
-  const f = (t - lo[0]) / (hi[0] - lo[0] || 1);
-  const ch = (k: number) => Math.round(lo[1][k] + f * (hi[1][k] - lo[1][k]));
-  return `rgb(${ch(0)}, ${ch(1)}, ${ch(2)})`;
 }
 
 /**
@@ -63,7 +41,7 @@ export function SpectrogramPlot({
         const col = data[t];
         for (let b = 0; b < bins; b++) {
           const norm = Math.min(1, Math.max(0, (col[b] - floorDb) / -floorDb));
-          ctx.fillStyle = heat(norm);
+          ctx.fillStyle = heatColor(norm);
           // Frequency increases upward (flip y).
           ctx.fillRect(t * cw, h - (b + 1) * ch, Math.ceil(cw), Math.ceil(ch));
         }

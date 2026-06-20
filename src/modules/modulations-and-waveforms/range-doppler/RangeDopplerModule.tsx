@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react';
 import { ControlRail } from '@/components/ControlRail';
 import { GlossedText } from '@/components/GlossedText';
 import { Slider } from '@/components/Slider';
+import { AcquisitionHeatmap } from '@/components/plots/AcquisitionHeatmap';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PlotTitle } from '@/components/plots/PlotTitle';
-import { SpectrogramPlot } from '@/components/plots/SpectrogramPlot';
 import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { XYPlot } from '@/components/plots/XYPlot';
 import { colors } from '@/design/tokens';
@@ -23,13 +23,6 @@ const WINDOW = M + RANGE_BINS; // received-pulse length, so a far target still f
 const PULSE_OPTIONS = [16, 32, 64]; // FFT lengths (powers of two)
 const VEL_TO_DOPPLER = 0.4; // |velocity| = 1 ⇒ ±0.4 cycles/pulse (kept under the ±0.5 unambiguous limit)
 const FLOOR_DB = -35;
-
-/** Range bins → dB grid, normalized so the global peak is 0 dB (what the spectrogram canvas expects). */
-function gridToDb(grid: number[][], floorDb: number): number[][] {
-  let peak = 1e-12;
-  for (const row of grid) for (const v of row) if (v > peak) peak = v;
-  return grid.map((row) => row.map((v) => Math.max(floorDb, 20 * Math.log10((v || 1e-12) / peak))));
-}
 
 /**
  * Pulse Compression & Range-Doppler — the synthesis scene. Radar's signal chain is three tools the
@@ -51,7 +44,7 @@ export function RangeDopplerModule() {
   const doppler = velocity * VEL_TO_DOPPLER;
   const tbp = timeBandwidthProduct(M, 2 * bw);
 
-  const { txWave, echoWave, profile, detected, mapDb } = useMemo(() => {
+  const { txWave, echoWave, profile, detected, map } = useMemo(() => {
     const tx = chirp(M, -bw, bw);
     const targets: RadarTarget[] = [{ rangeBin, doppler, amplitude: 1 }];
     if (secondTarget) {
@@ -68,7 +61,7 @@ export function RangeDopplerModule() {
       echoWave: rx[0].map((s) => s.re),
       profile,
       detected,
-      mapDb: gridToDb(map, FLOOR_DB),
+      map, // linear magnitudes; AcquisitionHeatmap normalizes to dB internally
     };
   }, [rangeBin, doppler, bw, snrDb, nPulses, secondTarget]);
 
@@ -146,8 +139,8 @@ export function RangeDopplerModule() {
           range-Doppler map{' '}
           <span className="text-text-faint">— FFT across pulses adds velocity</span>
         </PlotTitle>
-        <SpectrogramPlot
-          data={mapDb}
+        <AcquisitionHeatmap
+          data={map}
           floorDb={FLOOR_DB}
           height={240}
           xLabel={{ quantity: 'Range (bins)' }}
