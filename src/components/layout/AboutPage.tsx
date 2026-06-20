@@ -28,9 +28,9 @@ export function AboutPage() {
               built mainly for software developers who aren&rsquo;t electrical engineers. Every
               transform is built from scratch &mdash; no black-box libraries do the interesting math
               &mdash; and each one is checked against independent reference values by the test
-              suite, so you can open the code and trust it rather than take a library&rsquo;s word
-              for the result. You learn by doing: drag an emitter, sweep a slider, and watch
-              everything recompute live.
+              suite, so you can trust the math rather than take a library&rsquo;s word for the
+              result. You learn by doing: drag an emitter, sweep a slider, and watch everything
+              recompute live.
             </p>
           </section>
 
