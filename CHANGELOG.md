@@ -335,6 +335,36 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- **Bottom-fade scroll cue added to the explanation side-rail.** The right-hand explanation panel
+  (`ASIDE`) is one of the app's two main content scroll regions — its write-ups routinely run past the
+  fold — but only the module plot region (`.wf-scroll`) signaled "more below" with a bottom fade; the
+  side-rail had no such cue, so its scrollability wasn't obvious. It now carries the **same** fade,
+  bringing both main scroll regions into alignment (they already shared the app-wide scrollbar styling).
+  The fade is token-derived and quiet (neutral, never the green accent) and — crucially — fades to the
+  panel's own `surface`, the color _behind_ the text: a long explanation fades out at the bottom edge,
+  while a short, non-scrolling one leaves bare surface under the fade and shows nothing, so it's never
+  dimmed. Layout/CSS only; explanation copy and behavior are unchanged. The Modulation Zoo marquee
+  screenshot is regenerated and shows the cue on its long explanation.
+
+- **Sticky controls now pin to whichever edge they're anchored on — top _or_ bottom (fixes Modulation
+  Zoo).** The co-visibility rail (`<ControlRail>`) previously only pinned **bottom**-anchored controls
+  (the radar / GPS footers); a module whose controls sit at the **top** with plot rows stacked below —
+  the **Modulation Zoo**, whose SNR slider and scheme-selector chips drive five stacked views per
+  scheme — pushed those controls off the _top_ of the fold as the reader scrolled to the spectrum / eye
+  / spectrogram rows, severing the same drag-watch loop the rail exists to protect (the radar problem,
+  inverted). The shared mechanism is now **parameterized by edge** (`<ControlRail edge="top">`):
+  `ModuleView` lays the column out as a scrolling plot region **between a pinned header and footer**, and
+  the rail portals into the slot for the edge it lives on — so controls pin to whichever edge they're
+  anchored on and the loop is never severed regardless of placement. The Modulation Zoo's SNR slider and
+  both scheme-chip rows now pin as a **header**: scroll to any plot row and they stay put, drag SNR or
+  switch schemes and the visible row responds. The rail keeps the same occlusion care as the footer —
+  opaque token `bg-surface`, an edge-correct border + shadow that face the plots, and scroll content
+  bounded so nothing renders under the pinned header (no peek-through strip). Pure layout: no DSP,
+  computed-value, copy, or control-behavior change; the radar / GPS footers are untouched. The
+  Playwright layout guard now asserts co-visibility for **both** edges (footer sliders for the radar,
+  the pinned SNR/chip header with a lower plot row scrolled into view for the zoo), and the affected
+  screenshot is regenerated.
+
 - **Direction-finding maps brought up to the affordance/legibility conventions (FDOA worst-case
   first).** A visual/affordance pass over the older geolocation scenes — no DSP, computed readout, or
   drag-behavior changes. The shared **`WorldMap`** now (1) sizes every marker label to the app's type

@@ -176,4 +176,9 @@ There is no second list to maintain. (It's a learner reference; contributor docs
 - **Interactive affordance**: draggable canvas handles use a `grab`/`grabbing` cursor + a persistent
   halo + keyboard focus; sliders use a pointer cursor; chips look pressable; passive affordance is
   primary, with at most one quiet textual hint per map. See CONTRIBUTING → "Interactive affordance".
+- **Co-visible controls + scroll cues**: tall modules pin their primary controls in a `<ControlRail>`
+  (`ModuleView`) to whichever edge they're anchored on — top _or_ bottom — so a control and the plot
+  it drives never scroll apart. Both main scroll regions (the module plot region and the explanation
+  side-rail) carry a token-derived bottom-fade "more below" cue. See CONTRIBUTING → "Keep controls
+  co-visible with their target plot".
 - **Tests** are colocated (`*.test.ts`) for `dsp/` and registry logic.

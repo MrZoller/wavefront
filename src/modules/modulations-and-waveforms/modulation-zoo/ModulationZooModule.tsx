@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ControlRail } from '@/components/ControlRail';
 import { GlossedText } from '@/components/GlossedText';
 import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
@@ -55,23 +56,36 @@ export function ModulationZooModule() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-center gap-6 rounded-lg border border-border bg-surface p-4">
-        <Slider
-          label="SNR"
-          value={snrDb}
-          min={0}
-          max={30}
-          step={1}
-          unit=" dB"
-          onChange={setSnrDb}
-          style={{ minWidth: 220 }}
-          ariaLabel="Signal-to-noise ratio in decibels"
-        />
-      </div>
+      {/* Controls — pinned in a top rail (a header outside the scroll region) so the SNR slider and the
+          scheme chips that drive the plots stay co-visible while the stacked plot rows (constellation,
+          time, spectrum, eye, spectrogram) scroll beneath them — the drag-watch loop the app is built
+          on, here for top-anchored controls. The chip rows mirror the plot grid so each sits above its
+          column. */}
+      <ControlRail edge="top">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-center gap-6">
+            <Slider
+              label="SNR"
+              value={snrDb}
+              min={0}
+              max={30}
+              step={1}
+              unit=" dB"
+              onChange={setSnrDb}
+              style={{ minWidth: 220 }}
+              ariaLabel="Signal-to-noise ratio in decibels"
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <SchemeChips name={a} onPick={setA} />
+            <SchemeChips name={b} onPick={setB} />
+          </div>
+        </div>
+      </ControlRail>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <SchemeColumn name={a} onPick={setA} snrDb={snrDb} seed={100} />
-        <SchemeColumn name={b} onPick={setB} snrDb={snrDb} seed={200} />
+        <SchemeColumn name={a} snrDb={snrDb} seed={100} />
+        <SchemeColumn name={b} snrDb={snrDb} seed={200} />
       </div>
 
       <div className="rounded-lg border border-border bg-surface p-4">
@@ -87,17 +101,34 @@ export function ModulationZooModule() {
   );
 }
 
-function SchemeColumn({
-  name,
-  onPick,
-  snrDb,
-  seed,
-}: {
-  name: string;
-  onPick: (n: string) => void;
-  snrDb: number;
-  seed: number;
-}) {
+/**
+ * The scheme-selector chip row for one column. Lifted out of `SchemeColumn` so it can be pinned in the
+ * top rail (it drives the plots and is anchored at the top) while the plots scroll beneath.
+ */
+function SchemeChips({ name, onPick }: { name: string; onPick: (n: string) => void }) {
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {NAMES.map((n) => (
+        <button
+          key={n}
+          type="button"
+          aria-pressed={n === name}
+          onClick={() => onPick(n)}
+          className={[
+            'readout rounded-md border px-2.5 py-1 text-xs transition-colors',
+            n === name
+              ? 'border-signal-dim text-signal'
+              : 'border-border text-text-muted hover:border-signal-dim',
+          ].join(' ')}
+        >
+          {n}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function SchemeColumn({ name, snrDb, seed }: { name: string; snrDb: number; seed: number }) {
   const mod = MODULATORS[name];
 
   const { iq, spectrum, sgram, scatter, ideal } = useMemo(() => {
@@ -125,25 +156,6 @@ function SchemeColumn({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-1.5">
-        {NAMES.map((n) => (
-          <button
-            key={n}
-            type="button"
-            aria-pressed={n === name}
-            onClick={() => onPick(n)}
-            className={[
-              'readout rounded-md border px-2.5 py-1 text-xs transition-colors',
-              n === name
-                ? 'border-signal-dim text-signal'
-                : 'border-border text-text-muted hover:border-signal-dim',
-            ].join(' ')}
-          >
-            {n}
-          </button>
-        ))}
-      </div>
-
       <ConstellationPlot
         ideal={ideal}
         scatter={scatter}

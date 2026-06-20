@@ -8,16 +8,19 @@ import { useAppStore } from '@/store/appStore';
  * Hosts a single module: the interactive canvas dominates, with the explanation
  * in a calm collapsible side rail rather than a wall of text (brief §11).
  *
- * The module column is laid out as a **scrolling plot region above a pinned footer**: the plots
- * scroll in `.wf-scroll`, and a module's primary controls portal into the footer via `<ControlRail>`
- * so they stay co-visible with the plot they drive — the plots scroll *up to* the rail and stop,
- * never under it. A **bottom fade** is the scroll cue: partial plot content fades into the background
- * at the bottom edge, signaling "more below" (a forced/persistent scrollbar was dropped — modern
- * browsers auto-hide overlay scrollbars regardless). See CONTRIBUTING → "Keep controls co-visible".
+ * The module column is laid out as a **scrolling plot region between a pinned header and footer**: the
+ * plots scroll in `.wf-scroll`, and a module's primary controls portal into the header or footer via
+ * `<ControlRail edge>` so they stay co-visible with the plot they drive whichever edge they're
+ * anchored on — the plots scroll *up to* the rail and stop, never under it. A **bottom fade** is the
+ * scroll cue on both main scroll regions (the plot region and the explanation side-rail): partial
+ * content fades into the background at the bottom edge, signaling "more below" (a forced/persistent
+ * scrollbar was dropped — modern browsers auto-hide overlay scrollbars regardless). See CONTRIBUTING →
+ * "Keep controls co-visible".
  */
 export function ModuleView({ moduleId }: { moduleId: string }) {
   const setActiveModule = useAppStore((s) => s.setActiveModule);
   const [drawerOpen, setDrawerOpen] = useState(true);
+  const [header, setHeader] = useState<HTMLElement | null>(null);
   const [footer, setFooter] = useState<HTMLElement | null>(null);
   const mod = getModule(moduleId);
 
@@ -61,8 +64,12 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
 
       <div className="flex min-h-0 flex-1">
         <main className="flex min-w-0 flex-1 flex-col">
+          {/* The pinned control-rail header: a top-anchored <ControlRail edge="top"> portals here, so
+              the plots scroll up to its bottom edge and stop rather than under it. Zero-height (hidden)
+              when a module has no top rail. */}
+          <div ref={setHeader} className="relative z-10 empty:hidden" />
           <div className="wf-scroll min-h-0 flex-1 overflow-y-auto p-6">
-            <ControlRailSlotProvider slot={footer}>
+            <ControlRailSlotProvider top={header} bottom={footer}>
               <Interactive />
             </ControlRailSlotProvider>
           </div>
@@ -70,13 +77,22 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
               tall module reads as "more below" without relying on a scrollbar. Also softens the rail's
               top edge. Deep enough that clipped content visibly disappears into it. */}
           <div className="wf-scroll-fade pointer-events-none relative z-10 -mt-12 h-12 bg-gradient-to-b from-transparent to-bg" />
-          {/* The pinned control-rail footer: <ControlRail> portals here, so the plots scroll up to it
-              and stop rather than under it. Zero-height (hidden) when a module has no rail. */}
+          {/* The pinned control-rail footer: a bottom-anchored <ControlRail> portals here, so the plots
+              scroll up to it and stop rather than under it. Zero-height (hidden) when a module has no
+              bottom rail. */}
           <div ref={setFooter} className="relative z-10 empty:hidden" />
         </main>
         {Explanation && drawerOpen && (
-          <aside className="w-80 shrink-0 overflow-y-auto border-l border-border bg-surface px-5 py-5 text-sm leading-relaxed text-text-muted">
-            <Explanation />
+          // The explanation side-rail is the app's second main scroll region, so it gets the same
+          // bottom-fade cue as the plot region: the panel holds the scroller and an overlay fade, and
+          // the plain text scrolls within. The fade is token-derived (→ surface, the panel's own bg),
+          // so a long explanation fades out at the bottom ("more below") while a short one leaves bare
+          // surface under the fade — invisible — so it never dims a non-scrolling panel.
+          <aside className="flex w-80 shrink-0 flex-col border-l border-border bg-surface">
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 text-sm leading-relaxed text-text-muted">
+              <Explanation />
+            </div>
+            <div className="wf-aside-fade pointer-events-none relative z-10 -mt-12 h-12 bg-gradient-to-b from-transparent to-surface" />
           </aside>
         )}
       </div>
