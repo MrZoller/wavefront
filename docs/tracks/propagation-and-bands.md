@@ -26,6 +26,22 @@ across states at night, FM stay local, and shortwave go global?_
 The two real interactives are Band Explorer and Radio Horizon; the ionosphere piece is a deliberately
 conceptual stub (one layer, illustrative critical frequencies, one hop — no real ionosphere model).
 
+## Layer 1 — Synthesis
+
+| Module                           | Intuition                                                                                                         | Status      |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------- |
+| **The Ionosonde & the Ionogram** | Ping the sky and sweep frequency: the echo delay is a height (`h' = c·t/2`), and where the echo vanishes is foF2. | ✅ shipping |
+
+The scene that **completes the skywave story**: an ionosonde is the echo-delay radar trick pointed
+straight up. The single ping reuses the radar echo-delay view (delay → virtual height) and the
+chirp machinery; the **ionogram** is the shared x–y plot, virtual height against swept frequency,
+cusping up and cutting off at the critical frequency the skywave stub merely asserts. Drag foF2
+(day/night), the layer peak height, or the oblique angle and watch the cutoff move and the
+`MUF = foF2·sec φ` readout follow — the same secant law, now fed a _measured_ foF2. A regular module,
+not the capstone: **Band Explorer** stays the track's marquee.
+
+![The Ionosonde & the Ionogram module](../images/ionosonde.png)
+
 ## The cross-link — propagation-aware geolocation
 
 The one place propagation genuinely **changes a DSP answer**, and the strongest reason this track
@@ -47,12 +63,21 @@ module, not a duplicated map.
 - [Radio horizon](../propagation/radio-horizon.md) — the geometric line-of-sight distance.
 - [Skywave & MUF](../propagation/skywave.md) — the conceptual reflect-vs-penetrate rule and the
   illustrative bearing deflection the cross-link uses.
+- [Ionosonde & the ionogram](../propagation/ionosonde.md) — echo-delay ranging pointed up
+  (`h' = c·t/2`), a single-layer reflection model, and the ionogram sweep that measures the critical
+  frequency the skywave rule asserts. Reuses the radar round-trip-delay primitive and the skywave
+  secant law rather than re-deriving them.
 
-The new [`RayPathDiagram`](../../src/components/plots/RayPathDiagram.tsx) (2D earth-curvature /
-ray-path cross-section) is shared by Radio Horizon and the skywave stub.
+The shared [`RayPathDiagram`](../../src/components/plots/RayPathDiagram.tsx) (2D earth-curvature /
+ray-path cross-section) backs Radio Horizon and the skywave stub; the ionogram needs no new viz — it
+is the shared x–y line plot.
 
 ## Out of scope
 
 No atmospheric simulator, no real ionosphere model, no antenna or link-budget engineering, no system
-parameters or frequencies of interest. Strictly textbook-level concepts of bands, horizon, and
-skywave. Modes and reaches are illustrative bands, not predictions. All values synthetic.
+parameters or frequencies of interest. Strictly textbook-level concepts of bands, horizon, skywave,
+and vertical sounding. Modes and reaches are illustrative bands, not predictions. All values
+synthetic. The ionosonde scene is a **bounded synthesis**, not the seed of a sounding track:
+ordinary/extraordinary ray splitting, full multi-layer (D/E/F1/F2) profiles, true-height inversion,
+oblique sounding, and real ionogram/station data are named future directions, deliberately **not**
+built.

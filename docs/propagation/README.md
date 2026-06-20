@@ -14,6 +14,9 @@ geometry live behind their own boundary and never touch the signal-processing co
 √h₂)` km.
 - **[Skywave & MUF](./skywave.md)** — the conceptual reflect-vs-penetrate rule (the maximum usable
   frequency) and the illustrative skywave bearing deflection behind the geolocation cross-link.
+- **[Ionosonde & the ionogram](./ionosonde.md)** — echo-delay ranging pointed up (`h' = c·t/2`), a
+  single-layer reflection model, and the ionogram sweep that _measures_ the critical frequency the
+  skywave rule asserts (then closes the loop with the same secant-law MUF).
 
 ## Scope
 

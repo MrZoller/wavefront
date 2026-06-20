@@ -357,6 +357,19 @@ test('propagation-aware geolocation (skywave drift)', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'aoa-skywave-drift.png') });
 });
 
+test('ionosonde & ionogram module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'The Ionosonde & the Ionogram' }).first().click();
+  const ionogram = page.getByRole('img', { name: /ionogram/i });
+  await expect(ionogram).toBeVisible();
+  // The marquee (ionogram) sits last, above the pinned control rail. Scroll the plot region to the
+  // bottom so the ionogram and the foF2 / peak-height sliders are co-visible in the capture.
+  const scroll = page.locator('.wf-scroll');
+  await scroll.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+  await expect(ionogram).toBeInViewport();
+  await page.screenshot({ path: path.join(IMG_DIR, 'ionosonde.png') });
+});
+
 test('channel coding module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Channel Coding (FEC)' }).first().click();
