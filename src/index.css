@@ -123,3 +123,32 @@ input[type='range']:focus-visible::-moz-range-thumb {
 input[type='range']:focus {
   outline: none;
 }
+
+/*
+ * Scroll regions (the module column). The drag-watch loop needs the controls reachable while a plot
+ * is visible (CONTRIBUTING → "Keep controls co-visible with their target plot"): the controls sit in
+ * a pinned footer and the plots scroll in a region above it. Force a persistent, thin scrollbar so a
+ * tall module reads as scrollable on load — macOS overlay scrollbars otherwise auto-hide until you
+ * scroll, hiding the affordance. A scrollbar is a static affordance, not a live value, so it stays
+ * token-neutral (border / faint), never the green accent.
+ */
+.wf-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.wf-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.wf-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.wf-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+.wf-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: var(--color-text-faint);
+}
