@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "An interactive, from-scratch DSP learning platform — learn signal processing by watching the math happen. First track: Direction Finding & Geolocation.",
+  "description": "An interactive, from-scratch, test-verified DSP learning tool for software engineers — seven tracks from a signal as a rotating vector through direction finding, the radio chain, and channel coding.",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
