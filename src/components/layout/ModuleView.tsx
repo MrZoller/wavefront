@@ -57,7 +57,7 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
             className="shrink-0 rounded-md border border-border px-3 py-1.5 text-xs text-text-muted transition-colors hover:border-signal-dim hover:text-signal"
             aria-expanded={drawerOpen}
           >
-            {drawerOpen ? 'Hide' : 'Go deeper'}
+            {drawerOpen ? 'Hide explanation' : 'Show explanation'}
           </button>
         )}
       </header>
