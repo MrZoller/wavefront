@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Tailwind's `lg` breakpoint is 1024px; "compact" is everything below it — the viewport band where
- * the sidebar collapses into the overlay drawer. Kept as one constant so the JS that gives the open
- * drawer its modal behavior (focus trap, `inert` background, Escape) and the `lg:` CSS that drives
- * its layout share a single source and can't drift out of agreement.
+ * Tailwind's `lg` breakpoint — its default `64rem`. The drawer's layout is driven by `lg:` utilities
+ * (`@media (min-width: 64rem)`), so the JS that gives the open drawer its modal behavior (focus trap,
+ * `inert` background, Escape) must key off the *same* rem-based threshold. Naming it once keeps the
+ * two in lockstep.
  */
-export const COMPACT_VIEWPORT_QUERY = '(max-width: 1023.98px)';
+export const LG_BREAKPOINT = '64rem';
+
+/**
+ * "Compact" is everything below `lg` — the viewport band where the sidebar is an overlay drawer.
+ * Expressed as the exact negation of Tailwind's `(min-width: 64rem)`, in rem, on purpose: a px query
+ * like `(max-width: 1023.98px)` would diverge from the rem-based CSS under a non-16px root font,
+ * opening a band where the drawer is shown but its `inert`/focus/Escape behavior never engages.
+ */
+export const COMPACT_VIEWPORT_QUERY = `not all and (min-width: ${LG_BREAKPOINT})`;
 
 /** Read a media query now, guarding environments without `matchMedia` (SSR, jsdom tests → false). */
 function read(query: string): boolean {
