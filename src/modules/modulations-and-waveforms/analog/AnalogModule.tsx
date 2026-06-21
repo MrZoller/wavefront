@@ -70,7 +70,7 @@ export function AnalogModule() {
             {s}
           </button>
         ))}
-        <DesktopAudioControl>
+        <DesktopAudioControl onSuppress={audio.stop}>
           <button
             type="button"
             onClick={() => (audio.playing ? audio.stop() : audio.play(scheme, depth))}

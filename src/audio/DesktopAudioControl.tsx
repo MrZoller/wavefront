@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { useIsCompactViewport } from '@/hooks/useMediaQuery';
 
 /**
@@ -16,9 +16,34 @@ import { useIsCompactViewport } from '@/hooks/useMediaQuery';
  * before, so desktop layout and behavior are untouched. Suppression is visibility-only: the audio
  * hooks build their AudioContext lazily on the button press, so a hidden button never initializes
  * audio — nothing audio-related runs on mobile. Wrap every audio trigger in this (guarded by a test).
+ *
+ * Crossing *into* compact while audio is playing (a desktop window dragged narrow, a tablet rotated,
+ * a split-screen) would otherwise strand the sound: the trigger is the only stop control, and hiding
+ * it leaves the oscillator running with no way to silence it. So pass `onSuppress` — the module's
+ * audio `stop` — and the gate calls it as it suppresses the control, keeping "no control" and "no
+ * sound" in lockstep. The callback also fires if the module first mounts already compact (a harmless
+ * no-op there, since nothing is playing yet).
  */
-export function DesktopAudioControl({ children }: { children: ReactNode }) {
+export function DesktopAudioControl({
+  children,
+  onSuppress,
+}: {
+  children: ReactNode;
+  onSuppress?: () => void;
+}) {
   const isCompact = useIsCompactViewport();
+
+  // Hold the latest callback in a ref so the suppress effect fires once on the transition into
+  // compact — not on every render while compact, and regardless of whether the caller memoizes it.
+  const onSuppressRef = useRef(onSuppress);
+  useEffect(() => {
+    onSuppressRef.current = onSuppress;
+  }, [onSuppress]);
+
+  useEffect(() => {
+    if (isCompact) onSuppressRef.current?.();
+  }, [isCompact]);
+
   if (isCompact) return null;
   return <>{children}</>;
 }

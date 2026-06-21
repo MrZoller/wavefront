@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { Slider } from '@/components/Slider';
 import { AXIS } from '@/components/plots/axisLabel';
 import { PhasorPlot } from '@/components/plots/PhasorPlot';
@@ -93,10 +93,14 @@ export function PhasorModule() {
     if (playing) audio.setFrequency(toAudioHz(frequency));
   }, [frequency, playing, audio]);
 
+  const stopAudio = useCallback(() => {
+    audio.stop();
+    setPlaying(false);
+  }, [audio]);
+
   const toggleAudio = () => {
     if (playing) {
-      audio.stop();
-      setPlaying(false);
+      stopAudio();
     } else {
       audio.start(toAudioHz(frequency));
       setPlaying(true);
@@ -195,7 +199,7 @@ export function PhasorModule() {
           {running ? '⏸ Pause' : '▶ Resume'}
         </button>
 
-        <DesktopAudioControl>
+        <DesktopAudioControl onSuppress={stopAudio}>
           <button
             onClick={toggleAudio}
             aria-pressed={playing}

@@ -1,21 +1,35 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DesktopAudioControl } from './DesktopAudioControl';
 
-/** Pin matchMedia so the compact-viewport query resolves deterministically (jsdom lacks it). */
-function setViewport(compact: boolean) {
+/**
+ * A controllable matchMedia whose `matches` can be flipped to fire a `change` at listeners — lets a
+ * test cross the `lg` breakpoint at runtime (a window dragged narrow, a tablet rotated). jsdom has no
+ * matchMedia of its own, so each test installs this.
+ */
+function mockMatchMedia(initialCompact: boolean) {
+  let matches = initialCompact; // useIsCompactViewport matches below `lg`
+  const listeners = new Set<() => void>();
   window.matchMedia = vi.fn().mockReturnValue({
-    matches: compact, // useIsCompactViewport matches below `lg`
+    get matches() {
+      return matches;
+    },
     media: '',
     onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    addListener: () => {},
-    removeListener: () => {},
+    addEventListener: (_: string, cb: () => void) => listeners.add(cb),
+    removeEventListener: (_: string, cb: () => void) => listeners.delete(cb),
+    addListener: (cb: () => void) => listeners.add(cb),
+    removeListener: (cb: () => void) => listeners.delete(cb),
     dispatchEvent: () => false,
   }) as unknown as typeof window.matchMedia;
+  return {
+    set(nextCompact: boolean) {
+      matches = nextCompact;
+      listeners.forEach((cb) => cb());
+    },
+  };
 }
 
 const originalMatchMedia = window.matchMedia;
@@ -26,24 +40,45 @@ afterEach(() => {
 });
 
 describe('DesktopAudioControl', () => {
-  it('renders its audio control on desktop (lg+)', () => {
-    setViewport(false);
+  it('renders its audio control on desktop (lg+) without stopping anything', () => {
+    mockMatchMedia(false);
+    const onSuppress = vi.fn();
     render(
-      <DesktopAudioControl>
+      <DesktopAudioControl onSuppress={onSuppress}>
         <button>► hear it</button>
       </DesktopAudioControl>
     );
     expect(screen.getByRole('button', { name: '► hear it' })).toBeInTheDocument();
+    expect(onSuppress).not.toHaveBeenCalled();
   });
 
-  it('suppresses the audio control below lg — no dead button to tap on mobile', () => {
-    setViewport(true);
+  it('suppresses the control below lg — no dead button to tap on mobile', () => {
+    mockMatchMedia(true);
     render(
-      <DesktopAudioControl>
+      <DesktopAudioControl onSuppress={() => {}}>
         <button>► hear it</button>
       </DesktopAudioControl>
     );
     expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('stops in-flight playback when the viewport crosses into compact', () => {
+    // Start on desktop with the control shown, then drag below `lg`: the button vanishes AND playback
+    // is stopped, so audio can't keep running with no visible way to silence it.
+    const { set } = mockMatchMedia(false);
+    const onSuppress = vi.fn();
+    render(
+      <DesktopAudioControl onSuppress={onSuppress}>
+        <button>► hear it</button>
+      </DesktopAudioControl>
+    );
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(onSuppress).not.toHaveBeenCalled();
+
+    act(() => set(true));
+
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(onSuppress).toHaveBeenCalledTimes(1);
   });
 });
 

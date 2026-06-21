@@ -191,7 +191,7 @@ export function QuantizationModule() {
           >
             dither {dither ? 'on' : 'off'}
           </button>
-          <DesktopAudioControl>
+          <DesktopAudioControl onSuppress={audio.stop}>
             <button
               type="button"
               aria-pressed={audio.playing}
