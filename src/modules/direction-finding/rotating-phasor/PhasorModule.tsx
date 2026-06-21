@@ -10,6 +10,7 @@ import {
   useReducedMotionPlayState,
 } from '@/components/plots/usePrefersReducedMotion';
 import { colors } from '@/design/tokens';
+import { DesktopAudioControl } from '@/audio/DesktopAudioControl';
 import { useToneAudio } from '@/audio/useToneAudio';
 
 const WINDOW_SAMPLES = 240; // points in the scrolling I/Q waveforms
@@ -194,18 +195,20 @@ export function PhasorModule() {
           {running ? '⏸ Pause' : '▶ Resume'}
         </button>
 
-        <button
-          onClick={toggleAudio}
-          aria-pressed={playing}
-          className={[
-            'rounded-md border px-4 py-2 text-sm transition-colors',
-            playing
-              ? 'border-signal-dim bg-signal-dim/20 text-signal'
-              : 'border-border text-text-muted hover:border-signal-dim hover:text-signal',
-          ].join(' ')}
-        >
-          {playing ? '◼ Stop tone' : '▶ Hear it'}
-        </button>
+        <DesktopAudioControl>
+          <button
+            onClick={toggleAudio}
+            aria-pressed={playing}
+            className={[
+              'rounded-md border px-4 py-2 text-sm transition-colors',
+              playing
+                ? 'border-signal-dim bg-signal-dim/20 text-signal'
+                : 'border-border text-text-muted hover:border-signal-dim hover:text-signal',
+            ].join(' ')}
+          >
+            {playing ? '◼ Stop tone' : '▶ Hear it'}
+          </button>
+        </DesktopAudioControl>
       </div>
     </div>
   );

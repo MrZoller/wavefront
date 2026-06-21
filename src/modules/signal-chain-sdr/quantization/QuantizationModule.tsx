@@ -6,6 +6,7 @@ import { PlotTitle } from '@/components/plots/PlotTitle';
 import { SpectrumPlot } from '@/components/plots/SpectrumPlot';
 import { useCanvas } from '@/components/plots/useCanvas';
 import { Slider } from '@/components/Slider';
+import { DesktopAudioControl } from '@/audio/DesktopAudioControl';
 import { useSampleLoop } from '@/audio/useSampleLoop';
 import { colors } from '@/design/tokens';
 import { complex } from '@/dsp/complex';
@@ -190,19 +191,21 @@ export function QuantizationModule() {
           >
             dither {dither ? 'on' : 'off'}
           </button>
-          <button
-            type="button"
-            aria-pressed={audio.playing}
-            onClick={() => (audio.playing ? audio.stop() : audio.play(renderTone))}
-            className={[
-              'readout cursor-pointer rounded-md border px-3 py-1.5 text-xs transition-colors',
-              audio.playing
-                ? 'border-signal-dim bg-surface-raised text-signal'
-                : 'border-border bg-surface text-text-muted hover:border-signal-dim hover:text-text',
-            ].join(' ')}
-          >
-            {audio.playing ? '◼ stop' : '► hear it'}
-          </button>
+          <DesktopAudioControl>
+            <button
+              type="button"
+              aria-pressed={audio.playing}
+              onClick={() => (audio.playing ? audio.stop() : audio.play(renderTone))}
+              className={[
+                'readout cursor-pointer rounded-md border px-3 py-1.5 text-xs transition-colors',
+                audio.playing
+                  ? 'border-signal-dim bg-surface-raised text-signal'
+                  : 'border-border bg-surface text-text-muted hover:border-signal-dim hover:text-text',
+              ].join(' ')}
+            >
+              {audio.playing ? '◼ stop' : '► hear it'}
+            </button>
+          </DesktopAudioControl>
         </div>
       </div>
 
