@@ -16,19 +16,37 @@ interface AppState {
   glossaryOpen: boolean;
   /** Whether the About page is showing (only relevant when no module is open). */
   aboutOpen: boolean;
+  /**
+   * Whether the nav drawer is open. Only consulted below the desktop breakpoint, where the sidebar
+   * collapses to a hamburger-toggled overlay; at desktop width the sidebar is always visible and
+   * this flag is inert. Every navigation action clears it, so choosing a destination on a phone
+   * dismisses the drawer and reveals the content it routed to.
+   */
+  sidebarOpen: boolean;
   /** Open a module (or pass null to return to the landing); always leaves the reference pages. */
   setActiveModule: (id: string | null) => void;
   /** Open the Glossary index — a deliberate reference destination, not a module. */
   openGlossary: () => void;
   /** Open the About page — a quiet reference destination (what the tool is, and isn't). */
   openAbout: () => void;
+  /** Toggle the mobile nav drawer (hamburger). No-op visually at desktop width. */
+  toggleSidebar: () => void;
+  /** Close the mobile nav drawer (backdrop tap, Escape, or after navigating). */
+  closeSidebar: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
   activeModuleId: null,
   glossaryOpen: false,
   aboutOpen: false,
-  setActiveModule: (id) => set({ activeModuleId: id, glossaryOpen: false, aboutOpen: false }),
-  openGlossary: () => set({ activeModuleId: null, glossaryOpen: true, aboutOpen: false }),
-  openAbout: () => set({ activeModuleId: null, glossaryOpen: false, aboutOpen: true }),
+  sidebarOpen: false,
+  // Navigating always dismisses the mobile drawer so the chosen destination is what's on screen.
+  setActiveModule: (id) =>
+    set({ activeModuleId: id, glossaryOpen: false, aboutOpen: false, sidebarOpen: false }),
+  openGlossary: () =>
+    set({ activeModuleId: null, glossaryOpen: true, aboutOpen: false, sidebarOpen: false }),
+  openAbout: () =>
+    set({ activeModuleId: null, glossaryOpen: false, aboutOpen: true, sidebarOpen: false }),
+  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+  closeSidebar: () => set({ sidebarOpen: false }),
 }));
