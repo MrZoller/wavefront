@@ -185,13 +185,16 @@ export function FftBinsModule() {
           display={`${nFft} bins`}
           ariaLabel="Number of FFT bins (a power of two)"
         />
+        {/* Capture lengths 16 → 40 → 64: each sits clearly on one side of the fs/N_real ≈ 30 Hz
+            threshold, skipping the crossing near 32 samples where a rectangular window resolves a
+            hair early and the count would briefly disagree with the displayed resolution. */}
         {scene === 'two' && (
           <Slider
             label="Capture length (real samples)"
             value={nReal}
             min={16}
-            max={96}
-            step={8}
+            max={64}
+            step={24}
             onChange={setNReal}
             display={`${nReal} samples`}
             accent={colors.cyan}

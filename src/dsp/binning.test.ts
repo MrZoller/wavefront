@@ -118,4 +118,16 @@ describe('more bins ≠ more resolution; more data is', () => {
     // the resolution rode in with the longer capture.
     expect(peaksAt(nReal, 256)).toBe(2);
   });
+
+  // The module's two-tone capture slider exposes exactly these lengths, deliberately skipping the
+  // crossing near fs/sep ≈ 33 samples: there a rectangular window resolves a hair before the nominal
+  // fs/N_real, so the count would briefly read "2" while the displayed resolution is still > sep.
+  // Pinning the demo points keeps the readout, the resolution number, and the plot in agreement.
+  it('reads consistently with the fs/N_real rule at every demonstrated capture length', () => {
+    for (const nReal of [16, 40, 64]) {
+      const resolved = peaksAt(nReal, 4096) === 2;
+      const ruleResolved = frequencyResolution(fs, nReal) <= sep;
+      expect(resolved, `nReal=${nReal}`).toBe(ruleResolved);
+    }
+  });
 });
