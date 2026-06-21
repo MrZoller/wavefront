@@ -62,21 +62,26 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
         )}
       </header>
 
-      <div className="flex min-h-0 flex-1">
-        <main className="flex min-w-0 flex-1 flex-col">
+      {/* Desktop (`lg`): a two-pane row, each pane its own internal-scroll region (the original
+          layout). Below `lg`: the columns would be too narrow, so the body becomes one vertical
+          scroll — module content, then the explanation stacked beneath it — and the panes drop their
+          independent scrollers to flow naturally into that single scroll. */}
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-visible">
+        <main className="flex min-w-0 flex-col lg:flex-1">
           {/* The pinned control-rail header: a top-anchored <ControlRail edge="top"> portals here, so
               the plots scroll up to its bottom edge and stop rather than under it. Zero-height (hidden)
               when a module has no top rail. */}
           <div ref={setHeader} className="relative z-10 empty:hidden" />
-          <div className="wf-scroll min-h-0 flex-1 overflow-y-auto p-6">
+          <div className="wf-scroll p-6 lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
             <ControlRailSlotProvider top={header} bottom={footer}>
               <Interactive />
             </ControlRailSlotProvider>
           </div>
           {/* The scroll cue: partial plot content fades into the background at the bottom edge, so a
               tall module reads as "more below" without relying on a scrollbar. Also softens the rail's
-              top edge. Deep enough that clipped content visibly disappears into it. */}
-          <div className="wf-scroll-fade pointer-events-none relative z-10 -mt-12 h-12 bg-gradient-to-b from-transparent to-bg" />
+              top edge. Deep enough that clipped content visibly disappears into it. Tied to the pane's
+              internal scroll, so it's a desktop-only cue — on mobile the whole body scrolls instead. */}
+          <div className="wf-scroll-fade pointer-events-none relative z-10 -mt-12 hidden h-12 bg-gradient-to-b from-transparent to-bg lg:block" />
           {/* The pinned control-rail footer: a bottom-anchored <ControlRail> portals here, so the plots
               scroll up to it and stop rather than under it. Zero-height (hidden) when a module has no
               bottom rail. */}
@@ -87,12 +92,14 @@ export function ModuleView({ moduleId }: { moduleId: string }) {
           // bottom-fade cue as the plot region: the panel holds the scroller and an overlay fade, and
           // the plain text scrolls within. The fade is token-derived (→ surface, the panel's own bg),
           // so a long explanation fades out at the bottom ("more below") while a short one leaves bare
-          // surface under the fade — invisible — so it never dims a non-scrolling panel.
-          <aside className="flex w-80 shrink-0 flex-col border-l border-border bg-surface">
-            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 text-sm leading-relaxed text-text-muted">
+          // surface under the fade — invisible — so it never dims a non-scrolling panel. On mobile it
+          // stacks under the module (full width, top border instead of left) and flows in the body's
+          // single scroll, so the internal scroller + fade are desktop-only.
+          <aside className="flex w-full shrink-0 flex-col border-t border-border bg-surface lg:w-80 lg:border-t-0 lg:border-l">
+            <div className="px-5 py-5 text-sm leading-relaxed text-text-muted lg:min-h-0 lg:flex-1 lg:overflow-y-auto">
               <Explanation />
             </div>
-            <div className="wf-aside-fade pointer-events-none relative z-10 -mt-12 h-12 bg-gradient-to-b from-transparent to-surface" />
+            <div className="wf-aside-fade pointer-events-none relative z-10 -mt-12 hidden h-12 bg-gradient-to-b from-transparent to-surface lg:block" />
           </aside>
         )}
       </div>
