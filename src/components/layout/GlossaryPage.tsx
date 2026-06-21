@@ -46,7 +46,7 @@ export function GlossaryPage() {
   }, [filtered]);
 
   return (
-    <div className="mx-auto max-w-3xl px-8 py-12">
+    <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
       <h1 className="text-3xl font-semibold tracking-tight">Glossary</h1>
       <p className="mt-2 max-w-2xl text-sm text-text-muted">
         Every term Wavefront uses, in one place — each with a link to the module that teaches it.
