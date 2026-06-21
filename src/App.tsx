@@ -5,6 +5,7 @@ import { ModuleView } from '@/components/layout/ModuleView';
 import { GlossaryPage } from '@/components/layout/GlossaryPage';
 import { AboutPage } from '@/components/layout/AboutPage';
 import { Wordmark } from '@/components/Wordmark';
+import { useIsCompactViewport } from '@/hooks/useMediaQuery';
 import { useAppStore } from '@/store/appStore';
 
 export default function App() {
@@ -13,6 +14,8 @@ export default function App() {
   const aboutOpen = useAppStore((s) => s.aboutOpen);
   const setActiveModule = useAppStore((s) => s.setActiveModule);
   const toggleSidebar = useAppStore((s) => s.toggleSidebar);
+  const sidebarOpen = useAppStore((s) => s.sidebarOpen);
+  const isCompact = useIsCompactViewport();
 
   // The landing, Glossary, and About share one scroll container (the <main> below), so switching
   // among them swaps the child while the scroller keeps its position. That can open a destination
@@ -28,7 +31,14 @@ export default function App() {
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-bg text-text">
       <Sidebar />
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      {/* Everything but the drawer. While the drawer is open on a compact viewport it's a modal, so
+          this whole region (top bar included) goes `inert`: the dimmed-out content can't take focus
+          or clicks, which traps Tab inside the drawer. Never inert at `lg`, where the drawer doesn't
+          exist as an overlay and the layout is the original side-by-side. */}
+      <div
+        inert={isCompact && sidebarOpen}
+        className="flex min-w-0 flex-1 flex-col overflow-hidden"
+      >
         {/* Mobile-only top bar: the hamburger that summons the collapsed nav drawer, plus the
             wordmark as a tap-home affordance. Hidden at `lg`, where the persistent sidebar carries
             both — so the desktop layout is exactly as before, with no bar above the content. */}

@@ -1,6 +1,8 @@
+import { useEffect, useRef } from 'react';
 import { Wordmark } from '@/components/Wordmark';
 import { usePrefersReducedMotion } from '@/components/plots/usePrefersReducedMotion';
 import { APP_TAGLINE } from '@/config';
+import { useIsCompactViewport } from '@/hooks/useMediaQuery';
 import { TRACKS, getTrackLayers, moduleStatusBadge } from '@/registry';
 import { useAppStore } from '@/store/appStore';
 
@@ -12,6 +14,13 @@ import { useAppStore } from '@/store/appStore';
  * `lg` breakpoint the fixed-width rail would crowd out the content, so it collapses to a hamburger-
  * toggled overlay drawer (`sidebarOpen`) that slides in over a dimming backdrop and slides back out
  * when a nav item, the backdrop, or Escape dismisses it — desktop layout is untouched.
+ *
+ * On that compact viewport the open drawer is a real modal for the keyboard, not just a visual one:
+ * its background is marked `inert` (in {@link import('@/App')}) so Tab can't wander onto content
+ * hidden behind the dim, focus moves into the drawer on open (so the advertised Escape dismiss works
+ * immediately and Tab cycles within), and focus returns to the opener on close. While *closed* the
+ * off-canvas drawer is itself `inert`, so its buttons never sit invisibly in the tab order ahead of
+ * the visible hamburger. None of this engages at `lg`, where the rail is just an in-flow column.
  */
 export function Sidebar() {
   const activeModuleId = useAppStore((s) => s.activeModuleId);
@@ -23,6 +32,27 @@ export function Sidebar() {
   const sidebarOpen = useAppStore((s) => s.sidebarOpen);
   const closeSidebar = useAppStore((s) => s.closeSidebar);
   const reducedMotion = usePrefersReducedMotion();
+  const isCompact = useIsCompactViewport();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Modal behavior for the open drawer on a compact viewport. Bind Escape at the document level so it
+  // fires no matter where focus sits — notably right after the hamburger (in App) opens the drawer,
+  // before focus has moved in — which is the gap a nav-scoped handler would miss. Move focus into the
+  // drawer (its close button) so Tab is trapped against the inert background and Escape lands, then
+  // restore focus to whatever opened it when it closes, so the keyboard isn't dumped back at the top.
+  useEffect(() => {
+    if (!isCompact || !sidebarOpen) return;
+    const previouslyFocused = document.activeElement;
+    closeButtonRef.current?.focus();
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeSidebar();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
+    };
+  }, [isCompact, sidebarOpen, closeSidebar]);
 
   // The two reference destinations share one quiet style — muted until active, never the live accent
   // unless it's the current page (links/active nav are the sanctioned accent use).
@@ -48,13 +78,13 @@ export function Sidebar() {
 
       <nav
         aria-label="Tracks and modules"
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') closeSidebar();
-        }}
+        // While closed on a compact viewport the drawer is parked off-canvas — `inert` keeps its
+        // buttons out of the tab order and the a11y tree (a CSS transform alone would leave them
+        // focusable). At `lg` it's never inert: it's the visible, in-flow rail.
+        inert={isCompact && !sidebarOpen}
         // Desktop (`lg`): the original in-flow, fixed-width rail. Below `lg`: a fixed overlay drawer
         // that slides in from the left when `sidebarOpen`, sitting above the content + backdrop.
-        // `transform`-only animation respects reduced motion. When closed it's translated off-screen
-        // and made inert so it can't trap focus behind the content.
+        // `transform`-only animation respects reduced motion.
         className={[
           'flex w-72 shrink-0 flex-col gap-6 overflow-y-auto border-r border-border bg-surface px-4 py-5',
           'fixed inset-y-0 left-0 z-50 lg:static lg:z-auto lg:translate-x-0',
@@ -74,8 +104,10 @@ export function Sidebar() {
             </h1>
             <p className="mt-0.5 text-xs text-text-muted">{APP_TAGLINE}</p>
           </button>
-          {/* Mobile-only dismiss — the in-drawer twin of the hamburger. Hidden at `lg`. */}
+          {/* Mobile-only dismiss — the in-drawer twin of the hamburger, and the focus target when the
+              drawer opens (so Escape and Tab-trapping work at once). Hidden at `lg`. */}
           <button
+            ref={closeButtonRef}
             onClick={closeSidebar}
             aria-label="Close navigation"
             className="-mr-1 shrink-0 rounded-md p-1.5 text-text-muted transition-colors hover:bg-surface-raised hover:text-text lg:hidden"
