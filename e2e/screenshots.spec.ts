@@ -318,6 +318,15 @@ test('windowing module', async ({ page }) => {
   await page.screenshot({ path: path.join(IMG_DIR, 'windowing.png') });
 });
 
+test('fft bins module', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'FFT Bins & Zero-Padding' }).first().click();
+  await expect(
+    page.getByRole('img', { name: /sampled by the chosen number of FFT bins/i })
+  ).toBeVisible();
+  await page.screenshot({ path: path.join(IMG_DIR, 'fft-bins.png') });
+});
+
 test('convolution module', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Convolution & the Impulse Response' }).first().click();

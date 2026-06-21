@@ -8,6 +8,20 @@ All notable changes to this project are documented here. The format is based on
 
 ### Added
 
+- **Fundamentals module: FFT Bins & Zero-Padding.** A new module in the **Sampling & the Frequency
+  Domain** stage (right after Windowing & Leakage) centered on a direct-manipulation **bin-count
+  knob**: grab it and the same spectrum redraws with more and more dots — a coarse, blocky curve
+  smoothing into its true sinc shape — over a fixed faint "true spectrum" so _more bins = more dots on
+  the same picture_ is undeniable. The twist: switch to **two close tones** merged into one blob and
+  crank the bins to the max — still one blob; then grow the **capture length** (real samples) and the
+  blob splits in two. Zero-padding resamples the picture (bin spacing `fs / N_fft`); only more
+  captured signal adds resolution (≈ `fs / N_real`). Backed by a tested, from-scratch zero-pad path
+  (`src/dsp/binning.ts`) that reuses the existing FFT — including a machine-proof that two tones
+  closer than `fs / N_real` stay one peak no matter the zero-pad amount, but split once `N_real` is
+  large enough. Cross-links Windowing & Leakage and The DFT as a Change of Basis; adds glossary
+  entries for **bin**, **bin spacing**, **zero-padding**, and **frequency resolution**. All signals
+  synthetic; the 1 kHz / 200–230 Hz values are illustrative.
+
 - **Reduced-motion support (`prefers-reduced-motion`).** Auto-animating modules now respect the
   OS-level "reduce motion" accessibility setting. With it **on**, every module that would otherwise
   start moving on arrival loads **paused on a representative static frame** with a play/Resume

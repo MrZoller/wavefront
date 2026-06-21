@@ -56,6 +56,7 @@ const ALIASES: Record<string, string[]> = {
   snr: ['signal-to-noise ratio'],
   'steering-vector': ['steering vectors'],
   'time-bandwidth': ['time-bandwidth', 'TBP'],
+  'zero-padding': ['zero-pad', 'zero-padded'],
 };
 
 interface Form {

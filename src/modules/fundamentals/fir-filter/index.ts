@@ -7,7 +7,7 @@ registerModule({
   title: 'FIR Filtering',
   track: 'fundamentals',
   layer: 2,
-  order: 4,
+  order: 5,
   oneLineIntuition:
     'A filter is a sliding dot product of tap weights — the taps are the impulse response, their transform the frequency response.',
   component: FirFilterModule,

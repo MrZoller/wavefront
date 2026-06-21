@@ -116,6 +116,22 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     moduleId: 'noisy-channel',
     docsPage: 'comms',
   },
+  bin: {
+    id: 'bin',
+    term: 'bin',
+    gloss:
+      'One frequency slot of an FFT — its output at a single frequency, one point of the spectrum.',
+    moduleId: 'dft-basis',
+    docsPage: 'fft',
+  },
+  'bin-spacing': {
+    id: 'bin-spacing',
+    term: 'bin spacing',
+    gloss:
+      'The frequency gap between adjacent FFT bins, fs / N_fft — how finely the spectrum is sampled, set by the transform size (not the resolution).',
+    moduleId: 'fft-bins',
+    docsPage: 'fft-bins',
+  },
   bpsk: {
     id: 'bpsk',
     term: 'BPSK',
@@ -343,6 +359,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss: 'Encoding a message by varying the instantaneous frequency of the carrier.',
     moduleId: 'analog-modulation',
     docsPage: 'modulation',
+  },
+  'frequency-resolution': {
+    id: 'frequency-resolution',
+    term: 'frequency resolution',
+    gloss:
+      'The closest two tones a capture can tell apart, ≈ fs / N_real — set by how much signal you captured, not how many FFT bins you compute.',
+    moduleId: 'fft-bins',
+    docsPage: 'fft-bins',
   },
   fsk: {
     id: 'fsk',
@@ -829,6 +853,14 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
     gloss:
       'A receiver that mixes the signal straight to baseband, so a modest converter can sample it directly.',
     moduleId: 'sdr-architectures',
+  },
+  'zero-padding': {
+    id: 'zero-padding',
+    term: 'zero-padding',
+    gloss:
+      'Appending zeros to a capture before the FFT — it samples the same spectrum at more points (a smoother plot), but adds no resolution.',
+    moduleId: 'fft-bins',
+    docsPage: 'fft-bins',
   },
 };
 
