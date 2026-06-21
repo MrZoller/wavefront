@@ -8,6 +8,7 @@ import { TimeSeriesPlot } from '@/components/plots/TimeSeriesPlot';
 import { colors } from '@/design/tokens';
 import { am, fm, pm } from '@/dsp/modulation';
 import { magnitudeSpectrumDb } from '@/dsp/spectrum';
+import { DesktopAudioControl } from '@/audio/DesktopAudioControl';
 import { useModulatedAudio } from '@/audio/useModulatedAudio';
 
 const N = 512;
@@ -69,14 +70,16 @@ export function AnalogModule() {
             {s}
           </button>
         ))}
-        <button
-          type="button"
-          onClick={() => (audio.playing ? audio.stop() : audio.play(scheme, depth))}
-          className="readout ml-auto rounded-md border border-signal-dim px-3 py-1 text-xs text-signal transition-colors hover:bg-surface-raised"
-          aria-label={audio.playing ? 'Stop audio' : `Play ${scheme} audio`}
-        >
-          {audio.playing ? '■ Stop' : `▶ Hear ${scheme}`}
-        </button>
+        <DesktopAudioControl onSuppress={audio.stop}>
+          <button
+            type="button"
+            onClick={() => (audio.playing ? audio.stop() : audio.play(scheme, depth))}
+            className="readout ml-auto rounded-md border border-signal-dim px-3 py-1 text-xs text-signal transition-colors hover:bg-surface-raised"
+            aria-label={audio.playing ? 'Stop audio' : `Play ${scheme} audio`}
+          >
+            {audio.playing ? '■ Stop' : `▶ Hear ${scheme}`}
+          </button>
+        </DesktopAudioControl>
       </div>
 
       <div>
