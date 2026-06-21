@@ -76,14 +76,15 @@ describe('zero-padding interpolates — same spectrum, more dots', () => {
 });
 
 describe('prominentPeakCount', () => {
-  it('counts well-separated lobes and ignores sub-threshold ripple', () => {
+  it('counts two lobes only when a real valley separates them', () => {
     expect(prominentPeakCount([0, 1, 0, 0, 0])).toBe(1);
-    expect(prominentPeakCount([0, 1, 0, 1, 0])).toBe(2);
-    expect(prominentPeakCount([0, 0.2, 1, 0.6, 1, 0.2, 0])).toBe(2); // a shallow dip is still two
-    expect(prominentPeakCount([0, 1, 0.3, 0.45, 0.2, 0])).toBe(1); // the 0.45 bump is below 0.5·peak
+    expect(prominentPeakCount([0, 1, 0, 1, 0])).toBe(2); // deep valley (0) → two
+    expect(prominentPeakCount([0, 0.2, 1, 0.1, 1, 0.2, 0])).toBe(2); // notch to 0.1 → two
+    expect(prominentPeakCount([0, 0.2, 1, 0.6, 1, 0.2, 0])).toBe(1); // dimple to 0.6 → one broad lobe
   });
 
-  it('counts a flat-topped peak once rather than missing it', () => {
+  it('ignores sub-threshold ripple and counts a flat top once', () => {
+    expect(prominentPeakCount([0, 1, 0.3, 0.45, 0.2, 0])).toBe(1); // the 0.45 bump is below 0.5·peak
     expect(prominentPeakCount([0, 1, 1, 0])).toBe(1);
   });
 });

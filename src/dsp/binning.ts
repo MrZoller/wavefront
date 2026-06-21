@@ -29,20 +29,17 @@ export function nextPow2(n: number): number {
 }
 
 /**
- * A capture of `nReal` real samples of one or more unit analytic tones, `Σ_f e^{j2πfn/fs}` for
- * `n = 0 … nReal−1`. Analytic (complex) tones sit at a single positive frequency, so the one-sided
- * magnitude spectrum shows one clean lobe per tone — the cleanest way to ask "one tone or two?".
+ * A capture of `nReal` real samples of one or more equal-amplitude sinusoids, `Σ_f cos(2πfn/fs)` for
+ * `n = 0 … nReal−1`. Real cosines are the textbook "two sine waves" the resolution lesson is about,
+ * and their one-sided magnitude spectrum merges into a single lobe exactly when the tones sit closer
+ * than `fs / nReal` — unlike summed analytic tones, whose per-tone phase ramps can interfere and
+ * carve a false dip between sub-resolution tones.
  */
 export function toneCapture(freqsHz: number[], nReal: number, fs: number): Complex[] {
   return Array.from({ length: nReal }, (_, n) => {
     let re = 0;
-    let im = 0;
-    for (const f of freqsHz) {
-      const phase = (2 * Math.PI * f * n) / fs;
-      re += Math.cos(phase);
-      im += Math.sin(phase);
-    }
-    return { re, im };
+    for (const f of freqsHz) re += Math.cos((2 * Math.PI * f * n) / fs);
+    return { re, im: 0 };
   });
 }
 
@@ -96,22 +93,35 @@ export function oneSidedBinFreqs(nFft: number, fs: number): number[] {
 }
 
 /**
- * Count the prominent spectral peaks — strict local maxima at least `frac` of the global peak — i.e.
- * how many tones you can actually *tell apart*. The whole lesson in one number: it tracks the
- * capture length (resolution), not the zero-pad amount, so dragging the bin count never changes it
- * while a too-short capture's two tones stay merged, yet a longer capture flips it to two.
+ * Count the *resolved* spectral peaks — how many tones you can actually tell apart. The whole lesson
+ * in one number: it tracks the capture length (resolution), not the zero-pad amount, so dragging the
+ * bin count never changes it while a too-short capture's two tones stay merged, yet a longer capture
+ * flips it to two.
  *
- * The `> left, ≥ right` test (rather than strict both sides) counts a flat top once instead of
- * missing it, so an exact tie between two samples astride a peak can't drop the count to zero.
+ * Two steps, so a shallow ripple between sub-resolution tones doesn't read as a split:
+ *  1. find local maxima at least `floorFrac` of the global peak (the `> left, ≥ right` test counts a
+ *     flat top once rather than missing it on an exact tie);
+ *  2. treat two maxima as *distinct* only when the valley between them drops below `dipFrac` of the
+ *     lower of the two — a genuine notch, not a dimple. Tones merge into one broad lobe with only a
+ *     slight dimple right up to the resolution limit, so requiring a real valley is what keeps the
+ *     count aligned with the `fs / N_real` rule.
  */
-export function prominentPeakCount(mags: number[], frac = 0.5): number {
+export function prominentPeakCount(mags: number[], floorFrac = 0.5, dipFrac = 0.6): number {
   if (mags.length === 0) return 0;
   const peak = Math.max(...mags);
   if (peak <= 0) return 0;
-  const thresh = frac * peak;
-  let count = 0;
+  const floor = floorFrac * peak;
+  const maxima: number[] = [];
   for (let i = 1; i < mags.length - 1; i++) {
-    if (mags[i] >= thresh && mags[i] > mags[i - 1] && mags[i] >= mags[i + 1]) count++;
+    if (mags[i] >= floor && mags[i] > mags[i - 1] && mags[i] >= mags[i + 1]) maxima.push(i);
+  }
+  if (maxima.length <= 1) return maxima.length;
+  let count = 1;
+  for (let j = 1; j < maxima.length; j++) {
+    let valley = Infinity;
+    for (let i = maxima[j - 1]; i <= maxima[j]; i++) valley = Math.min(valley, mags[i]);
+    const lower = Math.min(mags[maxima[j - 1]], mags[maxima[j]]);
+    if (valley < dipFrac * lower) count++;
   }
   return count;
 }

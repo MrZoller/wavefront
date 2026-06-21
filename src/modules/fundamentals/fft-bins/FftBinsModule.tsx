@@ -27,35 +27,38 @@ import {
 const FS = 1000; // an illustrative sample rate (Hz), so bin spacing and resolution read as real numbers
 const ONE_TONE = [200];
 const TWO_TONES = [200, 230]; // a close pair, 30 Hz apart
+const ONE_TONE_CAPTURE = 16; // fixed short capture for the one-tone scene, so its bin sweep stays coarse→smooth
 const TRUE_NFFT = 4096; // the underlying spectrum, sampled finely enough to read as a continuous curve
 
 export function FftBinsModule() {
   const [scene, setScene] = useState<'one' | 'two'>('one');
-  const [nReal, setNReal] = useState(16); // captured (real) samples — the resolution knob
+  const [nReal, setNReal] = useState(16); // captured (real) samples — the resolution knob (two-tone scene)
   const [binExp, setBinExp] = useState(5); // FFT size = 2^binExp — the bin-count knob (the star)
 
-  const chosenNFft = 2 ** binExp;
-  // You can zero-pad up to any size ≥ the capture, but never below it: the transform can't have
-  // fewer points than the samples it's built from.
-  const nFft = Math.max(chosenNFft, nextPow2(nReal));
+  const tones = scene === 'two' ? TWO_TONES : ONE_TONE;
+  const captureN = scene === 'two' ? nReal : ONE_TONE_CAPTURE;
+  // You can't transform fewer points than you captured, so the smallest FFT is nextPow2(captureN).
+  // The bin knob floors here, and the slider's min tracks it (below) — so the displayed bin count is
+  // always the size actually transformed, never a smaller number the floor has quietly overridden.
+  const floorExp = Math.log2(nextPow2(captureN));
+  const binExpEff = Math.max(binExp, floorExp);
+  const nFft = 2 ** binExpEff;
 
   // The underlying spectrum (the "photograph") depends only on the capture, not the bin count.
   const { trueMags, truePeak, resolvable } = useMemo(() => {
-    const capture = toneCapture(scene === 'two' ? TWO_TONES : ONE_TONE, nReal, FS);
-    const mags = paddedMagnitudeSpectrum(capture, TRUE_NFFT);
+    const mags = paddedMagnitudeSpectrum(toneCapture(tones, captureN, FS), TRUE_NFFT);
     return {
       trueMags: mags,
       truePeak: Math.max(...mags),
       resolvable: prominentPeakCount(mags),
     };
-  }, [scene, nReal]);
+  }, [tones, captureN]);
 
   // The chosen bins: the same capture sampled at N_fft points — the dots laid on the curve.
   const stems = useMemo(() => {
-    const capture = toneCapture(scene === 'two' ? TWO_TONES : ONE_TONE, nReal, FS);
-    const mags = paddedMagnitudeSpectrum(capture, nFft);
+    const mags = paddedMagnitudeSpectrum(toneCapture(tones, captureN, FS), nFft);
     return { mags, freqs: oneSidedBinFreqs(nFft, FS) };
-  }, [scene, nReal, nFft]);
+  }, [tones, captureN, nFft]);
 
   const canvasRef = useCanvas(
     (ctx, w, h) => {
@@ -163,7 +166,7 @@ export function FftBinsModule() {
           <>
             <Readout
               label="Resolution ≈ fs / Nreal"
-              value={`${frequencyResolution(FS, nReal).toFixed(1)} Hz`}
+              value={`${frequencyResolution(FS, captureN).toFixed(1)} Hz`}
               live
             />
             <Readout label="Tones distinguishable" value={resolvable === 2 ? '2' : '1'} live />
@@ -174,12 +177,12 @@ export function FftBinsModule() {
       <div className="flex flex-col gap-4">
         <Slider
           label="FFT bins (zero-pad to)"
-          value={binExp}
-          min={4}
+          value={binExpEff}
+          min={floorExp}
           max={11}
           step={1}
           onChange={setBinExp}
-          display={`${chosenNFft} bins`}
+          display={`${nFft} bins`}
           ariaLabel="Number of FFT bins (a power of two)"
         />
         {scene === 'two' && (
@@ -213,9 +216,9 @@ export function FftBinsModule() {
               <span className="text-signal">FFT bins</span> to the max — still one blob; more dots
               can&rsquo;t split it. Now grow the <span className="text-cyan">capture length</span>{' '}
               and the blob splits in two. Resolution rode in with the data, not the bins — bin
-              spacing can shrink forever while the resolution (≈ fs / Nreal) stays put. The
-              transform can&rsquo;t be smaller than the capture, so very long captures raise the bin
-              floor.
+              spacing can shrink forever while the resolution (≈ fs / Nreal) stays put. A transform
+              can&rsquo;t be smaller than its capture, so a longer capture raises the bin
+              slider&rsquo;s floor.
             </GlossedText>
           )}
         </p>
